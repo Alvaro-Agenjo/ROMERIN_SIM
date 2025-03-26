@@ -1,0 +1,8 @@
+Wed Mar 26 17:59:01 2025
+ERROR: Load model error: Error: material 'grid_body' not found in geom 0
+Element name 'bodyfloor', id 0, line 50
+
+Wed Mar 26 18:02:03 2025
+ERROR: Load model error: Error: unknown transmission target 'Q_FRIGG_2' for actuator id = 18
+Element name 'motor_Q_FRIGG_1', id 18, line 93
+

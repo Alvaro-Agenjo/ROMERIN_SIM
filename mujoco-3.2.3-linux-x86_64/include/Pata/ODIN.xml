@@ -1,5 +1,5 @@
   <body name="ODIN" pos="0 0 0" euler="0 -0 0">
-      <geom name="visual_ODIN" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="-90 -0 0" mesh="link1CGSimple" material="Marron"/> <!-- Parte interior a resto de "cadera" -->
+      <!-- <geom name="visual_ODIN" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="-90 -0 0" mesh="link1CGSimple" material="Marron"/> Parte interior a resto de "cadera" -->
       <geom type="capsule" size="0.0313 0.0001" friction="1 0.005 0.00015" contype="1" conaffinity="1" pos="0 0 0" euler="0 -0 0" rgba="1 1 1 0"/>
       <joint name="Q_ODIN_1" type="hinge" pos="0 0 0" axis="-1 0 0" limited="true" stiffness="0.2" range="-1 1" damping="1" frictionloss="0.5"/>
       <body name="link_ODIN_2" pos="-0.00002 -0.001 0.0596" euler="-0.046 6.844e-05 0.086">
