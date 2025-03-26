@@ -1,0 +1,144 @@
+/*
+MS5611.h
+Library for barometric pressure sensor MS5611-01BA on I2C with arduino
+
+This library has been lightly modified by Carlos Prados in order to improve the rate
+
+by Petr Gronat@2014
+*/
+#define OSR 					1		// 0-3 CARLOS: This may vary to decrease the time
+#define CMD_RESET 				0x1E
+#define CMD_ADC_READ			0x00
+#define CMD_CONV_D1_BASE 		0x40
+#define CMD_CONV_D2_BASE 		0x50
+#define CONV_REG_SIZE 			0x02
+#define CMD_PROM_READ_BASE		0xA2
+#define PROM_REG_SIZE			0x02
+#define NBYTES_CONV 			3
+#define NBYTES_PROM 			2
+
+// Temperature sampling period threshold [milliseconds]
+// Kindly read the comment bellow in getPressure() method
+#define T_THR					1000
+/*
+TODO:
+1) Separate OSR for temperature and pressure
+2) Timedelay empirical formula for temperature oversampling
+3) Precidion pressure celibration for high temperature
+4) Default and optional OSR
+5) Documentation
+*/
+
+#include "MS5611.h"
+MS5611::MS5611(){
+	T_ 		= 0;
+	P_ 		= 0;
+	lastTime_ 	= T_THR;
+	for(uint8_t k=0; k<N_PROM_PARAMS; k++) 
+		C_[k]=69;
+}
+
+void MS5611::begin(){
+	Wire.begin();
+	reset();
+	delay(100);
+	readCalibration();
+}
+
+int32_t	MS5611::getPressure(){
+	getTemperature(); 		//updates temperature dT_ and _T  // CARLOS: This may be removed if fuction is called outside
+	/*uint32_t D1 = getRawPressure();
+	
+	int64_t OFF  = (int64_t)C_[2-1]*65536 
+				 + (int64_t)C_[4-1]*dT_/128;
+	
+	int64_t SENS = (int64_t)C_[1-1]*32768 
+				 + (int64_t)C_[3-1]*dT_/256;
+	P_ = (D1*SENS/2097152 - OFF)/32768;
+	*/
+	return P_;
+}
+
+uint32_t MS5611::getRawPressure(){
+	sendCommand(CMD_CONV_D1_BASE+OSR*CONV_REG_SIZE);	//read sensor, prepare a data
+	delay(1+OSR); 									//wait at least 8.33us for full oversampling
+	sendCommand(CMD_ADC_READ); 							//get ready for reading the data
+	return readnBytes(NBYTES_CONV);						//reading the data
+}
+
+int32_t MS5611::getTemperature(){
+	// Code below can be uncommented for slight speedup:
+	// NOTE: Be sure what you do! Notice that Delta 1C ~= Delta 2hPa
+	//****************
+	// if(abs(millis()-lastTime_)<T_THR)
+	// 	return _T;
+	//lastTime_ = millis();
+	//****************
+	uint32_t D2; 	
+	D2  = getRawTemperature();
+	dT_ = D2-((uint32_t)C_[5-1] * 256); 		//update 'dT_'
+	// Below, 'dT' and 'C_[6-1]'' must be casted in order to prevent overflow
+	// A bitwise division can not be dobe since it is unpredictible for signed integers
+	T_ = 2000 + ((int64_t)dT_ * C_[6-1])/8388608;
+	return T_;
+}
+
+uint32_t MS5611::getRawTemperature(){	
+	sendCommand(CMD_CONV_D2_BASE+OSR*CONV_REG_SIZE);		//read sensor, prepare a data
+	delay(1+OSR); 										//wait at least 8.33us
+	sendCommand(CMD_ADC_READ); 								//get ready for reading the data
+	return readnBytes(NBYTES_CONV); 						//reading the data
+}
+
+void MS5611::readCalibration(){
+	for(uint8_t i=0;i<6;i++){
+	Wire.beginTransmission(ADD_MS5611);
+	Wire.write(CMD_PROM_READ_BASE+i*2);
+	Wire.endTransmission(false);
+	Wire.requestFrom(ADD_MS5611,2);
+	uint8_t data_h=Wire.read();
+	uint8_t data_l=Wire.read();
+	C_[i] = (data_h<<8)||(data_l);
+	}
+	return;
+	for(uint8_t k=0;k<6;k++){
+		sendCommand(CMD_PROM_READ_BASE + k*2);
+		C_[k] = (uint16_t) (readnBytes(NBYTES_PROM) & 0xFFFF); //masking out two LSB
+	}
+}
+
+void MS5611::getCalibration(uint16_t *C){
+	for(uint8_t k=0;k<N_PROM_PARAMS;k++)
+		C[k]=C_[k];
+	return;
+}
+
+void MS5611::sendCommand(uint8_t cmd){
+	Wire.beginTransmission(ADD_MS5611);
+	Wire.write(cmd);
+	Wire.endTransmission(); //era nada
+}
+
+uint32_t MS5611::readnBytes(uint8_t nBytes){
+	if ((0<nBytes) & (nBytes<5)){	
+		Wire.beginTransmission(ADD_MS5611);
+		Wire.requestFrom((uint8_t)ADD_MS5611, nBytes);
+			uint32_t data = 0;
+			/*if(Wire.available()!=nBytes){
+				Wire.endTransmission();
+				return 0;
+			}
+			for (int8_t k=nBytes-1; k>=0; k--)
+				data |= ( (uint32_t) Wire.read() << (8*k) ); 	// concantenate bytes
+				*/
+		Wire.endTransmission();
+		return data;
+	}												// too many bytes or
+	return NULL; 									// no byte required
+}
+
+void MS5611::reset(){
+	Wire.beginTransmission(ADD_MS5611);
+	Wire.write(CMD_RESET);
+	Wire.endTransmission();
+}

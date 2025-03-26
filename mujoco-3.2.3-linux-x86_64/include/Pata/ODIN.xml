@@ -1,0 +1,80 @@
+  <body name="ODIN" pos="0 0 0" euler="0 -0 0">
+      <geom name="visual_ODIN" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="-90 -0 0" mesh="link1CGSimple" material="Marron"/> <!-- Parte interior a resto de "cadera" -->
+      <geom type="capsule" size="0.0313 0.0001" friction="1 0.005 0.00015" contype="1" conaffinity="1" pos="0 0 0" euler="0 -0 0" rgba="1 1 1 0"/>
+      <joint name="Q_ODIN_1" type="hinge" pos="0 0 0" axis="-1 0 0" limited="true" stiffness="0.2" range="-1 1" damping="1" frictionloss="0.5"/>
+      <body name="link_ODIN_2" pos="-0.00002 -0.001 0.0596" euler="-0.046 6.844e-05 0.086">
+        <inertial pos="0 0 0" mass="0.212" fullinertia="1 1 1 0 0 0"/>
+        <geom name="visual_ODIN_0" type="mesh" contype="0" conaffinity="0" group="0" pos="3.388e-21 0 0" euler="0 -0 0" mesh="link2CGSimple" material="Verde"/> <!-- Parte exterior + parte exterior -->
+        <geom type="capsule" size="0.0255 0.0055" friction="1 0.005 0.0001" contype="1" conaffinity="1" pos="3.388e-21 0 0.0055" euler="0 -0 0" rgba="1 1 1 0"/>
+        <site name="force_torque_Q_ODIN_2" pos="0 -0.0014 -0.02879" euler="-0.0458 6.8439e-05 0.0859"/>
+        <joint name="Q_ODIN_2" type="hinge" pos="0 -0.00142 -0.02879" axis="0 1 0" limited="true" stiffness="0.2" range="-110.0022 110.0022" damping="1" frictionloss="0.5"/>
+        <body name="link_ODIN_3" pos="-0.0009 -0.00132 0.16603" euler="90 -0 0">
+          <inertial pos="0 0 0" mass="0.36" fullinertia="1 1 1 0 0 0"/>
+          <geom name="visual_ODIN_1" type="mesh" contype="0" conaffinity="0" group="0" pos="2.168e-19 0 4.337e-19" euler="-180 0 0" mesh="link3CGSimple" material="Naranja"/> <!-- Parte interior de rodilla hasta parte interior después de los dos palos -->
+          <geom type="capsule" size="0.0372 0.06" friction="1 0.005 0.0001" contype="1" conaffinity="1" pos="2.168e-19 -0.015 0" euler="-90 0 0" rgba="1 1 1 0"/>
+          <site name="force_torque_Q_ODIN_3"  pos="1.0842021724855044e-19 -0.1271 0.00113" euler="90 -0 0"/>
+          <joint name="Q_ODIN_3"  type="hinge" pos="1.1e-19 -0.1271 0.0011" axis="-1 0 0" limited="true" stiffness="0.2" range="-110.0022 110.0022" damping="1" frictionloss="0.5"/>
+          <body name="link_ODIN_4" pos="0.0015 0.2361 -0.0077" euler="180 -0.0053 180">
+            <inertial pos="0 0 0" mass="0.535" fullinertia="1 1 1 0 0 0"/>
+            <geom name="visual_ODIN_2" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="180 -0 0" mesh="link4CGSimple" material="Marron"/> <!-- Desde engranaje pegado a pata hasta rodilla (parte exterior incluida) -->
+            <geom type="capsule" size="0.0372 0.07" friction="1 0.005 0.0001" contype="1" conaffinity="1" pos="0 -0.03 0" euler="-90 0 0" rgba="1 1 1 0"/>
+            <site name="force_torque_Q_ODIN_4" pos="0.00149 -0.142814 -0.0215" euler="180 -0.0053 180"/>
+            <joint name="Q_ODIN_4" type="hinge" pos="0.00149 -0.142814 -0.02155" axis="-1 0 0" limited="true" stiffness="0.2" range="-45.0001 169.429" damping="1" frictionloss="0.5"/>
+            <body name="link_ODIN_5" pos="0.00023 0.1197 0.00092" euler="0 -0 0">
+              <inertial pos="0 0 0" mass="0.205" fullinertia="1 1 1 0 0 0"/>
+              <geom name="visual_ODIN_3" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="180 -0 0" mesh="link5CGSimple" material="Naranja"/> <!-- Lo que va entre los engranajes laterales hasta el engranaje pegado a la pata (no incluido) -->
+              <geom type="sphere" size="0.032" friction="1 0.005 0.0001" contype="1" conaffinity="1" pos="0 0 0" euler="0 -0 0" rgba="1 1 1 0"/>
+              <site name="force_torque_Q_ODIN_5" pos="0.000165 0.0175 -1.1e-05" euler="0 -0 0"/>
+              <joint name="Q_ODIN_5" type="hinge" pos="0.000165 0.0175 -1.1e-05" axis="0 -1 0" limited="true" stiffness="0.2" range="-180.0004 180.0004" damping="1" frictionloss="0.5"/>
+              <body name="link_ODIN_6" pos="-0.0009 0.0282 -1.6e-05" euler="0 -0 0">
+                <inertial pos="0 0 0" mass="0.12" fullinertia="1 1 1 0 0 0"/>
+                <geom name="collision_ODIN_4" type="mesh" group="3" friction="1 0.005 0.0001" pos="0 0 0" euler="0 -0 0" mesh="link6CGEnv"/>
+                <geom name="visual_ODIN_4" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="180 -0 0" mesh="link6CGSimple" material="Azul"/> <!-- Engranajes laterales + sujeción, los más cercanos a la ventosa -->
+                <site name="force_torque_Q_ODIN_6" pos="0.00108 -0.0107 0" euler="0 -0 0"/>
+                <joint name="Q_ODIN_6" type="hinge" pos="0.00108 -0.0107 0" axis="-1 0 0" limited="true" stiffness="0.2" range="-97.403 97.403" damping="1" frictionloss="0.5"/>
+                <body name="link_ODIN_7" pos="0 0.0217 5e-06" euler="0 -0 0">
+                  <inertial pos="0 0 0" mass="0.005" fullinertia="1 1 1 0 0 0"/>
+                  <geom name="collision_ODIN_5" type="mesh" group="3" friction="1 0.005 0.0001" pos="0 0 0" euler="0 -0 0" mesh="link7CGEnv"/>
+                  <geom name="visual_ODIN_5" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="180 -0 0" mesh="link7CGSimple" material="Verde"/> <!-- Engranaje justo en cima de la ventosa -->
+                  <site name="force_torque_Q_ODIN_7" pos="0.00108 -0.0324 0" euler="0 -0 0"/>
+                  <joint name="Q_ODIN_7" type="hinge" pos="0.00108 -0.0324 0" axis="0 1 0" limited="true" stiffness="0.2" range="-180.0004 180.0004" damping="1" frictionloss="0.5"/>
+                  <body name="link_ODIN_8" pos="0 0.05055 -0.000853" euler="0 0 0">
+                    <joint name="Q_ODIN_8" type="hinge" pos="0 0 0" axis="0 1 0" limited="true" stiffness="0.2" range="-1 1" damping="1" frictionloss="0.5"/>
+                    <!-- SUCCIONADOR -->
+                    <body name="suctionCupLink_ODIN" pos="0 0 0" euler="0 -0 0">
+                      <inertial pos="0 0 0" mass="0.287" fullinertia="1 1 1 0 0 0"/>
+                      <geom type="cylinder" size="0.088 0.02" friction="1 0.005 0.0001" contype="1" conaffinity="1" pos="0 -0 0" euler="-90 0 0" rgba="1 1 1 0"/>
+                      <geom name="visual_ODIN_6" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0.006 0" euler="-89.954 0 0" mesh="suctionCupCGSimple" material="Marron"/>
+                      <body name="Base_ODIN" pos="0 0.02 0" euler="-90 0 0">
+                        <geom name="suctionCupBase_ODIN" type="cylinder" size="0.088 0.0005" pos="0 0 0" rgba="1 1 1 0"/>
+                        <site name="baseSuccionador_ODIN" pos="0 -0.0011 0" euler="0 0 0" size="0.002" rgba="1 1 1 0"/>
+                      </body>
+                      <body name="distanceSensor_ODIN_1" pos="0.0384 0.01 0.0094" euler="89.954 -0 0">
+                        <inertial pos="0 0 0" mass="0" fullinertia="1 1 1 0 0 0"/>
+                        <geom name="visual_ODIN_7" type="box" contype="0" conaffinity="0" group="0" size="0.005 0.0025 0.005" pos="0 0 0" euler="0 -0 0"/>
+                        <site name="laser_ODIN_1" pos="0 0 0" euler="0 -0 0"/>
+                      </body>
+                      <body name="distanceSensor_ODIN_2" pos="-0.0219 0.01 0.037" euler="89.954 -0 0">
+                        <inertial pos="0 0 0" mass="0" fullinertia="1 1 1 0 0 0"/>
+                        <geom name="visual_ODIN_8" type="box" contype="0" conaffinity="0" group="0" size="0.005 0.0025 0.005" pos="0 -6.939e-18 6.939e-18" euler="0 -0 0"/>
+                        <site name="laser_ODIN_2" pos="0 -6.939e-18 6.939e-18" euler="0 -0 0"/>
+                      </body>
+                      <body name="distanceSensor_ODIN_3" pos="-0.030632 0.01 -0.031" euler="89.954 -0 0">
+                        <inertial pos="0 0 0" mass="0" fullinertia="1 1 1 0 0 0"/>
+                        <geom name="visual_ODIN_9" type="box" contype="0" conaffinity="0" group="0" size="0.005 0.0025 0.005" pos="0 0 -6.939e-18" euler="0 -0 0"/>
+                        <site name="laser_ODIN_3" pos="0 0 -6.939e-18" euler="0 -0 0"/>
+                      </body>
+                      <body name="tcpLink_ODIN_" pos="0 0.02 0" euler="0 -0 89.95">
+                        <inertial pos="0 0 0" mass="0" fullinertia="1 1 1 0 0 0"/>
+                      </body>
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </body>
+ 

@@ -1,0 +1,39 @@
+<mujoco model="suctionCupSimple">
+  <compiler eulerseq="XYZ"/>
+  <default>
+    <default class="unused"/>
+  </default>
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.10000000000000001 0.20000000000000001 0.29999999999999999" rgb2="0.20000000000000001 0.29999999999999999 0.40000000000000002" width="512" height="512"/>
+    <material name="grid" class="unused" texture="grid" texrepeat="1 1" texuniform="true" reflectance="0.20000000000000001"/>
+    <mesh name="suctionCupCGEnvSimple" class="unused" file="suctionCupCGEnvSimple-4ab1e150bbbffbd31f43c83ee9978d08909323e9.stl" scale="1 1 1"/>
+    <mesh name="suctionCupCGSimple" class="unused" file="suctionCupCGSimple-4d1d30281ce6d750f36d21cdf06cb2fa3ad9ee48.stl" scale="1 1 1"/>
+  </asset>
+  <worldbody>
+    <geom name="floor" class="unused" type="plane" condim="3" size="0 0 0.050000000000000003" material="grid" pos="0 0 -1"/>
+    <body name="suctionCupLink" pos="0 0 0" euler="0 -0 0">
+      <inertial pos="0 0 0" mass="0.28699999999999998" fullinertia="1 1 1 0 0 0"/>
+      <geom name="collision" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="0 0 0" euler="0 -0 0" mesh="suctionCupCGEnvSimple"/>
+      <geom name="visual" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0.0060000000000000001 0" euler="-89.954373835539243 0 0" mesh="suctionCupCGSimple"/>
+      <freejoint name="freejoint"/>
+      <body name="distanceSensor1" pos="0.038434999999999997 0.01 0.0094070000000000004" euler="89.954373835539243 -0 0">
+        <inertial pos="0 0 0" mass="1" fullinertia="1 1 1 0 0 0"/>
+        <geom name="visual_0" class="unused" type="box" contype="0" conaffinity="0" group="0" size="0.0050000000000000001 0.0025000000000000001 0.0050000000000000001" pos="0 0 0" euler="0 -0 0"/>
+        <site name="laser1" class="unused" pos="0 0 0" euler="0 -0 0"/>
+      </body>
+      <body name="distanceSensor2" pos="-0.021916999999999999 0.01 0.037254000000000002" euler="89.954373835539243 -0 0">
+        <inertial pos="0 0 0" mass="1" fullinertia="1 1 1 0 0 0"/>
+        <geom name="visual_1" class="unused" type="box" contype="0" conaffinity="0" group="0" size="0.0050000000000000001 0.0025000000000000001 0.0050000000000000001" pos="0 -6.9388939039072284e-18 6.9388939039072284e-18" euler="0 -0 0"/>
+        <site name="laser2" class="unused" pos="0 -6.9388939039072284e-18 6.9388939039072284e-18" euler="0 -0 0"/>
+      </body>
+      <body name="distanceSensor3" pos="-0.030632 0.01 -0.030828999999999999" euler="89.954373835539243 -0 0">
+        <inertial pos="0 0 0" mass="1" fullinertia="1 1 1 0 0 0"/>
+        <geom name="visual_2" class="unused" type="box" contype="0" conaffinity="0" group="0" size="0.0050000000000000001 0.0025000000000000001 0.0050000000000000001" pos="0 0 -6.9388939039072284e-18" euler="0 -0 0"/>
+        <site name="laser3" class="unused" pos="0 0 -6.9388939039072284e-18" euler="0 -0 0"/>
+      </body>
+      <body name="tcpLink" pos="0 0.02 0" euler="0 -0 89.954373835539243">
+        <inertial pos="0 0 0" mass="1" fullinertia="1 1 1 0 0 0"/>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

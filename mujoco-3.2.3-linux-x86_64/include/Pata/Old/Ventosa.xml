@@ -1,0 +1,97 @@
+<mujoco model="romerinSimpleModule">
+  <compiler eulerseq="XYZ"/>
+  <default>
+    <default class="unused"/>
+  </default>
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.10000000000000001 0.20000000000000001 0.29999999999999999" rgb2="0.20000000000000001 0.29999999999999999 0.40000000000000002" width="512" height="512"/>
+    <material name="grid" class="unused" texture="grid" texrepeat="1 1" texuniform="true" reflectance="0.20000000000000001"/>
+    <mesh name="link1CGEnv" class="unused" file="romerinSimple_v2/meshes/link1CGEnv.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link1CGSimple" class="unused" file="romerinSimple_v2/meshes//link1CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link2CGEnv" class="unused" file="romerinSimple_v2/meshes/link2CGEnv.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link2CGSimple" class="unused" file="romerinSimple_v2/meshes/link2CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link3CGEnv" class="unused" file="romerinSimple_v2/meshes/link3CGEnv.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link3CGSimple" class="unused" file="romerinSimple_v2/meshes/link3CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link4CGEnv" class="unused" file="romerinSimple_v2/meshes/link4CGEnv.stl" scale="1 1 1"/>
+    <mesh name="link4CGSimple" class="unused" file="romerinSimple_v2/meshes/link4CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link5CGEnv" class="unused" file="romerinSimple_v2/meshes/link5CGEnv.stl" scale="1 1 1"/>
+    <mesh name="link5CGSimple" class="unused" file="romerinSimple_v2/meshes/link5CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link6CGEnv" class="unused" file="romerinSimple_v2/meshes/link6CGEnv.stl" scale="1 1 1"/>
+    <mesh name="link6CGSimple" class="unused" file="romerinSimple_v2/meshes/link6CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link7CGEnv" class="unused" file="romerinSimple_v2/meshes/link7CGEnv.stl" scale="1 1 1"/>
+    <mesh name="link7CGSimple" class="unused" file="romerinSimple_v2/meshes/link7CGSimple.stl" scale="1 1 1"/>
+    <texture name="grid_0" type="2d" builtin="checker" rgb1="0.10000000000000001 0.20000000000000001 0.29999999999999999" rgb2="0.20000000000000001 0.29999999999999999 0.40000000000000002" width="512" height="512"/>
+    <material name="grid_0" class="unused" texture="grid_0" texrepeat="1 1" texuniform="true" reflectance="0.20000000000000001"/>
+    <mesh name="suctionCupCGEnvSimple" class="unused" file="suctionCupSimple/meshes/suctionCupCGEnvSimple.stl" scale="1 1 1"/>
+    <mesh name="suctionCupCGSimple" class="unused" file="suctionCupSimple/meshes/suctionCupCGSimple.stl" scale="1 1 1"/>
+  </asset>
+  <worldbody>
+    <geom name="floor" class="unused" type="plane" condim="3" size="0 0 0.050000000000000003" material="grid" pos="0 0 -1"/>
+    <body name="link1" pos="0 0 0" euler="90.045626164460742 0.091252328921505324 180">
+      <inertial pos="0 0 0" mass="0.14799999999999999" fullinertia="1 1 1 0 0 0"/>
+      <geom name="collision" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="0 0 0" euler="0 -0 0" mesh="link1CGEnv"/>
+      <geom name="visual" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="-90 -0 0" mesh="link1CGSimple"/> <!-- Parte interior a resto de "cadera" -->
+      <freejoint name="jointLibre"/>
+      <body name="link2" pos="-2.2458281538301686e-05 -0.00092057322810871686 0.059603751975503022" euler="-0.045836572281046088 6.8439213793125347e-05 0.085943642019666103">
+        <inertial pos="0 0 0" mass="0.21199999999999999" fullinertia="1 1 1 0 0 0"/>
+        <geom name="collision_0" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="3.3881317890172014e-21 0 0" euler="0 -0 0" mesh="link2CGEnv"/>
+        <geom name="visual_0" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="3.3881317890172014e-21 0 0" euler="0 -0 0" mesh="link2CGSimple"/> <!-- Parte exterior + parte exterior -->
+        <site name="force_torque_Q2" class="unused" pos="0 -0.0014200000000000029 -0.028793000000000006" euler="-0.045836572281046088 6.8439213793125347e-05 0.085943642019666103"/>
+        <joint name="Q2" class="unused" type="hinge" pos="0 -0.0014200000000000029 -0.028793000000000006" axis="0 1 0" limited="true" stiffness="0.20000000000000001" range="-110.00216708716675 110.00216708716675" damping="1" frictionloss="0.5"/>
+        <body name="link3" pos="-0.00089787760075353377 -0.0013216930631609405 0.16603099514627037" euler="90.000210459149713 -0 0">
+          <inertial pos="0 0 0" mass="0.35999999999999999" fullinertia="1 1 1 0 0 0"/>
+          <geom name="collision_1" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="2.1684043449710089e-19 0 4.3368086899420177e-19" euler="-90.000210459149713 0 0" mesh="link3CGEnv"/>
+          <geom name="visual_1" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="2.1684043449710089e-19 0 4.3368086899420177e-19" euler="-180.000210459149713 0 0" mesh="link3CGSimple"/> <!-- Parte interior de rodilla hasta parte interior después de los dos palos -->
+          <site name="force_torque_Q3" class="unused" pos="1.0842021724855044e-19 -0.12709699999999996 0.0010610000000000003" euler="90.000210459149713 -0 0"/>
+          <joint name="Q3" class="unused" type="hinge" pos="1.0842021724855044e-19 -0.12709699999999996 0.0010610000000000003" axis="-1 0 0" limited="true" stiffness="0.20000000000000001" range="-110.00216708716675 110.00216708716675" damping="1" frictionloss="0.5"/>
+          <body name="link4" pos="0.0014932877654435183 0.23616700000000007 -0.0076871383914677042" euler="180 -0.0053086596518785844 180">
+            <inertial pos="0 0 0" mass="0.53500000000000003" fullinertia="1 1 1 0 0 0"/>
+            <geom name="collision_2" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="0 0 0" euler="0 -0 0" mesh="link4CGEnv"/>
+            <geom name="visual_2" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="179.9998479605043 -0 0" mesh="link4CGSimple"/> <!-- Desde engranaje pegado a pata hasta rodilla (parte exterior incluida) -->
+            <site name="force_torque_Q4" class="unused" pos="0.00149 -0.142814 -0.021545999999999999" euler="180 -0.0053086596518785844 180"/>
+            <joint name="Q4" class="unused" type="hinge" pos="0.00149 -0.142814 -0.021545999999999999" axis="-1 0 0" limited="true" stiffness="0.20000000000000001" range="-45.000105229574856 169.42934959813573" damping="1" frictionloss="0.5"/>
+            <body name="link5" pos="0.00023300000000000003 0.11966999999999994 0.00091800000000000041" euler="0 -0 0">
+              <inertial pos="0 0 0" mass="0.20499999999999999" fullinertia="1 1 1 0 0 0"/>
+              <geom name="collision_3" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="0 0 0" euler="0 -0 0" mesh="link5CGEnv"/>
+              <geom name="visual_3" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="179.9998479605043 -0 0" mesh="link5CGSimple"/> <!-- Lo que va entre los engranajes laterales hasta el engranaje pegado a la pata (no incluido) -->
+              <site name="force_torque_Q5" class="unused" pos="0.000165 0.01750700000000005 -1.0999999999999725e-05" euler="0 -0 0"/>
+              <joint name="Q5" class="unused" type="hinge" pos="0.000165 0.01750700000000005 -1.0999999999999725e-05" axis="0 -1 0" limited="true" stiffness="0.20000000000000001" range="-180.00042091829943 180.00042091829943" damping="1" frictionloss="0.5"/>
+              <body name="link6" pos="-0.00091499999999999991 0.028222999999999998 -1.6000000000000389e-05" euler="0 -0 0">
+                <inertial pos="0 0 0" mass="0.12" fullinertia="1 1 1 0 0 0"/>
+                <geom name="collision_4" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="0 0 0" euler="0 -0 0" mesh="link6CGEnv"/>
+                <geom name="visual_4" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="179.9998479605043 -0 0" mesh="link6CGSimple"/> <!-- Engranajes laterales + sujeción, los más cercanos a la ventosa -->
+                <site name="force_torque_Q6" class="unused" pos="0.00108 -0.010715999999999948 0" euler="0 -0 0"/>
+                <joint name="Q6" class="unused" type="hinge" pos="0.00108 -0.010715999999999948 0" axis="1 0 0" limited="true" stiffness="0.20000000000000001" range="-97.402825172239943 97.402825172239943" damping="1" frictionloss="0.5"/>
+                <body name="link7" pos="0 0.021704000000000057 4.9999999999997963e-06" euler="0 -0 0">
+                  <inertial pos="0 0 0" mass="0.0050000000000000001" fullinertia="1 1 1 0 0 0"/>
+                  <geom name="collision_5" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="0 0 0" euler="0 -0 0" mesh="link7CGEnv"/>
+                  <geom name="visual_5" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="179.9998479605043 -0 0" mesh="link7CGSimple"/> <!-- Engranaje justo en cima de la ventosa -->
+                  <site name="force_torque_Q7" class="unused" pos="0.00108 -0.032420000000000004 0" euler="0 -0 0"/>
+                  <joint name="Q7" class="unused" type="hinge" pos="0.00108 -0.032420000000000004 0" axis="0 1 0" limited="true" stiffness="0.20000000000000001" range="-180.00042091829943 180.00042091829943" damping="1" frictionloss="0.5"/>
+                  <body name="link8" pos="0 0.05055499 -0.000853" euler="0 0 0">
+                    <joint name="Q8" type="hinge" pos="0 0 0" axis="0 1 0" limited="true" stiffness="0.2" range="-180 180" damping="1" frictionloss="0.5"/>
+                    <include file="succionador.xml"/>
+                    </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <sensor>
+    <force name="force_force_torque_Q2" noise="0" site="force_torque_Q2"/>
+    <torque name="torque_force_torque_Q2" noise="0" site="force_torque_Q2"/>
+    <force name="force_force_torque_Q3" noise="0" site="force_torque_Q3"/>
+    <torque name="torque_force_torque_Q3" noise="0" site="force_torque_Q3"/>
+    <force name="force_force_torque_Q4" noise="0" site="force_torque_Q4"/>
+    <torque name="torque_force_torque_Q4" noise="0" site="force_torque_Q4"/>
+    <force name="force_force_torque_Q5" noise="0" site="force_torque_Q5"/>
+    <torque name="torque_force_torque_Q5" noise="0" site="force_torque_Q5"/>
+    <force name="force_force_torque_Q6" noise="0" site="force_torque_Q6"/>
+    <torque name="torque_force_torque_Q6" noise="0" site="force_torque_Q6"/>
+    <force name="force_force_torque_Q7" noise="0" site="force_torque_Q7"/>
+    <torque name="torque_force_torque_Q7" noise="0" site="force_torque_Q7"/>
+  </sensor>
+</mujoco>

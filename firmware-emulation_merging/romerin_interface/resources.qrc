@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/logoCAR_UPM_CSICtransparente.png</file>
+        <file>images/romlogo256.png</file>
+    </qresource>
+</RCC>

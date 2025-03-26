@@ -1,0 +1,165 @@
+<mujoco model="Romerin">
+  <compiler eulerseq="XYZ"/>
+  <default>
+    <default class="unused"/>
+  </default>
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" width="512" height="512"/>
+    <material name="grid" class="unused" texture="grid" texrepeat="1 1" texuniform="true" reflectance="0.2"/>
+    <mesh name="link1CGEnv" class="unused" file="../Pata/meshes/link1CGEnv.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link1CGSimple" class="unused" file="../Pata/meshes//link1CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link2CGEnv" class="unused" file="../Pata/meshes/link2CGEnv.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link2CGSimple" class="unused" file="../Pata/meshes/link2CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link3CGEnv" class="unused" file="../Pata/meshes/link3CGEnv.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="link3CGSimple" class="unused" file="../Pata/meshes/link3CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link4CGEnv" class="unused" file="../Pata/meshes/link4CGEnv.stl" scale="1 1 1"/>
+    <mesh name="link4CGSimple" class="unused" file="../Pata/meshes/link4CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link5CGEnv" class="unused" file="../Pata/meshes/link5CGEnv.stl" scale="1 1 1"/>
+    <mesh name="link5CGSimple" class="unused" file="../Pata/meshes/link5CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link6CGEnv" class="unused" file="../Pata/meshes/link6CGEnv.stl" scale="1 1 1"/>
+    <mesh name="link6CGSimple" class="unused" file="../Pata/meshes/link6CGSimple.stl" scale="1 1 1"/>
+    <mesh name="link7CGEnv" class="unused" file="../Pata/meshes/link7CGEnv.stl" scale="1 1 1"/>
+    <mesh name="link7CGSimple" class="unused" file="../Pata/meshes/link7CGSimple.stl" scale="1 1 1"/>
+    <texture name="grid_0" type="2d" builtin="checker" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" width="512" height="512"/>
+    <material name="grid_0" class="unused" texture="grid_0" texrepeat="1 1" texuniform="true" reflectance="0.2"/>
+    <mesh name="suctionCupCGEnvSimple" class="unused" file="../Pata/meshes/suctionCupCGEnvSimple.stl" scale="1 1 1"/>
+    <mesh name="suctionCupCGSimple" class="unused" file="../Pata/meshes/suctionCupCGSimple.stl" scale="1 1 1"/>
+
+    <texture name="naranja" type= "2d" file="../Robot/Colores/naranja.png"/>
+    <material name="Naranja" texture="naranja"/>
+
+    <texture name="marron" type= "2d" file="../Robot/Colores/marron.png"/>
+    <material name="Marron" texture="marron"/>
+
+    <texture name="azul" type= "2d" file="../Robot/Colores/azul.png"/>
+    <material name="Azul" texture="azul"/>
+
+    <texture name="verde" type= "2d" file="../Robot/Colores/verde.png"/>
+    <material name="Verde" texture="verde"/>
+
+    <texture name="grid_body" type="2d" builtin="checker" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" width="512" height="512"/>
+    <material name="grid_body" class="unused" texture="grid" texrepeat="1 1" texuniform="true" reflectance="0.2"/>
+
+    <mesh name="body1CGEnv" class="unused" file="../Cuerpo/meshes/body1CGEnv.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="body1CGSimple" class="unused" file="../Cuerpo/meshes/body1CGSimple.stl" scale="1 1 1"/>
+    <mesh name="body2CGEnv" class="unused" file="../Cuerpo/meshes/body2CGEnv.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="body2CGSimple" class="unused" file="../Cuerpo/meshes/body2CGSimple.stl" scale="1 1 1"/>
+  </asset>
+
+  <worldbody>
+  <geom name="bodyfloor" class="unused" type="plane" condim="3" size="0 0 0.0000005" material="grid_body" pos="0 0 0"/>
+    <body name="Robot" pos="0 0 0.5" euler="-90 0 0">
+      <inertial pos="0 0 0" mass="0.898" fullinertia="1 1 1 0 0 0"/>
+      <freejoint name="RobotSuelto"/>
+      <include file="../Cuerpo/Cuerpo.xml"/>
+      <body name="THORGen" pos="0.081 0.053 0.1" euler="-180 225 0">   
+        <include file="../Pata/THOR.xml"/>
+      </body>
+      <body name="ODINGen" pos="-0.081 0.053 0.1" euler="-180 135 0">
+        <include file="../Pata/ODIN.xml"/>
+      </body>
+      <body name="LOKIGen" pos="0.081 0.053 -0.071" euler="-180 -45 0">
+        <include file="../Pata/LOKI.xml"/>
+      </body>
+      <body name="FRIGGGen" pos="-0.081 0.053 -0.071" euler="-180 45 0">
+        <include file="../Pata/FRIGG.xml"/>
+      </body>
+    </body>
+    
+  </worldbody>
+
+  <actuator>
+    <motor name="motor_Q_THOR_1" joint="Q_THOR_2" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_THOR_2" joint="Q_THOR_3" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_THOR_3" joint="Q_THOR_4" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_THOR_4" joint="Q_THOR_5" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_THOR_5" joint="Q_THOR_6" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_THOR_6" joint="Q_THOR_7" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    
+    <motor name="motor_Q_ODIN_1" joint="Q_ODIN_2" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_ODIN_2" joint="Q_ODIN_3" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_ODIN_3" joint="Q_ODIN_4" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_ODIN_4" joint="Q_ODIN_5" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_ODIN_5" joint="Q_ODIN_6" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_ODIN_6" joint="Q_ODIN_7" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    
+    <motor name="motor_Q_LOKI_1" joint="Q_LOKI_2" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_LOKI_2" joint="Q_LOKI_3" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_LOKI_3" joint="Q_LOKI_4" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_LOKI_4" joint="Q_LOKI_5" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_LOKI_5" joint="Q_LOKI_6" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_LOKI_6" joint="Q_LOKI_7" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    
+    <motor name="motor_Q_FRIGG_1" joint="Q_FRIGG_2" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_FRIGG_2" joint="Q_FRIGG_3" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_FRIGG_3" joint="Q_FRIGG_4" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_FRIGG_4" joint="Q_FRIGG_5" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_FRIGG_5" joint="Q_FRIGG_6" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    <motor name="motor_Q_FRIGG_6" joint="Q_FRIGG_7" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    
+    <adhesion name="Ventosa_THOR" body="Base_THOR" ctrlrange="0 117.72" gain="117.72"/>
+    <adhesion name="Ventosa_ODIN" body="Base_ODIN" ctrlrange="0 1" gain="2000"/>
+    <adhesion name="Ventosa_LOKI" body="Base_LOKI" ctrlrange="0 1" gain="2000"/>
+    <adhesion name="Ventosa_FRIGG" body="Base_FRIGG" ctrlrange="0 1" gain="2000"/>
+  </actuator>
+
+  <sensor>
+    <force name="force_force_torque_Q_THOR_2" noise="0" site="force_torque_Q_THOR_2"/>
+    <torque name="torque_force_torque_Q_THOR_2" noise="0" site="force_torque_Q_THOR_2"/>
+    <force name="force_force_torque_Q_THOR_3" noise="0" site="force_torque_Q_THOR_3"/>
+    <torque name="torque_force_torque_Q_THOR_3" noise="0" site="force_torque_Q_THOR_3"/>
+    <force name="force_force_torque_Q_THOR_4" noise="0" site="force_torque_Q_THOR_4"/>
+    <torque name="torque_force_torque_Q_THOR_4" noise="0" site="force_torque_Q_THOR_4"/>
+    <force name="force_force_torque_Q_THOR_5" noise="0" site="force_torque_Q_THOR_5"/>
+    <torque name="torque_force_torque_Q_THOR_5" noise="0" site="force_torque_Q_THOR_5"/>
+    <force name="force_force_torque_Q_THOR_6" noise="0" site="force_torque_Q_THOR_6"/>
+    <torque name="torque_force_torque_Q_THOR_6" noise="0" site="force_torque_Q_THOR_6"/>
+    <force name="force_force_torque_Q_THOR_7" noise="0" site="force_torque_Q_THOR_7"/>
+    <torque name="torque_force_torque_Q_THOR_7" noise="0" site="force_torque_Q_THOR_7"/>
+    <force name="force_force_torque_base_suct_Thor" noise="0" site="baseSuccionador_THOR"/>
+    <touch name="pressure_sensor_THOR" site="baseSuccionador_THOR"/>
+
+    <force name="force_force_torque_Q_ODIN_2" noise="0" site="force_torque_Q_ODIN_2"/>
+    <torque name="torque_force_torque_Q_ODIN_2" noise="0" site="force_torque_Q_ODIN_2"/>
+    <force name="force_force_torque_Q_ODIN_3" noise="0" site="force_torque_Q_ODIN_3"/>
+    <torque name="torque_force_torque_Q_ODIN_3" noise="0" site="force_torque_Q_ODIN_3"/>
+    <force name="force_force_torque_Q_ODIN_4" noise="0" site="force_torque_Q_ODIN_4"/>
+    <torque name="torque_force_torque_Q_ODIN_4" noise="0" site="force_torque_Q_ODIN_4"/>
+    <force name="force_force_torque_Q_ODIN_5" noise="0" site="force_torque_Q_ODIN_5"/>
+    <torque name="torque_force_torque_Q_ODIN_5" noise="0" site="force_torque_Q_ODIN_5"/>
+    <force name="force_force_torque_Q_ODIN_6" noise="0" site="force_torque_Q_ODIN_6"/>
+    <torque name="torque_force_torque_Q_ODIN_6" noise="0" site="force_torque_Q_ODIN_6"/>
+    <force name="force_force_torque_Q_ODIN_7" noise="0" site="force_torque_Q_ODIN_7"/>
+    <torque name="torque_force_torque_Q_ODIN_7" noise="0" site="force_torque_Q_ODIN_7"/>
+    <touch name="pressure_sensor_ODIN" site="baseSuccionador_ODIN"/>
+
+    <force name="force_force_torque_Q_LOKI_2" noise="0" site="force_torque_Q_LOKI_2"/>
+    <torque name="torque_force_torque_Q_LOKI_2" noise="0" site="force_torque_Q_LOKI_2"/>
+    <force name="force_force_torque_Q_LOKI_3" noise="0" site="force_torque_Q_LOKI_3"/>
+    <torque name="torque_force_torque_Q_LOKI_3" noise="0" site="force_torque_Q_LOKI_3"/>
+    <force name="force_force_torque_Q_LOKI_4" noise="0" site="force_torque_Q_LOKI_4"/>
+    <torque name="torque_force_torque_Q_LOKI_4" noise="0" site="force_torque_Q_LOKI_4"/>
+    <force name="force_force_torque_Q_LOKI_5" noise="0" site="force_torque_Q_LOKI_5"/>
+    <torque name="torque_force_torque_Q_LOKI_5" noise="0" site="force_torque_Q_LOKI_5"/>
+    <force name="force_force_torque_Q_LOKI_6" noise="0" site="force_torque_Q_LOKI_6"/>
+    <torque name="torque_force_torque_Q_LOKI_6" noise="0" site="force_torque_Q_LOKI_6"/>
+    <force name="force_force_torque_Q_LOKI_7" noise="0" site="force_torque_Q_LOKI_7"/>
+    <torque name="torque_force_torque_Q_LOKI_7" noise="0" site="force_torque_Q_LOKI_7"/>
+    <touch name="pressure_sensor_LOKI" site="baseSuccionador_LOKI"/>
+
+    <force name="force_force_torque_Q_FRIGG_2" noise="0" site="force_torque_Q_FRIGG_2"/>
+    <torque name="torque_force_torque_Q_FRIGG_2" noise="0" site="force_torque_Q_FRIGG_2"/>
+    <force name="force_force_torque_Q_FRIGG_3" noise="0" site="force_torque_Q_FRIGG_3"/>
+    <torque name="torque_force_torque_Q_FRIGG_3" noise="0" site="force_torque_Q_FRIGG_3"/>
+    <force name="force_force_torque_Q_FRIGG_4" noise="0" site="force_torque_Q_FRIGG_4"/>
+    <torque name="torque_force_torque_Q_FRIGG_4" noise="0" site="force_torque_Q_FRIGG_4"/>
+    <force name="force_force_torque_Q_FRIGG_5" noise="0" site="force_torque_Q_FRIGG_5"/>
+    <torque name="torque_force_torque_Q_FRIGG_5" noise="0" site="force_torque_Q_FRIGG_5"/>
+    <force name="force_force_torque_Q_FRIGG_6" noise="0" site="force_torque_Q_FRIGG_6"/>
+    <torque name="torque_force_torque_Q_FRIGG_6" noise="0" site="force_torque_Q_FRIGG_6"/>
+    <force name="force_force_torque_Q_FRIGG_7" noise="0" site="force_torque_Q_FRIGG_7"/>
+    <torque name="torque_force_torque_Q_FRIGG_7" noise="0" site="force_torque_Q_FRIGG_7"/>
+    <touch name="pressure_sensor_FRIGG" site="baseSuccionador_FRIGG"/>
+  </sensor>
+
+</mujoco>

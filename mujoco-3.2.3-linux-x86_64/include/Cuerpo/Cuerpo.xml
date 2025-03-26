@@ -1,0 +1,13 @@
+
+ 
+  <body name="Cuerpo" pos="0 0 0" euler="0 -0 0">>
+      <geom name="collision" class="unused" type="box" size="0.072 0.052 0.108" group="0" contype="1" conaffinity="1" friction="1 0.005 0.0001" pos="0 0.045 0" euler="0 -00 0" rgba="1 1 1 0"/>
+      <geom name="bodyvisual" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="0 -0 0" mesh="body1CGSimple" material="Naranja"/>
+      <body name="body2Link" pos="-0.000221 -0.115135 0.039" euler="90 -0 0">
+        <inertial pos="0 0 0" mass="0.001" fullinertia="1 1 1 0 0 0"/>
+        <geom name="collision_0" class="unused" type="box" size="0.016 0.017 0.006" group="0" contype="1" conaffinity="1" friction="1 0.005 0.0001" pos="0 0 0" euler="0 -00 0" rgba="1 1 1 0"/>
+        <geom name="bodyvisual_0" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0 0" euler="0 -00 0" mesh="body2CGSimple" material="Azul"/>
+        <joint name="P1" class="unused" type="hinge" pos="-0.00022 -3.9e-05 -0.0177" axis="0 0 1" limited="true" range="-180 180"/>
+      </body>
+    </body>
+  </body>

@@ -1,0 +1,24 @@
+#ifndef MODEL_H
+#define MODEL_H
+#include <QHostAddress>
+#include <QString>
+#include "btport.h"
+#include "romerinmodule.h"
+#include <list>
+
+class Module
+{
+public:
+   QString name;
+   QHostAddress ip;
+   BTport *port;
+   QString port_name;
+   RomerinModule *tab;
+   Module():name(""),ip(),port(0),port_name(""),tab(0){}
+};
+class Modules
+{
+static list<Module> 
+};
+
+#endif // MODEL_H

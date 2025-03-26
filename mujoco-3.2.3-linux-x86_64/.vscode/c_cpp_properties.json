@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/daniel/Documentos/TFG/mujoco-3.2.3-linux-x86_64/mujoco-3.2.3/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "browse": {"path":[      "${workspaceFolder}/**",
+            "/home/daniel/Documentos/TFG/mujoco-3.2.3-linux-x86_64/mujoco-3.2.3/include"],
+            "limitSymbolsToIncludedHeaders": true,"databaseFilename": ""}
+
+        }
+    ],
+    "version": 4
+}

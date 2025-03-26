@@ -1,0 +1,24 @@
+
+    <body name="suctionCupLink" pos="0 0 0" euler="0 -0 0">
+      <inertial pos="0 0 0" mass="0.28699999999999998" fullinertia="1 1 1 0 0 0"/>
+      <geom name="colision" class="unused" type="mesh" group="3" friction="1 0.0050000000000000001 0.0001" pos="0 0 0" euler="0 -0 0" mesh="suctionCupCGEnvSimple"/>
+      <geom name="Visual" class="unused" type="mesh" contype="0" conaffinity="0" group="0" pos="0 0.0060000000000000001 0" euler="-89.954373835539243 0 0" mesh="suctionCupCGSimple"/>
+      <body name="distanceSensor1" pos="0.038434999999999997 0.01 0.0094070000000000004" euler="89.954373835539243 -0 0">
+        <inertial pos="0 0 0" mass="1" fullinertia="1 1 1 0 0 0"/>
+        <geom name="Visual_0" class="unused" type="box" contype="0" conaffinity="0" group="0" size="0.0050000000000000001 0.0025000000000000001 0.0050000000000000001" pos="0 0 0" euler="0 -0 0"/>
+        <site name="laser1" class="unused" pos="0 0 0" euler="0 -0 0"/>
+      </body>
+      <body name="distanceSensor2" pos="-0.021916999999999999 0.01 0.037254000000000002" euler="89.954373835539243 -0 0">
+        <inertial pos="0 0 0" mass="1" fullinertia="1 1 1 0 0 0"/>
+        <geom name="Visual_1" class="unused" type="box" contype="0" conaffinity="0" group="0" size="0.0050000000000000001 0.0025000000000000001 0.0050000000000000001" pos="0 -6.9388939039072284e-18 6.9388939039072284e-18" euler="0 -0 0"/>
+        <site name="laser2" class="unused" pos="0 -6.9388939039072284e-18 6.9388939039072284e-18" euler="0 -0 0"/>
+      </body>
+      <body name="distanceSensor3" pos="-0.030632 0.01 -0.030828999999999999" euler="89.954373835539243 -0 0">
+        <inertial pos="0 0 0" mass="1" fullinertia="1 1 1 0 0 0"/>
+        <geom name="Visual_2" class="unused" type="box" contype="0" conaffinity="0" group="0" size="0.0050000000000000001 0.0025000000000000001 0.0050000000000000001" pos="0 0 -6.9388939039072284e-18" euler="0 -0 0"/>
+        <site name="laser3" class="unused" pos="0 0 -6.9388939039072284e-18" euler="0 -0 0"/>
+      </body>
+      <body name="tcpLink" pos="0 0.02 0" euler="0 -0 89.954373835539243">
+        <inertial pos="0 0 0" mass="1" fullinertia="1 1 1 0 0 0"/>
+      </body>
+    </body>

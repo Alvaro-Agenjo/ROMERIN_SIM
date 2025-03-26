@@ -1,0 +1,567 @@
+<?xml version="1.0"?>
+
+<sdf version="1.6">
+    <model name="romerinSimpleModule">
+      <static>false</static>
+      <self_collide>true</self_collide>
+
+      <link name='link1'>
+        <pose frame=''>0 0 0 -1.57 3.14 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.148</mass>
+          <!-- <inertia>
+            <ixx>67.737e-06</ixx>
+            <ixy>-0.178e-06</ixy>
+            <ixz>-0.001e-06</ixz>
+            <iyy>34.241e-06</iyy>
+            <iyz>0.450e-06</iyz>
+            <izz>59.199e-06</izz>
+          </inertia> -->
+        </inertial>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link1CGEnv.stl</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <pose frame=''>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link1CGSimple.dae</uri>
+              <!-- <scale>0.001 0.001 0.001</scale> -->
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='link2'>
+        <pose frame=''>0.000024 0.059603 -0.000968 -1.5708 3.1415 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.212</mass>
+          <!-- <inertia>
+            <ixx>172.392e-06</ixx>
+            <ixy>-2.23e-06</ixy>
+            <ixz>-0.018e-06</ixz>
+            <iyy>108.992e-06</iyy>
+            <iyz>-2.226e-06</iyz>
+            <izz>172.392e-06</izz>
+          </inertia> -->
+        </inertial>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link2CGEnv.stl</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link2CGSimple.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='link3'>
+        <pose frame=''>0.000922 0.225634 -0.002289 0 3.1415 0</pose>
+        <!-- <pose frame=''>0.000103 0.277552 0.011633 0 0 0</pose> -->
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.360</mass>
+          <!-- <inertia>
+            <ixx>2731.755e-06</ixx>
+            <ixy>-2.849e-06</ixy>
+            <ixz>0.107e-06</ixz>
+            <iyy>151.151e-06</iyy>
+            <iyz>55.407e-06</iyz>
+            <izz>2754.172e-06</izz>
+          </inertia> -->
+        </inertial>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 -1.5708 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link3CGEnv.stl</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <pose frame=''>0 0 0 -1.5708 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link3CGSimple.dae</uri>
+              <!-- <scale>0.001 0.001 0.001</scale> -->
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='link4'>
+        <pose frame=''>-0.000572 0.461801 0.005398 0 0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.535</mass>
+          <!-- <inertia>
+            <ixx>2136.429e-06</ixx>
+            <ixy>0.3e-06</ixy>
+            <ixz>-0.251e-06</ixz>
+            <iyy>213.299e-06</iyy>
+            <iyz>-34.948e-06</iyz>
+            <izz>2186.915e-06</izz>
+          </inertia> -->
+        </inertial>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link4CGEnv.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <pose frame=''>0 0 0 3.14159 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link4CGSimple.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='link5'>
+        <pose frame=''>-0.000339 0.581471 0.006316 0 0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.205</mass>
+          <!-- <inertia>
+            <ixx>103.957e-06</ixx>
+            <ixy>-0.06e-06</ixy>
+            <ixz>-0.026e-06</ixz>
+            <iyy>118.828e-06</iyy>
+            <iyz>0.256e-06</iyz>
+            <izz>165.261e-06</izz>
+          </inertia> -->
+        </inertial>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link5CGEnv.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <pose frame=''>0 0 0 3.14159 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link5CGSimple.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='link6'>
+        <pose frame=''>-0.001254 0.609694 0.0063 0 0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.120</mass>
+          <!-- <inertia>
+            <ixx>68.937e-06</ixx>
+            <ixy>0.002e-06</ixy>
+            <ixz>-0.014e-06</ixz>
+            <iyy>239.329e-06</iyy>
+            <iyz>0.018e-06</iyz>
+            <izz>258.09e-06</izz>
+          </inertia> -->
+        </inertial>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link6CGEnv.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <pose frame=''>0 0 0 3.14159 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link6CGSimple.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='link7'>
+        <pose frame=''>-0.001254 0.631398 0.006305 0 0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>0.005</mass>
+          <!-- <inertia>
+            <ixx>2.134e-06</ixx>
+            <ixy>0e-06</ixy>
+            <ixz>0e-06</ixz>
+            <iyy>4.255e-06</iyy>
+            <iyz>0e-06</iyz>
+            <izz>2.144e-06</izz>
+          </inertia> -->
+        </inertial>
+        <collision name='collision'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link7CGEnv.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <pose frame=''>0 0 0 3.14159 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>model://romerinSimple_v2/meshes/link7CGSimple.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+
+      <include>
+        <pose frame=''>0.000632 0.688553 -0.000858 0 0 0</pose>
+          <uri>model://suctionCupSimple</uri>
+          <name>suctionCup</name>
+      </include>
+
+      <!-- JOINTS -->
+      <joint name='Q2' type='revolute'>
+        <parent>link1</parent>
+        <child>link2</child>
+        <pose frame=''>0.0 -0.00142 -0.028793 0 -0 0</pose>
+        <axis>
+          <limit>
+            <lower>-1.9199</lower>
+            <upper>1.9199</upper>
+            <!-- <effort>6.0</effort> -->
+            <effort>9</effort>
+            <!-- <velocity>0.5</velocity> -->
+          </limit>
+          <xyz>0 1 0</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <damping>1.</damping>
+            <spring_reference>0.</spring_reference>
+            <spring_stiffness>0.2</spring_stiffness>
+            <friction>0.5</friction>
+          </dynamics>
+        </axis>
+        <sensor name="force_torque_Q2" type="force_torque">
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+          <update_rate>30</update_rate>
+          <always_on>true</always_on>
+          <visualize>false</visualize>
+        </sensor>
+        <physics>
+          <provide_feedback>true</provide_feedback>
+        </physics>
+      </joint>
+      <joint name='Q3' type='revolute'>
+        <parent>link2</parent>
+        <child>link3</child>
+        <pose frame=''>0.0 -0.127097 0.001061 0 -0 0</pose>
+        <axis>
+          <limit>
+            <lower>-1.9199</lower>
+            <upper>1.9199</upper>
+            <!-- <effort>9.9</effort> -->
+            <effort>15</effort>
+            <!-- <velocity>0.5</velocity> -->
+          </limit>
+          <xyz>-1 0 0</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <damping>1.</damping>
+            <spring_reference>0.</spring_reference>
+            <spring_stiffness>0.2</spring_stiffness>
+            <friction>0.5</friction>
+          </dynamics>
+        </axis>
+        <sensor name="force_torque_Q3" type="force_torque">
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+          <update_rate>30</update_rate>
+          <always_on>true</always_on>
+          <visualize>false</visualize>
+        </sensor>
+        <physics>
+          <provide_feedback>true</provide_feedback>
+        </physics>
+      </joint>
+      <joint name='Q4' type='revolute'>
+        <parent>link3</parent>
+        <child>link4</child>
+        <pose frame=''>0.00149 -0.142814 -0.021546 0 -0 0</pose>
+        <axis>
+          <limit>
+            <lower>-0.7854</lower>
+            <upper>2.9571</upper>
+            <!-- <effort>9.9</effort> -->
+            <effort>15</effort>
+            <!-- <velocity>0.5</velocity> -->
+          </limit>
+          <xyz>-1 0 0</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <damping>1.</damping>
+            <spring_reference>0.</spring_reference>
+            <spring_stiffness>0.2</spring_stiffness>
+            <friction>0.5</friction>
+          </dynamics>
+        </axis>
+        <sensor name="force_torque_Q4" type="force_torque">
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+          <update_rate>30</update_rate>
+          <always_on>true</always_on>
+          <visualize>false</visualize>
+        </sensor>
+        <physics>
+          <provide_feedback>true</provide_feedback>
+        </physics>
+      </joint>
+      <joint name='Q5' type='revolute'>
+        <parent>link4</parent>
+        <child>link5</child>
+        <pose frame=''>0.000165 0.017507 -0.000011 0 -0 0</pose>
+        <axis>
+          <limit>
+            <lower>-3.1416</lower>
+            <upper>3.1416</upper>
+            <!-- TORQUE = 1.5 * (4/3) -->
+            <effort>2.0</effort>
+            <!-- <effort>6</effort> -->
+            <!-- <velocity>0.5</velocity> -->
+          </limit>
+          <xyz>0 -1 0</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <damping>1.</damping>
+            <spring_reference>0.</spring_reference>
+            <spring_stiffness>0.2</spring_stiffness>
+            <friction>0.5</friction>
+          </dynamics>
+        </axis>
+        <sensor name="force_torque_Q5" type="force_torque">
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+          <update_rate>30</update_rate>
+          <always_on>true</always_on>
+          <visualize>false</visualize>
+        </sensor>
+        <physics>
+          <provide_feedback>true</provide_feedback>
+        </physics>
+      </joint>
+      <joint name='Q6' type='revolute'>
+        <parent>link5</parent>
+        <child>link6</child>
+        <pose frame=''>0.00108 -0.010716 0 0 -0 0</pose>
+        <axis>
+          <limit>
+            <!-- Lo modifico para que haya un poco de holgura -->
+            <!-- <lower>-1.5708</lower>
+            <upper>1.5708</upper> -->
+            <lower>-1.7</lower>
+            <upper>1.7</upper>
+            <!-- TORQUE = 1.5 * (3/2) * 2 -->
+            <effort>4.5</effort>
+            <!-- <effort>6</effort> -->
+            <!-- <velocity>0.5</velocity> -->
+          </limit>
+          <xyz>1 0 0</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <damping>1.</damping>
+            <spring_reference>0.</spring_reference>
+            <spring_stiffness>0.2</spring_stiffness>
+            <friction>0.5</friction>
+          </dynamics>
+        </axis>
+        <sensor name="force_torque_Q6" type="force_torque">
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+          <update_rate>30</update_rate>
+          <always_on>true</always_on>
+          <visualize>false</visualize>
+        </sensor>
+        <physics>
+          <provide_feedback>true</provide_feedback>
+        </physics>
+      </joint>
+      <joint name='Q7' type='revolute'>
+        <parent>link6</parent>
+        <child>link7</child>
+        <pose frame=''>0.00108 -0.03242 0 0 -0 0</pose>
+        <axis>
+          <limit>
+            <lower>-3.1416</lower>
+            <upper>3.1416</upper>
+            <!-- TORQUE = 1.5 * (3/2) * 2 -->
+            <effort>4.5</effort>
+            <!-- <effort>4</effort> -->
+            <!-- <velocity>0.5</velocity> -->
+            <dynamics>
+              <friction>0.5</friction>
+            </dynamics>
+          </limit>
+          <xyz>0 1 0</xyz>
+          <use_parent_model_frame>0</use_parent_model_frame>
+          <dynamics>
+            <damping>1.</damping>
+            <spring_reference>0.</spring_reference>
+            <spring_stiffness>0.2</spring_stiffness>
+            <friction>0.5</friction>
+          </dynamics>
+        </axis>
+        <sensor name="force_torque_Q7" type="force_torque">
+          <frame>sensor</frame>
+          <measure_direction>child_to_parent</measure_direction>
+          <update_rate>30</update_rate>
+          <always_on>true</always_on>
+          <visualize>false</visualize>
+        </sensor>
+        <physics>
+          <provide_feedback>true</provide_feedback>
+        </physics>
+      </joint>
+      <joint name='sc_attach' type='revolute'>
+        <parent>link7</parent>
+        <child>suctionCup::suctionCupLink</child>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <axis>
+          <limit>
+            <lower>-0.00001</lower>
+            <upper>0.00001</upper>
+          </limit>
+        </axis>
+        <physics>
+          <provide_feedback>true</provide_feedback>
+        </physics>
+      </joint>
+    </model>
+</sdf>
