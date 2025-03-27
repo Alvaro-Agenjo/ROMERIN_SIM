@@ -1,0 +1,19 @@
+<mujoco>
+    <default>
+        <default class="default"/>
+    </default>
+
+
+    <asset>
+        <texture name="grid_body" type="2d" builtin="checker" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" width="512" height="512"/>
+        <material name="grid_body" texture="grid_body" texrepeat="1 1" reflectance="0.2"/>
+        <!-- <material name="grid_body" class="unused" texture="grid_body" texrepeat="1 1" texuniform="true" reflectance="0.2"/> -->
+    </asset>
+
+
+    <worldbody>
+    <geom name="bodyfloor" class="default" type="plane" condim="3" size="0 0 0.0000005" material="grid_body" pos="0 0 0"/>
+    <geom name="test_1" type="box" size="1 1 1 " rgba="0.5 0.5 0.5 1" />
+    
+  </worldbody>
+</mujoco>
