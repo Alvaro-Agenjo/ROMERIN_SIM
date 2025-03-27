@@ -47,7 +47,7 @@
   </asset>
 
   <worldbody>
-  <geom name="bodyfloor" class="unused" type="plane" condim="3" size="0 0 0.0000005" material="grid_body" pos="0 0 0"/>
+  <geom name="bodyfloor" class="unused" type="plane" size="0 0 0.0000005" material="grid_body" pos="0 0 0"/>
     <body name="Robot" pos="0 0 0.5" euler="-90 0 0">
       <inertial pos="0 0 0" mass="0.898" fullinertia="1 1 1 0 0 0"/>
       <freejoint name="RobotSuelto"/>

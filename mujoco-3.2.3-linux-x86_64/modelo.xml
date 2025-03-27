@@ -1,19 +1,26 @@
 <mujoco>
-    <default>
-        <default class="default"/>
-    </default>
-
-
     <asset>
-        <texture name="grid_body" type="2d" builtin="checker" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" width="512" height="512"/>
-        <material name="grid_body" texture="grid_body" texrepeat="1 1" reflectance="0.2"/>
-        <!-- <material name="grid_body" class="unused" texture="grid_body" texrepeat="1 1" texuniform="true" reflectance="0.2"/> -->
+        <texture name="grid" type="2d" builtin="checker" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" width="512" height="512"/>
+        <material name="grid" texture="grid" texrepeat="1 1" reflectance="0.2"/>
     </asset>
 
 
     <worldbody>
-    <geom name="bodyfloor" class="default" type="plane" condim="3" size="0 0 0.0000005" material="grid_body" pos="0 0 0"/>
-    <geom name="test_1" type="box" size="1 1 1 " rgba="0.5 0.5 0.5 1" />
+    <geom name="bodyfloor" type="plane" condim="3" size="0 0 0.0000005" material="grid" pos="0 0 0"/>
+        <body>
+            <inertial pos="0 0 0" mass="0.898" fullinertia="1 1 1 0 0 0"/>
+            <freejoint name="RobotSuelto"/>
+            <geom name="Cuerpo" type="box" size="0.072 0.052 0.108" rgba="0.5 0.5 0.5 1" pos="0 0 2"/>
+            
+            <body name = "link_1">
+                <geom type="capsule" size="0.313 0.1" friction="1 0.005 0.00015" contype="1" conaffinity="1" pos="0 0 0" euler="90 -0 0" rgba="1 1 1 1"/>
+                <joint name="Q1" type="hinge" pos="0 0 0" axis="-1 0 0" limited="true" stiffness="0.2" range="-1 1" damping="1" frictionloss="0.5"/>
+            </body>
+        </body>
     
-  </worldbody>
+    </worldbody>
+
+    <actuator>
+        <motor name="motor_Q1" joint="Q1" ctrlrange="-7.3 7.3" ctrllimited="true"/>
+    </actuator>
 </mujoco>
