@@ -1,1 +1,6 @@
 - revisar primer geom de Patas, puede que haya cambiado el tamaño del stl por lo que aparece una figura gigante que envuelve el robot
+
+31/03/2025
+medir altura de la pata respecto al cuerpo (inicio link_1)
+01/04/2025
+A la hora de comprobar colisiones mujoco no comprueba las colisiones de cuerpos padre-hijo a excepcion del worldbody
