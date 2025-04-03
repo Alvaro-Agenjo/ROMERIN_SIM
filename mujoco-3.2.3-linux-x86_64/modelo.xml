@@ -23,5 +23,10 @@
        <motor name="motor_Q6" joint="Q6" />
     </actuator> 
 
+    <sensor>
+        <rangefinder name="prx-1" site="prx-1"/>
+        <rangefinder name="prx-2" site="prx-2"/>
+        <rangefinder name="prx-3" site="prx-3"/>
+    </sensor>
 
 </mujoco>
