@@ -1,34 +1,43 @@
 <body>
-    <geom name="cuerpo" type="box" size="0.075 0.075 0.01" rgba="1 1 1 1" pos="0 0 0"/>
-    <body name="att-m1" pos="0.075 0.075 0" euler="0 0 45">
-        <geom name="colision-b0" type="capsule" size="0.01 0.008" euler="0 90 0" rgba="1 1 1 1"/>
-        <body name="b1" pos="0.054 0 0" >
-            <geom name="colision-b1" type="capsule" size="0.01 0.022" euler="0 90 0" rgba="5 1 1 1"/>
+    <geom name="cuerpo" type="box" size="0.08 0.0825 0.035" rgba="1 1 1 1" pos="0 0 0"/>
+    <body name="att-m1" pos="0.08 0.0825 0" euler="0 0 45.8814">
+        <geom name="colision-b0" type="capsule" size="0.025 0.008" euler="0 90 0" rgba="1 1 1 1"/>
+        <body name="b1" pos="0.069 0 0" >
+            <inertial pos="0 0 0" mass="0.212" diaginertia="1 1 1"/>
+            <geom name="colision-b1" type="sphere" size="0.032" euler="0 90 0" rgba="1 1 1 1"/>
             <site name="sensor-b1" pos="-0.034 0 0"/>
-            <joint name="Q1" type="hinge" pos="-0.034 0 0" axis="0 0 1" stiffness="0.2" damping="1" frictionloss="0.5"/>
+            <joint name="Q1" type="hinge" pos="-0.034 0 0" axis="0 0 1" limited="true" range="-110 110" damping="1" frictionloss="0.5"/>
             <body name="b2" pos="0.034 0 0">
-                <geom name="colision-b2" type="capsule" size="0.01" fromto="0.012 0 0 0.224 0 -0.0129" rgba="1 5 1 0.8"/>
+                <inertial pos="0.118 0 -0.00745" mass="0.360" diaginertia="1 1 1"/>
+                <geom name="colision-b2" type="capsule" size="0.032" fromto="0.034 0 0 0.202 0 -0.0129" rgba="1 1 1 0.8"/>
                 <site name="sensor-b2" pos="0 0 0"/>
-                <joint name="Q2" type="hinge" pos="0 0 0" axis="0 -1 0" stiffness="0.2" damping="1" frictionloss="0.5"/>
+                <joint name="Q2" type="hinge" pos="0 0 0" axis="0 -1 0" limited="true" range="-110 110" damping="1" frictionloss="0.5"/>
                 <body name="b3" pos="0.236 0 -0.0149">
-                    <geom name="colision-b3" type="capsule" size="0.01" fromto="0.012 0 0 0.258 0 0.02" rgba="1 1 5 0.8"/>
+                    <inertial pos="0.14 0 0.011" mass="0.535" diaginertia="1 1 1"/>
+                    <geom name="colision-b3" type="capsule" size="0.032" fromto="0.034 0 0 0.199 0 0.02" rgba="1 1 1 0.8"/>
                     <site name="sensor-b3" pos="0 0 0"/>
-                    <joint name="Q3" type="hinge" pos="0 0 0" axis="0 1 -0" stiffness="0.2" damping="1" frictionloss="0.5"/>
+                    <joint name="Q3" type="hinge" pos="0 0 0" axis="0 1 -0" limited="true" range="-35 170" damping="1" frictionloss="0.5"/>
                     <body name="b4" pos="0.28 0 0.022">
-                        <geom name="colision-b4" type="sphere" size="0.01" euler="0 90 0" rgba="5 5 1 0.8"/>
+                        <inertial pos="0 0 0" mass="0.205" diaginertia="1 1 1"/>
+                        <geom name="colision-b4" type="sphere" size="0.035" rgba="1 1 1 0.8"/>
                         <site name="sensor-b4" pos="-0.28 0 0"/>
-                        <joint name="Q4" type="hinge" pos="-0.28 0 0" axis="-1 0 0" stiffness="0.2" damping="1" frictionloss="0.5"/>
+                        <joint name="Q4" type="hinge" pos="-0.28 0 0" axis="-1 0 0" limited="true" range="-180 180" damping="1" frictionloss="0.5"/>
                         <body name="b5" pos="0 0 0">
-                            <geom name="invisible-b5" type="sphere" size="0.001" euler="0 90 0" rgba="5 1 5 0.8"/>
+                            <inertial pos="0 0 0" mass="0.125" diaginertia="1 1 1"/>
+                            <geom name="invisible-b5" type="sphere" size="0.001" euler="0 90 0" rgba="1 1 1 0.8"/>
                             <site name="sensor-b5" pos="0 0 0"/>
-                            <joint name="Q5" type="hinge" pos="0 0 0" axis="0 -1 0" stiffness="0.2" damping="1" frictionloss="0.5"/>
+                            <joint name="Q5" type="hinge" pos="0 0 0" axis="0 -1 0" limited="true" range="-180 180" damping="1" frictionloss="0.5"/>
                             <body name="b6" pos="0.087 0 0">
-                                <geom name="colision-b6" type="cylinder" size="0.05 0.008" euler="0 90 0" rgba="1 5 5 0.2"/>
+                                <inertial pos="0 0 0" mass="0.287" diaginertia="1 1 1"/>
+                                <geom name="colision-b6_up" type="cylinder" size="0.047 0.0185" pos="-0.0295 0 0" euler="0 90 0" rgba="1 1 1 0.5"/>
+                                <geom name="colision-b6_contact" type="cylinder" size="0.095 0.011" euler="0 90 0" rgba="1 1 1 0.5"/>
+                                
                                 <site name="sensor-b6" pos="-0.087 0 0"/>
-                                <site name="prx-1" pos="0 0.025 0" euler="0 90 0"/>
-                                <site name="prx-2" pos="0 -0.02035 0.01452" euler="0 90 0"/>
-                                <site name="prx-3" pos="0 -0.00814 -0.02364" euler="0 90 0"/>
-                                <joint name="Q6" type="hinge" pos="-0.097 0 0" axis="1 0 -0" stiffness="0.2" damping="1" frictionloss="0.5"/>
+                                <site name="prx-1" pos="0 0.022 0.0381" euler="0 90 0"/>
+                                <site name="prx-2" pos="0 -0.044 0" euler="0 90 0"/>
+                                <site name="prx-3" pos="0 -0.022 -0.0381" euler="0 90 0"/>
+                                
+                                <joint name="Q6" type="hinge" pos="-0.087 0 0" axis="1 0 -0" limited="true" range="-180 180" damping="1" frictionloss="0.5"/>
                             </body>
                         </body>
                     </body>

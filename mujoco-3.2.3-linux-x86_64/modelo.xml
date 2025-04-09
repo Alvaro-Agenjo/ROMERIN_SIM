@@ -15,12 +15,12 @@
     </worldbody>
 
     <actuator>
-       <motor name="motor_Q1" joint="Q1" />
-       <motor name="motor_Q2" joint="Q2" />
-       <motor name="motor_Q3" joint="Q3" />
-       <motor name="motor_Q4" joint="Q4" />
-       <motor name="motor_Q5" joint="Q5" />
-       <motor name="motor_Q6" joint="Q6" />
+       <motor name="motor_Q1" joint="Q1" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+       <motor name="motor_Q2" joint="Q2" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+       <motor name="motor_Q3" joint="Q3" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+       <motor name="motor_Q4" joint="Q4" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+       <motor name="motor_Q5" joint="Q5" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+       <motor name="motor_Q6" joint="Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>
     </actuator> 
 
     <sensor>
