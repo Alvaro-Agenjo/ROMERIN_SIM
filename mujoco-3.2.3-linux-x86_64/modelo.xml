@@ -7,9 +7,22 @@
 
     <worldbody>
     <geom name="bodyfloor" type="plane" condim="3" size="0 0 0.0000005" material="grid" pos="0 0 0"/>
-        <body name="link" pos="0 0 2">
-            <include file="link.xml"/>
-            <freejoint name="RobotSuelto"/>
+        <body name="Cuerpo" pos="0 0 2">
+            <!-- <include file="cuerpo.xml"/> -->
+            <geom name="cuerpo" type="box" size="0.08 0.0825 0.035" rgba="1 1 1 1" pos="0 0 0"/>
+            <freejoint name="libre"/>
+            <body name="THOR" pos="0.08 0.0825 0" euler="0 0 45.8814">
+                <include file="THOR.xml"/>
+            </body>
+            <body name="LOKI" pos="0.08 0.0825 0" euler="0 0 -45.8814">
+                <include file="LOKI.xml"/>
+            </body>
+            <body name="ODIN" pos="0.08 0.0825 0" euler="0 0 135.8814">
+                <include file="ODIN.xml"/>
+            </body>
+            <body name="FRIGG" pos="0.08 0.0825 0" euler="0 0 -135.8814">
+                <include file="FRIGG.xml"/>
+            </body>
         </body>
     
     </worldbody>
@@ -24,9 +37,9 @@
     </actuator> 
 
     <sensor>
-        <rangefinder name="prx-1" site="prx-1"/>
-        <rangefinder name="prx-2" site="prx-2"/>
-        <rangefinder name="prx-3" site="prx-3"/>
+        <rangefinder name="prx_1" site="prx_1"/>
+        <rangefinder name="prx_2" site="prx_2"/>
+        <rangefinder name="prx_3" site="prx_3"/>
     </sensor>
 
 </mujoco>

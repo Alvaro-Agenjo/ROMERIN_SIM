@@ -170,7 +170,8 @@ float MotorSimulation::m2q(float goalAng){
   switch(id){
     case 1:{
       //printf("ang1: %f\n", (goalAng - M_PI) * romkin.rad2deg);
-        return (goalAng - M_PI);  
+      return (goalAng - M_PI);  
+      
     }
     break;
     case 2:{
