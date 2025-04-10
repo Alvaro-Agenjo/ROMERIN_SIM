@@ -1,1 +1,6 @@
-<geom name="cuerpo" type="box" size="0.08 0.0825 0.035" rgba="1 1 1 1" pos="0 0 0"/>
+<body name="cuerpo">
+    <geom name="ROMERIN" type="box" size="0.08 0.0825 0.035" rgba="1 1 1 1"/>
+    <body name="stand">
+        <geom name="Stand" type="box" size="0.08 0.0825 1" pos="0 0 -1.035" contype="2" conaffinity="2" rgba="0.5 0.5 0.5 0"/>
+    </body>
+</body>
