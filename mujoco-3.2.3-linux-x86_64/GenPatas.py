@@ -16,6 +16,7 @@ with open('link.xml', 'r') as PataGeneral:
         # Original = Original.replace('suctionCupLink', 'suctionCupLink_' + nombre)
         Original = Original.replace('sensor', 'sensor_' + nombre)
         Original = Original.replace('prx', nombre + '_prx')
+        Original = Original.replace('contact', 'contact_' + nombre)
         # Original = Original.replace('tcpLink', 'tcpLink_' + nombre + '_')
         # Original = Original.replace('Base', 'Base_' + nombre)
         # Original = Original.replace('baseSuccionador', 'baseSuccionador_' + nombre)

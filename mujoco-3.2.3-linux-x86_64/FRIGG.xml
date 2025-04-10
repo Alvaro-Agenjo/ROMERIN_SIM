@@ -6,38 +6,42 @@
     <inertial pos="0 0 0" mass="0.212" diaginertia="1 1 1"/>
     <geom name="colision_FRIGG_b1" type="sphere" size="0.032" euler="0 90 0" rgba="1 1 1 1"/>
     <site name="sensor_FRIGG_b1" pos="-0.034 0 0"/>
-    <joint name="FRIGG_Q1" type="hinge" pos="-0.034 0 0" axis="0 0 1" limited="true" range="-110 110" damping="1" frictionloss="0.5"/>
+    <joint name="FRIGG_Q1" type="hinge" pos="-0.034 0 0" axis="0 0 1" limited="true" range="-110 110" stiffness="1" damping="1" frictionloss="0.5"/>
     <body name="FRIGG_link_2" pos="0.034 0 0">
         <inertial pos="0.118 0 -0.00745" mass="0.360" diaginertia="1 1 1"/>
         <geom name="colision_FRIGG_b2" type="capsule" size="0.032" fromto="0.034 0 0 0.202 0 -0.0129" rgba="1 1 1 0.8"/>
         <site name="sensor_FRIGG_b2" pos="0 0 0"/>
-        <joint name="FRIGG_Q2" type="hinge" pos="0 0 0" axis="0 -1 0" limited="true" range="-110 110" damping="1" frictionloss="0.5"/>
+        <joint name="FRIGG_Q2" type="hinge" pos="0 0 0" axis="0 -1 0" limited="true" range="-110 110"  stiffness="1" damping="1" frictionloss="0.5"/>
         <body name="FRIGG_link_3" pos="0.236 0 -0.0149">
             <inertial pos="0.14 0 0.011" mass="0.535" diaginertia="1 1 1"/>
             <geom name="colision_FRIGG_b3" type="capsule" size="0.032" fromto="0.034 0 0 0.199 0 0.02" rgba="1 1 1 0.8"/>
             <site name="sensor_FRIGG_b3" pos="0 0 0"/>
-            <joint name="FRIGG_Q3" type="hinge" pos="0 0 0" axis="0 1 -0" limited="true" range="-35 170" damping="1" frictionloss="0.5"/>
+            <joint name="FRIGG_Q3" type="hinge" pos="0 0 0" axis="0 1 -0" limited="true" range="-35 170"  stiffness="1" damping="1" frictionloss="0.5"/>
             <body name="FRIGG_link_4" pos="0.28 0 0.022">
                 <inertial pos="0 0 0" mass="0.205" diaginertia="1 1 1"/>
                 <geom name="colision_FRIGG_b4" type="sphere" size="0.035" rgba="1 1 1 0.8"/>
                 <site name="sensor_FRIGG_b4" pos="-0.28 0 0"/>
-                <joint name="FRIGG_Q4" type="hinge" pos="-0.28 0 0" axis="-1 0 0" limited="true" range="-180 180" damping="1" frictionloss="0.5"/>
+                <joint name="FRIGG_Q4" type="hinge" pos="-0.28 0 0" axis="-1 0 0" limited="true" range="-180 180"  stiffness="1" damping="1" frictionloss="0.5"/>
                 <body name="FRIGG_link_5" pos="0 0 0">
                     <inertial pos="0 0 0" mass="0.125" diaginertia="1 1 1"/>
                     <geom name="noFRIGG_link_5" type="sphere" size="0.001" euler="0 90 0" rgba="1 1 1 0.8"/>
                     <site name="sensor_FRIGG_b5" pos="0 0 0"/>
-                    <joint name="FRIGG_Q5" type="hinge" pos="0 0 0" axis="0 -1 0" limited="true" range="-180 180" damping="1" frictionloss="0.5"/>
+                    <joint name="FRIGG_Q5" type="hinge" pos="0 0 0" axis="0 -1 0" limited="true" range="-180 180"  stiffness="1" damping="1" frictionloss="0.5"/>
                     <body name="FRIGG_link_6" pos="0.087 0 0">
                         <inertial pos="0 0 0" mass="0.287" diaginertia="1 1 1"/>
                         <geom name="colision_FRIGG_b6_up" type="cylinder" size="0.047 0.0185" pos="-0.0295 0 0" euler="0 90 0" rgba="1 1 1 0.5"/>
-                        <geom name="colision_FRIGG_b6_contact" type="cylinder" size="0.095 0.011" euler="0 90 0" rgba="1 1 1 0.5"/>
+                        <geom name="colision_FRIGG_b6_contact_FRIGG" type="cylinder" size="0.095 0.011" euler="0 90 0" rgba="1 1 1 0.5"/>
                         
                         <site name="sensor_FRIGG_b6" pos="-0.087 0 0"/>
-                        <site name="FRIGG_prx_1" pos="0 0.022 0.0381" euler="0 90 0"/>
-                        <site name="FRIGG_prx_2" pos="0 -0.044 0" euler="0 90 0"/>
-                        <site name="FRIGG_prx_3" pos="0 -0.022 -0.0381" euler="0 90 0"/>
-                        
-                        <joint name="FRIGG_Q6" type="hinge" pos="-0.087 0 0" axis="1 0 -0" limited="true" range="-180 180" damping="1" frictionloss="0.5"/>
+                                                
+                        <joint name="FRIGG_Q6" type="hinge" pos="-0.087 0 0" axis="1 0 -0" limited="true" range="-180 180"  stiffness="1" damping="1" frictionloss="0.5"/>
+                        <body name="adhesion_contact_FRIGG" pos="0.011 0 0">
+                            <geom name="contact_FRIGG" type="cylinder" size="0.09 0.0005" pos="0.0005 0 0" euler="0 90 0" rgba="5 5 5 0.5"/>
+
+                            <site name="FRIGG_prx_1" pos="0.0001 0.022 0.0381" euler="0 90 0"/>
+                            <site name="FRIGG_prx_2" pos="0.0001 -0.044 0" euler="0 90 0"/>
+                            <site name="FRIGG_prx_3" pos="0.0001 0.022 -0.0381" euler="0 90 0"/>
+                        </body>
                     </body>
                 </body>
             </body>
