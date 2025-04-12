@@ -11,16 +11,16 @@
             <include file="cuerpo.xml"/>
             <freejoint name="libre"/>
             <body name="THOR" pos="0.08 0.0825 0" euler="0 0 45.8814">
-                <include file="THOR.xml"/>
+                <include file="include/Pata/THOR.xml"/>
             </body>
             <body name="LOKI" pos="0.08 -0.0825 0" euler="0 0 -45.8814">
-                <include file="LOKI.xml"/>
+                <include file="include/Pata/LOKI.xml"/>
             </body>
             <body name="ODIN" pos="-0.08 -0.0825 0" euler="0 0 -135.8814">
-                <include file="ODIN.xml"/>
+                <include file="include/Pata/ODIN.xml"/>
             </body>
             <body name="FRIGG" pos="-0.08 0.0825 0" euler="0 0 135.8814">
-                <include file="FRIGG.xml"/>
+                <include file="include/Pata/FRIGG.xml"/>
             </body>
         </body>
     
@@ -68,8 +68,10 @@
 
     <sensor>
         
-        <torque name="Q1_THOR_torque" site="sensor_THOR_b1"/>
-        <torque name="Q2_THOR_torque" site="sensor_THOR_b2"/>
+        <!-- <torque name="Q1_THOR_torque" site="sensor_THOR_b1"/>
+        <force name="Q1_THOR_force" site="sensor_THOR_b1"/> -->
+        <touch name="Preassure_THOR" site="THOR_prss"/>
+        <!-- <torque name="Q2_THOR_torque" site="sensor_THOR_b2"/>
         <torque name="Q3_THOR_torque" site="sensor_THOR_b3"/>
         <torque name="Q4_THOR_torque" site="sensor_THOR_b4"/>
         <torque name="Q5_THOR_torque" site="sensor_THOR_b5"/>
@@ -92,7 +94,7 @@
 
         <rangefinder name="FRIGG_prx_1" site="FRIGG_prx_1"/>
         <rangefinder name="FRIGG_prx_2" site="FRIGG_prx_2"/>
-        <rangefinder name="FRIGG_prx_3" site="FRIGG_prx_3"/>
+        <rangefinder name="FRIGG_prx_3" site="FRIGG_prx_3"/> -->
     </sensor>
 
 </mujoco>
