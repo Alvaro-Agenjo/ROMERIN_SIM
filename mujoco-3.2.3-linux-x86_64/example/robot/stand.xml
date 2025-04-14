@@ -11,16 +11,16 @@
             <include file="cuerpo.xml"/>
             <freejoint name="libre"/>
             <body name="THOR" pos="0.08 0.0825 0" euler="0 0 45.8814">
-                <include file="include/Pata/THOR.xml"/>
+                <include file="THOR.xml"/>
             </body>
             <body name="LOKI" pos="0.08 -0.0825 0" euler="0 0 -45.8814">
-                <include file="include/Pata/LOKI.xml"/>
+                <include file="LOKI.xml"/>
             </body>
             <body name="ODIN" pos="-0.08 -0.0825 0" euler="0 0 -135.8814">
-                <include file="include/Pata/ODIN.xml"/>
+                <include file="ODIN.xml"/>
             </body>
             <body name="FRIGG" pos="-0.08 0.0825 0" euler="0 0 135.8814">
-                <include file="include/Pata/FRIGG.xml"/>
+                <include file="FRIGG.xml"/>
             </body>
         </body>
     
@@ -69,88 +69,32 @@
     <sensor>
         
         <!-- <torque name="Q1_THOR_torque" site="sensor_THOR_b1"/>
-        <torque name="Q2_THOR_torque" site="sensor_THOR_b2"/>
+        <force name="Q1_THOR_force" site="sensor_THOR_b1"/> -->
+        <touch name="Preassure_THOR" site="THOR_prss"/>
+        <!-- <torque name="Q2_THOR_torque" site="sensor_THOR_b2"/>
         <torque name="Q3_THOR_torque" site="sensor_THOR_b3"/>
         <torque name="Q4_THOR_torque" site="sensor_THOR_b4"/>
         <torque name="Q5_THOR_torque" site="sensor_THOR_b5"/>
         <torque name="Q6_THOR_torque" site="sensor_THOR_b6"/>
         
-        <force name="Q1_THOR_force" site="sensor_THOR_b1"/>
-        <force name="Q2_THOR_force" site="sensor_THOR_b2"/>
-        <force name="Q3_THOR_force" site="sensor_THOR_b3"/>
-        <force name="Q4_THOR_force" site="sensor_THOR_b4"/>
-        <force name="Q5_THOR_force" site="sensor_THOR_b5"/>
-        <force name="Q6_THOR_force" site="sensor_THOR_b6"/>
-
         <rangefinder name="THOR_prx_1" site="THOR_prx_1"/>
         <rangefinder name="THOR_prx_2" site="THOR_prx_2"/>
-        <rangefinder name="THOR_prx_3" site="THOR_prx_3"/> -->
+        <rangefinder name="THOR_prx_3" site="THOR_prx_3"/>
 
-        <touch name="Preassure_THOR" site="THOR_prss"/>
-
-
-
-        <!-- <torque name="Q1_LOKI_torque" site="sensor_LOKI_b1"/>
-        <torque name="Q2_LOKI_torque" site="sensor_LOKI_b2"/>
-        <torque name="Q3_LOKI_torque" site="sensor_LOKI_b3"/>
-        <torque name="Q4_LOKI_torque" site="sensor_LOKI_b4"/>
-        <torque name="Q5_LOKI_torque" site="sensor_LOKI_b5"/>
-        <torque name="Q6_LOKI_torque" site="sensor_LOKI_b6"/>
-        
-        <force name="Q1_LOKI_force" site="sensor_LOKI_b1"/>
-        <force name="Q2_LOKI_force" site="sensor_LOKI_b2"/>
-        <force name="Q3_LOKI_force" site="sensor_LOKI_b3"/>
-        <force name="Q4_LOKI_force" site="sensor_LOKI_b4"/>
-        <force name="Q5_LOKI_force" site="sensor_LOKI_b5"/>
-        <force name="Q6_LOKI_force" site="sensor_LOKI_b6"/>
 
         <rangefinder name="LOKI_prx_1" site="LOKI_prx_1"/>
         <rangefinder name="LOKI_prx_2" site="LOKI_prx_2"/>
         <rangefinder name="LOKI_prx_3" site="LOKI_prx_3"/>
 
-        <touch name="Preassure_LOKI" site="LOKI_prss"/>
-
-
-        <torque name="Q1_ODIN_torque" site="sensor_ODIN_b1"/>
-        <torque name="Q2_ODIN_torque" site="sensor_ODIN_b2"/>
-        <torque name="Q3_ODIN_torque" site="sensor_ODIN_b3"/>
-        <torque name="Q4_ODIN_torque" site="sensor_ODIN_b4"/>
-        <torque name="Q5_ODIN_torque" site="sensor_ODIN_b5"/>
-        <torque name="Q6_ODIN_torque" site="sensor_ODIN_b6"/>
-        
-        <force name="Q1_ODIN_force" site="sensor_ODIN_b1"/>
-        <force name="Q2_ODIN_force" site="sensor_ODIN_b2"/>
-        <force name="Q3_ODIN_force" site="sensor_ODIN_b3"/>
-        <force name="Q4_ODIN_force" site="sensor_ODIN_b4"/>
-        <force name="Q5_ODIN_force" site="sensor_ODIN_b5"/>
-        <force name="Q6_ODIN_force" site="sensor_ODIN_b6"/>
 
         <rangefinder name="ODIN_prx_1" site="ODIN_prx_1"/>
         <rangefinder name="ODIN_prx_2" site="ODIN_prx_2"/>
         <rangefinder name="ODIN_prx_3" site="ODIN_prx_3"/>
 
-        <touch name="Preassure_ODIN" site="ODIN_prss"/>
-
-
-        <torque name="Q1_FRIGG_torque" site="sensor_FRIGG_b1"/>
-        <torque name="Q2_FRIGG_torque" site="sensor_FRIGG_b2"/>
-        <torque name="Q3_FRIGG_torque" site="sensor_FRIGG_b3"/>
-        <torque name="Q4_FRIGG_torque" site="sensor_FRIGG_b4"/>
-        <torque name="Q5_FRIGG_torque" site="sensor_FRIGG_b5"/>
-        <torque name="Q6_FRIGG_torque" site="sensor_FRIGG_b6"/>
-        
-        <force name="Q1_FRIGG_force" site="sensor_FRIGG_b1"/>
-        <force name="Q2_FRIGG_force" site="sensor_FRIGG_b2"/>
-        <force name="Q3_FRIGG_force" site="sensor_FRIGG_b3"/>
-        <force name="Q4_FRIGG_force" site="sensor_FRIGG_b4"/>
-        <force name="Q5_FRIGG_force" site="sensor_FRIGG_b5"/>
-        <force name="Q6_FRIGG_force" site="sensor_FRIGG_b6"/>
 
         <rangefinder name="FRIGG_prx_1" site="FRIGG_prx_1"/>
         <rangefinder name="FRIGG_prx_2" site="FRIGG_prx_2"/>
-        <rangefinder name="FRIGG_prx_3" site="FRIGG_prx_3"/>
-
-        <touch name="Preassure_FRIGG" site="FRIGG_prss"/> -->
+        <rangefinder name="FRIGG_prx_3" site="FRIGG_prx_3"/> -->
     </sensor>
 
 </mujoco>
