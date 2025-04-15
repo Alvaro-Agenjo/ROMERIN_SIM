@@ -17,8 +17,8 @@ void MotorSimulation::loop(int number)
   float velocityRad;
 
   if(moduleName == "THOR") num = number + 0;
-  else if(moduleName == "ODIN") num = number + 6;
-  else if(moduleName == "LOKI") num = number + 12;
+  else if(moduleName == "LOKI") num = number + 6;
+  else if(moduleName == "ODIN") num = number + 12;
   else if(moduleName == "FRIGG") num = number + 18;
 
     float Kp_pos = 18;
@@ -80,10 +80,15 @@ void MotorSimulation::loop(int number)
 
 float MotorSimulation::getAngle(int numMotor){
   
-  const char* Q1[] = {"Q_THOR_2", "Q_THOR_3", "Q_THOR_4", "Q_THOR_5", "Q_THOR_6", "Q_THOR_7"};
-  const char* Q2[] = {"Q_ODIN_2", "Q_ODIN_3", "Q_ODIN_4", "Q_ODIN_5", "Q_ODIN_6", "Q_ODIN_7"};
-  const char* Q3[] = {"Q_LOKI_2", "Q_LOKI_3", "Q_LOKI_4", "Q_LOKI_5", "Q_LOKI_6", "Q_LOKI_7"};
-  const char* Q4[] = {"Q_FRIGG_2", "Q_FRIGG_3", "Q_FRIGG_4", "Q_FRIGG_5", "Q_FRIGG_6", "Q_FRIGG_7"};
+  // const char* Q1[] = {"Q_THOR_2", "Q_THOR_3", "Q_THOR_4", "Q_THOR_5", "Q_THOR_6", "Q_THOR_7"};
+  // const char* Q2[] = {"Q_ODIN_2", "Q_ODIN_3", "Q_ODIN_4", "Q_ODIN_5", "Q_ODIN_6", "Q_ODIN_7"};
+  // const char* Q3[] = {"Q_LOKI_2", "Q_LOKI_3", "Q_LOKI_4", "Q_LOKI_5", "Q_LOKI_6", "Q_LOKI_7"};
+  // const char* Q4[] = {"Q_FRIGG_2", "Q_FRIGG_3", "Q_FRIGG_4", "Q_FRIGG_5", "Q_FRIGG_6", "Q_FRIGG_7"};
+
+  const char* Q1[] = {"THOR_Q1", "THOR_Q2", "THOR_Q3", "THOR_Q4", "THOR_Q5", "THOR_Q6"};
+  const char* Q2[] = {"ODIN_Q1", "ODIN_Q2", "ODIN_Q3", "ODIN_Q4", "ODIN_Q5", "ODIN_Q6"};
+  const char* Q3[] = {"LOKI_Q1", "LOKI_Q2", "LOKI_Q3", "LOKI_Q4", "LOKI_Q5", "LOKI_Q6"};
+  const char* Q4[] = {"FRIGG_Q1", "FRIGG_Q2", "FRIGG_Q3", "FRIGG_Q4", "FRIGG_Q5", "FRIGG_Q6"};
   
   const char* Q[6];
 
@@ -123,10 +128,15 @@ float MotorSimulation::getAngle(int numMotor){
 
 float MotorSimulation::getVelocity(int numMotor){
 
-  const char* Q1[] = {"Q_THOR_2", "Q_THOR_3", "Q_THOR_4", "Q_THOR_5", "Q_THOR_6", "Q_THOR_7"};
-  const char* Q2[] = {"Q_ODIN_2", "Q_ODIN_3", "Q_ODIN_4", "Q_ODIN_5", "Q_ODIN_6", "Q_ODIN_7"};
-  const char* Q3[] = {"Q_LOKI_2", "Q_LOKI_3", "Q_LOKI_4", "Q_LOKI_5", "Q_LOKI_6", "Q_LOKI_7"};
-  const char* Q4[] = {"Q_FRIGG_2", "Q_FRIGG_3", "Q_FRIGG_4", "Q_FRIGG_5", "Q_FRIGG_6", "Q_FRIGG_7"};
+  // const char* Q1[] = {"THOR_2", "Q_THOR_3", "Q_THOR_4", "Q_THOR_5", "Q_THOR_6", "Q_THOR_7"};
+  // const char* Q2[] = {"Q_ODIN_2", "Q_ODIN_3", "Q_ODIN_4", "Q_ODIN_5", "Q_ODIN_6", "Q_ODIN_7"};
+  // const char* Q3[] = {"Q_LOKI_2", "Q_LOKI_3", "Q_LOKI_4", "Q_LOKI_5", "Q_LOKI_6", "Q_LOKI_7"};
+  // const char* Q4[] = {"Q_FRIGG_2", "Q_FRIGG_3", "Q_FRIGG_4", "Q_FRIGG_5", "Q_FRIGG_6", "Q_FRIGG_7"};
+  
+  const char* Q1[] = {"THOR_Q1", "THOR_Q2", "THOR_Q3", "THOR_Q4", "THOR_Q5", "THOR_Q6"};
+  const char* Q2[] = {"ODIN_Q1", "ODIN_Q2", "ODIN_Q3", "ODIN_Q4", "ODIN_Q5", "ODIN_Q6"};
+  const char* Q3[] = {"LOKI_Q1", "LOKI_Q2", "LOKI_Q3", "LOKI_Q4", "LOKI_Q5", "LOKI_Q6"};
+  const char* Q4[] = {"FRIGG_Q1", "FRIGG_Q2", "FRIGG_Q3", "FRIGG_Q4", "FRIGG_Q5", "FRIGG_Q6"};
   
   const char* Q[6];
 
@@ -329,6 +339,7 @@ void RomJoints::loop(QString module_name)
   else if(moduleName == "ODIN") j = 6;
   else if(moduleName == "LOKI") j = 12;
   else if(moduleName == "FRIGG") j = 18;
+  
 
   //dynamixel simulations.
   int numMotor = 0;
@@ -461,8 +472,8 @@ void SuctionSimulation::setModel(mjModel* m, mjData* d, QString n){
 void SuctionSimulation::loop(QString name){
   int num;
   if(name == "THOR"){ modelData->ctrl[24] = (0.1 * goal_suctForce); /*printf("Fuerza de succion: %f\n", extractSuctData());*/}
-  else if(name == "ODIN") modelData->ctrl[25] = (0.1 * goal_suctForce);
-  else if(name == "LOKI") modelData->ctrl[26] = (0.1 * goal_suctForce);
+  else if(name == "LOKI") modelData->ctrl[25] = (0.1 * goal_suctForce);
+  else if(name == "ODIN") modelData->ctrl[26] = (0.1 * goal_suctForce);
   else if(name == "FRIGG") modelData->ctrl[27] = (0.1 * goal_suctForce);
   else printf("MODULE NAME INCORRECTO");
 }
@@ -471,10 +482,15 @@ void SuctionSimulation::loop(QString name){
 
 float SuctionSimulation::extractSuctData() {
     const char* name;
-    if(moduleName == "THOR") name = "pressure_sensor_THOR";
-    else if(moduleName == "ODIN") name = "pressure_sensor_ODIN";
-    else if(moduleName == "LOKI") name = "pressure_sensor_LOKI";
-    else if(moduleName == "FRIGG") name = "pressure_sensor__FRIGG";
+    // if(moduleName == "THOR") name = "pressure_sensor_THOR";
+    // else if(moduleName == "ODIN") name = "pressure_sensor_ODIN";
+    // else if(moduleName == "LOKI") name = "pressure_sensor_LOKI";
+    // else if(moduleName == "FRIGG") name = "pressure_sensor_FRIGG";
+
+    if(moduleName == "THOR") name = "Preassure_THOR";
+    else if(moduleName == "ODIN") name = "Preassure_ODIN";
+    else if(moduleName == "LOKI") name = "Preassure_LOKI";
+    else if(moduleName == "FRIGG") name = "Preassure_FRIGG";
 
     int sensor_id = mj_name2id(model, mjOBJ_SENSOR, name);
 

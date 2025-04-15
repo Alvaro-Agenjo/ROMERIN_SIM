@@ -57,7 +57,7 @@ struct InfoPatas{
 };
 
 struct Reposo{
-    int Q1;
+    mjtNum Q1;
     mjtNum Q2;
     mjtNum Q3;
     mjtNum Q4;

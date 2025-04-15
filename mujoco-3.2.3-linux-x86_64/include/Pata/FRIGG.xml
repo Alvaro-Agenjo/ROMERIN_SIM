@@ -40,7 +40,7 @@
                                 <site name="FRIGG_prx_1" pos="0.0001 0.022 0.0381" euler="0 90 0"/>
                                 <site name="FRIGG_prx_2" pos="0.0001 -0.044 0" euler="0 90 0"/>
                                 <site name="FRIGG_prx_3" pos="0.0001 0.022 -0.0381" euler="0 90 0"/>
-                                <site name="FRIGG_prss" type="cylinder" size="0.091 0.0005" pos="0.002 0 0" euler="0 90 0" rgba="1 1 1 0.4"/>
+                                <site name="FRIGG_prss" type="cylinder" size="0.095 0.0005" pos="0.002 0 0" euler="0 90 0" rgba="1 1 1 0"/>
                             </body>
                         </body>
                     </body>

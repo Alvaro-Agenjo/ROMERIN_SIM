@@ -8,19 +8,19 @@
     <worldbody>
     <geom name="bodyfloor" type="plane" condim="3" contype="3" conaffinity="3" size="0 0 0.0000005" material="grid" pos="0 0 0"/>
         <body name="Cuerpo" pos="0 0 2.5">
-            <include file="cuerpo.xml"/>
+            <include file="../Cuerpo/cuerpo.xml"/>
             <freejoint name="libre"/>
             <body name="THOR" pos="0.08 0.0825 0" euler="0 0 45.8814">
-                <include file="include/Pata/THOR.xml"/>
+                <include file="../Pata/THOR.xml"/>
             </body>
             <body name="LOKI" pos="0.08 -0.0825 0" euler="0 0 -45.8814">
-                <include file="include/Pata/LOKI.xml"/>
+                <include file="../Pata/LOKI.xml"/>
             </body>
             <body name="ODIN" pos="-0.08 -0.0825 0" euler="0 0 -135.8814">
-                <include file="include/Pata/ODIN.xml"/>
+                <include file="../Pata/ODIN.xml"/>
             </body>
             <body name="FRIGG" pos="-0.08 0.0825 0" euler="0 0 135.8814">
-                <include file="include/Pata/FRIGG.xml"/>
+                <include file="../Pata/FRIGG.xml"/>
             </body>
         </body>
     
@@ -68,7 +68,7 @@
 
     <sensor>
         
-        <!-- <torque name="Q1_THOR_torque" site="sensor_THOR_b1"/>
+        <torque name="Q1_THOR_torque" site="sensor_THOR_b1"/>
         <torque name="Q2_THOR_torque" site="sensor_THOR_b2"/>
         <torque name="Q3_THOR_torque" site="sensor_THOR_b3"/>
         <torque name="Q4_THOR_torque" site="sensor_THOR_b4"/>
@@ -84,13 +84,13 @@
 
         <rangefinder name="THOR_prx_1" site="THOR_prx_1"/>
         <rangefinder name="THOR_prx_2" site="THOR_prx_2"/>
-        <rangefinder name="THOR_prx_3" site="THOR_prx_3"/> -->
+        <rangefinder name="THOR_prx_3" site="THOR_prx_3"/>
 
         <touch name="Preassure_THOR" site="THOR_prss"/>
 
 
 
-        <!-- <torque name="Q1_LOKI_torque" site="sensor_LOKI_b1"/>
+        <torque name="Q1_LOKI_torque" site="sensor_LOKI_b1"/>
         <torque name="Q2_LOKI_torque" site="sensor_LOKI_b2"/>
         <torque name="Q3_LOKI_torque" site="sensor_LOKI_b3"/>
         <torque name="Q4_LOKI_torque" site="sensor_LOKI_b4"/>
@@ -150,7 +150,7 @@
         <rangefinder name="FRIGG_prx_2" site="FRIGG_prx_2"/>
         <rangefinder name="FRIGG_prx_3" site="FRIGG_prx_3"/>
 
-        <touch name="Preassure_FRIGG" site="FRIGG_prss"/> -->
+        <touch name="Preassure_FRIGG" site="FRIGG_prss"/>
     </sensor>
 
 </mujoco>

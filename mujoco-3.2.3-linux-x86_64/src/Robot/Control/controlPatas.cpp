@@ -19,6 +19,15 @@ Control::Control(){
     reposo.Q6 = 0; 
     reposo.suct = 0;
 
+    //Estado de reposo
+    // reposo.Q1 = 0;
+    // reposo.Q2 = 2;
+    // reposo.Q3 = -4.01;
+    // reposo.Q4 = 0;
+    // reposo.Q5 = -1.45; 
+    // reposo.Q6 = 0; 
+    // reposo.suct = 0;
+
     // Inicialización de atributos del hilo
     pthread_attr_init(&hilo);
     pthread_attr_setdetachstate(&hilo, PTHREAD_CREATE_JOINABLE);
@@ -31,9 +40,16 @@ Control::Control(){
 
     numPata = 0;
 
+
+    // modules.append(ModuleSimulator{0,"THOR",1});
+    // modules.append(ModuleSimulator{6, "ODIN",2});
+    // modules.append(ModuleSimulator{12, "LOKI",3});
+    // modules.append(ModuleSimulator{18, "FRIGG",4});
+
+
     modules.append(ModuleSimulator{0,"THOR",1});
-    modules.append(ModuleSimulator{6, "ODIN",2});
-    modules.append(ModuleSimulator{12, "LOKI",3});
+    modules.append(ModuleSimulator{6, "LOKI",2});
+    modules.append(ModuleSimulator{12, "ODIN",3});
     modules.append(ModuleSimulator{18, "FRIGG",4});
 
     openJson();
@@ -112,10 +128,15 @@ void* Control::getInfoPatas(void* args){
     Control* control = static_cast<Control*>(args);
     while(control->getVentanaAbierta()){
         //Posicion de succionadores
-        control->getPosicion("baseSuccionador_THOR");
-        control->getPosicion("baseSuccionador_ODIN");
-        control->getPosicion("baseSuccionador_LOKI");
-        control->getPosicion("baseSuccionador_FRIGG");
+        // control->getPosicion("baseSuccionador_THOR");
+        // control->getPosicion("baseSuccionador_ODIN");
+        // control->getPosicion("baseSuccionador_LOKI");
+        // control->getPosicion("baseSuccionador_FRIGG");
+
+        control->getPosicion("THOR_prss");
+        control->getPosicion("LOKI_prss");
+        control->getPosicion("ODIN_prss");
+        control->getPosicion("FRIGG_prss");
 
         //Succionadores
         mjtNum suction_force1 = control->param->d->actuator_force[24];
