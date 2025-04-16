@@ -1,1 +1,0 @@
-- revisar primer geom de Patas, puede que haya cambiado el tamaño del stl por lo que aparece una figura gigante que envuelve el robot
