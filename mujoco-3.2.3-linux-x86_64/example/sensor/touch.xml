@@ -1,0 +1,22 @@
+<mujoco>
+    <worldbody>
+        
+        <geom name="floor" type="box" size="2 2 0.1" rgba="1 1 5 1"/>
+        <body name="caja" pos="0 0 0.8" euler="0 45 0">
+            <inertial pos="0 0 0" mass="1" diaginertia="1 1 1"/>
+            <geom name="caja" type="box" size="0.2 0.2 0.4" rgba="5 1 1 1"/>
+            <site name="under_box" type="box" pos="0 0 -0.42" size="0.21 0.21 0.01" rgba="1 5 1 0.2"/> 
+            <freejoint name="q0"/>
+        </body>
+    </worldbody>
+
+    <sensor>
+        <force name="force" site="under_box"/>
+        <touch name="touch" site="under_box"/>
+        <!-- <torque name="torque" site="under_box2"/> -->
+    </sensor>
+
+    <actuator>
+        <adhesion name="ad" body="caja" ctrlrange="0 2" />
+    </actuator>
+</mujoco>

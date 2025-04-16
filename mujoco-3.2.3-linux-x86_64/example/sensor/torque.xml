@@ -1,0 +1,30 @@
+<mujoco>
+    <worldbody>
+        <geom name="mastil" type="box" size="0.1 0.1 0.8" rgba="5 1 1 1"/>
+        <body name="brazo" pos="0.13 0 0.8">
+            <inertial pos="0.4 0 0" mass="1" diaginertia="1 1 1"/>
+            <geom name="brazo" type="box" size="0.4 0.02 0.02" pos="0.4 0 0" rgba="5 1 1 1"/>
+            <site name="under_box"/> 
+            <joint name="articulacion" type="hinge" axis="0 1 0"/>
+            <body name="brazo2" pos="0.83 0 0">
+                <inertial pos="0.4 0 0" mass="1" diaginertia="1 1 1"/>
+                <geom name="brazo2" type="box" size="0.4 0.02 0.02" pos="0.4 0 0" rgba="5 1 1 1"/>
+                <site name="under_box2"/> 
+                <joint name="articulacion2" type="hinge" axis="0 1 0"/>
+            </body>
+        </body>
+    </worldbody>
+
+    <sensor>
+        <force name="force" site="under_box"/>
+        <torque name="torque" site="under_box"/>
+
+        <force name="force2" site="under_box2"/>
+        <torque name="torque2" site="under_box2"/>
+    </sensor>
+
+    <actuator>
+        <motor name="motor" joint="articulacion" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="motor2" joint="articulacion2" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+    </actuator>
+</mujoco>
