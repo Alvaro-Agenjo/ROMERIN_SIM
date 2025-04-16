@@ -18,3 +18,6 @@ añadido stand para comparar real y simulado.
 Sensor touch: debe de tener una superficie igual(un poco mayor) a la superficie del objeto donde queremos contabilizar la fuerza. 
 Contabiliza la fuerza normal de los puntos de contacto entre la geom  del site y otra siempre que dichos puntos esten dentro del volumen del site o el rayo normal al contacto intersecte el volumen del site
 a la superficie como un valor positivo, si no hay contacto el valor es nulo. 
+
+14/04/2025
+Sensor torque: al colocarlo en un joint solo mide el par producido por el motor
