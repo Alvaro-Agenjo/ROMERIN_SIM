@@ -19,14 +19,6 @@ Control::Control(){
     reposo.Q6 = 0; 
     reposo.suct = 0;
 
-    //Estado de reposo
-    // reposo.Q1 = 0;
-    // reposo.Q2 = 2;
-    // reposo.Q3 = -4.01;
-    // reposo.Q4 = 0;
-    // reposo.Q5 = -1.45; 
-    // reposo.Q6 = 0; 
-    // reposo.suct = 0;
 
     // Inicialización de atributos del hilo
     pthread_attr_init(&hilo);
@@ -139,6 +131,7 @@ void* Control::getInfoPatas(void* args){
         control->getPosicion("FRIGG_prss");
 
         //Succionadores
+        // No usados en el resto del codigo
         mjtNum suction_force1 = control->param->d->actuator_force[24];
         mjtNum suction_force2 = control->param->d->actuator_force[25];
         mjtNum suction_force3 = control->param->d->actuator_force[26];

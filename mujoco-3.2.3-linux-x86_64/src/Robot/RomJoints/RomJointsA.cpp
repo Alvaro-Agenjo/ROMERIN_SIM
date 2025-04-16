@@ -471,6 +471,12 @@ void SuctionSimulation::setModel(mjModel* m, mjData* d, QString n){
 
 void SuctionSimulation::loop(QString name){
   int num;
+
+  -----------------------------------------------------
+  Al ajustar el rango del actuador en el archivo 
+  modelo.xml no seria necesario el multiplicador x0.1
+  ----------------------------------------------------
+
   if(name == "THOR"){ modelData->ctrl[24] = (0.1 * goal_suctForce); /*printf("Fuerza de succion: %f\n", extractSuctData());*/}
   else if(name == "LOKI") modelData->ctrl[25] = (0.1 * goal_suctForce);
   else if(name == "ODIN") modelData->ctrl[26] = (0.1 * goal_suctForce);
