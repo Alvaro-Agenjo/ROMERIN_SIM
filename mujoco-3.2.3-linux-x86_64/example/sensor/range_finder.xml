@@ -1,0 +1,17 @@
+<mujoco>
+    <worldbody>
+        
+        <geom name="floor" type="box" size="2 2 0.1" rgba="1 1 5 1"/>
+        <body name="caja" pos="0 0 0.8" euler="0 0 0">
+            <inertial pos="0 0 0" mass="1" diaginertia="1 1 1"/>
+            <geom name="caja" type="box" size="0.2 0.2 0.5" rgba="5 1 1 0.5"/>
+            <site name="top_box" pos="0 0 0.5" euler="0 180 0"/> 
+            <freejoint name="q0"/>
+        </body>
+    </worldbody>
+
+    <sensor>
+        <rangefinder name="prx" site="top_box"/>
+    </sensor>
+
+</mujoco>
