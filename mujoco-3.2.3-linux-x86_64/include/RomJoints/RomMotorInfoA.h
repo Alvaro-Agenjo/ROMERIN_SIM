@@ -13,3 +13,10 @@ struct MotorInfo
  float min_angle = 0.0F;
  float max_angle = 360.0F;
 };
+
+struct SuctionCupInfo{
+    float suctionForce = 0.0;
+    float suctionPressure = 0.0;
+    uint8_t temperature = 0;
+    uint8_t distances[3] = {};
+};

@@ -394,6 +394,20 @@ void RomJoints::loop(QString module_name)
     }
   }
   setGoalAnglesConversions();
+
+  ///////////FORCE STORAGE
+  suction_cup.suctionForce = suctioncup.suctForce;  //IS units 
+  
+  ///////////PRESSURE STORAGE
+  suction_cup.suctionPressure = suctioncup.suctForce/ (M_PI* 0.095 * 0.095);
+  
+  ///////////TEMPERATURE STORAGE
+  suction_cup.temperature = 21.0;
+  
+  ///////////DISTANCES STORAGE
+  for(int i = 0; i < 3; i++){
+    suction_cup.distances[i] = suctioncup.distance[i];
+  }
 }
 
 void RomJoints::setGoalAnglesConversions(){
@@ -470,18 +484,40 @@ void SuctionSimulation::setModel(mjModel* m, mjData* d, QString n){
 }
 
 void SuctionSimulation::loop(QString name){
-  int num;
+int num = 0;
+const char * sforce, *sdist[3];
 
   // -----------------------------------------------------
   // Al ajustar el rango del actuador en el archivo 
   // modelo.xml no seria necesario el multiplicador x0.1
   // ----------------------------------------------------
 
-  if(name == "THOR"){ modelData->ctrl[24] = (0.1 * goal_suctForce); /*printf("Fuerza de succion: %f\n", extractSuctData());*/}
-  else if(name == "LOKI") modelData->ctrl[25] = (0.1 * goal_suctForce);
-  else if(name == "ODIN") modelData->ctrl[26] = (0.1 * goal_suctForce);
-  else if(name == "FRIGG") modelData->ctrl[27] = (0.1 * goal_suctForce);
+  // if(name == "THOR"){ modelData->ctrl[24] = (0.1 * goal_suctForce); /*printf("Fuerza de succion: %f\n", extractSuctData());*/}
+  // else if(name == "LOKI") modelData->ctrl[25] = (0.1 * goal_suctForce);
+  // else if(name == "ODIN") modelData->ctrl[26] = (0.1 * goal_suctForce);
+  // else if(name == "FRIGG") modelData->ctrl[27] = (0.1 * goal_suctForce);
+  // else printf("MODULE NAME INCORRECTO");
+
+  if(name == "THOR"){ num = 24; sforce = "Preassure_THOR"; sdist[0] = "THOR_prx_1"; sdist[1] = "THOR_prx_2"; sdist[2] = "THOR_prx_3";}
+  else if(name == "LOKI"){ num = 25; sforce = "Preassure_LOKI"; sdist[0] = "LOKI_prx_1"; sdist[1] = "LOKI_prx_2"; sdist[2] = "LOKI_prx_3";}
+  else if(name == "ODIN"){ num = 26; sforce = "Preassure_ODIN"; sdist[0] = "ODIN_prx_1"; sdist[1] = "ODIN_prx_2"; sdist[2] = "ODIN_prx_3";}
+  else if(name == "FRIGG"){ num = 27; sforce = "Preassure_FRIGG"; sdist[0] = "FRIGG_prx_1"; sdist[1] = "FRIGG_prx_2"; sdist[2] = "FRIGG_prx_3";}
   else printf("MODULE NAME INCORRECTO");
+
+  ////////////// ACTUALIZACIÓN DE FUERZA
+  modelData->ctrl[num] = (0.1 * goal_suctForce);
+
+  ////////////// LECTURA DE SENSORES DE FUERZA
+  int sensor_id = mj_name2id(model, mjOBJ_SENSOR, sforce);
+  int sensor_start = model->sensor_adr[sensor_id];
+  suctForce = modelData->sensordata[sensor_start];
+
+  ////////////// LECTURA DE SENSORES DE distancia
+  for(int i = 0; i< 3; i++){
+    sensor_id = mj_name2id(model, mjOBJ_SENSOR, sdist[i]);
+    sensor_start = model->sensor_adr[sensor_id];
+    distance[i] =(int)(modelData->sensordata[sensor_start] * 1000.0);
+  }
 }
 
 //Saca el valor de la fuerza que se está aplicando en la base de las ventosas
@@ -512,3 +548,26 @@ float SuctionSimulation::extractSuctData() {
     return touch_force;
 }
 
+uint8_t * SuctionSimulation::getDistances(){
+    uint8_t distancias[3]= {};
+    const char* name;
+    if(moduleName == "THOR") name = "THOR_prx_1";
+    else if(moduleName == "ODIN") name = "ODIN_prx_1";
+    else if(moduleName == "LOKI") name = "LOKI_prx_1";
+    else if(moduleName == "FRIGG") name = "FRIGG_prx_1";
+
+    int sensor_id = mj_name2id(model, mjOBJ_SENSOR, name);
+
+    if (sensor_id == -1) {
+        printf("Error: Sensor no encontrado.\n");
+        return nullptr;
+    }
+
+    for(int i = 0; i < 3; i++){
+    int sensor_start = model->sensor_adr[sensor_id + i];
+    
+    
+    distancias[i] = modelData->sensordata[sensor_start];
+    }
+    return distancias;
+}

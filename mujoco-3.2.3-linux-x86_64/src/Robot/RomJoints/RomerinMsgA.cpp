@@ -40,6 +40,30 @@ RomerinMsg suction_cup_info_message(float p, float f, float t, uint8_t dist[3])
     msg.size=(punt-msg.info)+1;
     return msg;  
 }
+RomerinMsg suction_cup_info_message(const SuctionCupInfo & sc_info )
+{
+    RomerinMsg msg;
+    uchar_t *punt=msg.info;
+    msg.id = ROM_SUCTIONCUP_INFO;
+    punt+=romerin_writeFloat(punt,sc_info.suctionPressure);
+    punt+=romerin_writeFloat(punt,sc_info.suctionForce);
+    punt+=romerin_writeFloat(punt,sc_info.temperature);
+    punt+=romerin_writeUChar(punt, sc_info.distances[0]);
+    punt+=romerin_writeUChar(punt, sc_info.distances[1]);
+    punt+=romerin_writeUChar(punt, sc_info.distances[2]);
+    msg.size=(punt-msg.info)+1;
+
+
+//   static int count = 0;
+//   count++;
+//   if(count % 8000  == 0){
+//     for(int i = 0; i < 3; i++){
+//       std::cout << (int)(sc_info.distances[i])  << "  ";      
+//     }
+//     std::cout << "FINAL" << std::endl;
+//   }
+    return msg;  
+}
 RomerinMsg analog_info_message(float vbat, float ibat, float vbus, float ibus)
 {
     RomerinMsg msg;

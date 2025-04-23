@@ -23,7 +23,8 @@ struct SuctionSimulation{
 
     float suctForce;
     float goal_suctForce;
-
+    
+    uint8_t distance[3];
     bool setup = false;
 
     void setModel(mjModel* m, mjData* d, QString n);
@@ -31,9 +32,10 @@ struct SuctionSimulation{
     //void setSuctForceInit(float num){this->goal_suctForce = num;}
     bool getSetup(){return setup;}
     void loop(QString name);
-    float getSuctForce(){return this->suctForce;}
+    //float getSuctForce(){return this->suctForce;}
 
-    float extractSuctData();
+    float extractSuctData(); //desuso
+    uint8_t * getDistances(); //desuso
 
 };
 
@@ -126,5 +128,9 @@ public:
     MotorSimulation* getMotorSim(int i){return &dynamixels[i];}
     MotorInfo motors[6];
     void setGoalAnglesConversions();
+    //////////////////////////////////////////
+    SuctionCupInfo suction_cup;
+    inline float getSucctionForce() {return suctioncup.extractSuctData();}  //desuso
+    inline uint8_t * getSucctionDistance() {return suctioncup.getDistances();}  //desuso
 };
 

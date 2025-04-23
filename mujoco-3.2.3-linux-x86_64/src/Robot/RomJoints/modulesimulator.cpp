@@ -86,14 +86,19 @@ void ModuleSimulator::sendRegularMessages()
         sendMessage(romerinMsg_robot_compact_data(robot_compact_data));
       }*/
       //else{  //verbose info (default mode)
-
-        for(int i=0;i<6;i++){
-          sendMessage(motor_info_message(i,joints.motors[i]));
-        }
         
-        //sendMessage(suction_cup_info_message(suction_cup.getRelPressure(), suction_cup.getForce(),
-        //suction_cup.getTemperature(),suction_cup.getDistances()));
-        /* #ifdef POWER_INFO
+      //uint8_t distancia[3] = {4, 5, 6}, * dist = distancia;
+      //SuctionCupInfo cup = {1.0, 2.0, 3, {4, 5, 6}};
+      for(int i=0;i<6;i++){
+        sendMessage(motor_info_message(i,joints.motors[i]));
+      }
+      
+      sendMessage(suction_cup_info_message(joints.suction_cup));
+      //sendMessage(suction_cup_info_message(cup));
+      //sendMessage(suction_cup_info_message(1,2,3, dist));
+      
+      
+      /* #ifdef POWER_INFO
             sendMessage(analog_info_message(power.getBatteryVolt(),power.getBatteryAmp(),
                               0,power.get12vAmp()));
         #endif
