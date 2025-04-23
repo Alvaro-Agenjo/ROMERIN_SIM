@@ -1,1 +1,3 @@
+firmware-emulation/romerin_interface/build
 mujoco-3.2.3-linux-x86_64/build
+.vscode
