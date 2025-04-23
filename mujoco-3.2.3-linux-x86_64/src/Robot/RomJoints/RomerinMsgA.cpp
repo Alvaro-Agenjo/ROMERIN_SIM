@@ -45,8 +45,8 @@ RomerinMsg suction_cup_info_message(const SuctionCupInfo & sc_info )
     RomerinMsg msg;
     uchar_t *punt=msg.info;
     msg.id = ROM_SUCTIONCUP_INFO;
-    punt+=romerin_writeFloat(punt,sc_info.suctionPressure);
-    punt+=romerin_writeFloat(punt,sc_info.suctionForce);
+    punt+=romerin_writeFloat(punt,sc_info.suctionPressure); //N/m
+    punt+=romerin_writeFloat(punt,sc_info.suctionForce);    //N
     punt+=romerin_writeFloat(punt,sc_info.temperature);
     punt+=romerin_writeUChar(punt, sc_info.distances[0]);
     punt+=romerin_writeUChar(punt, sc_info.distances[1]);
