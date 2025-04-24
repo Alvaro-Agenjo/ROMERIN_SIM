@@ -66,7 +66,8 @@ void MotorSimulation::loop(int number)
 
       torqueForce = (float)Propor_vel + (float)Der_vel; // La fuerza que se le va a dar al motor
       //if(moduleName == "THOR" && id == 2)printf("Fuerza torque: %f\n", torqueForce);
-      modelData->ctrl[num] = torqueForce; // Se da la fuerza al motor
+      modelData->ctrl[num] = (torque) ? torqueForce : 0;   // Se da la fuerza al motor
+      
       
       ep_old = ep; //Se guarda el error para la siguiente iteración
       ev_old = ev; //Se guarda el error para la siguiente iteración
@@ -472,10 +473,10 @@ void SuctionSimulation::setModel(mjModel* m, mjData* d, QString n){
 void SuctionSimulation::loop(QString name){
   int num;
 
-  -----------------------------------------------------
-  Al ajustar el rango del actuador en el archivo 
-  modelo.xml no seria necesario el multiplicador x0.1
-  ----------------------------------------------------
+  // -----------------------------------------------------
+  // Al ajustar el rango del actuador en el archivo 
+  // modelo.xml no seria necesario el multiplicador x0.1
+  // ----------------------------------------------------
 
   if(name == "THOR"){ modelData->ctrl[24] = (0.1 * goal_suctForce); /*printf("Fuerza de succion: %f\n", extractSuctData());*/}
   else if(name == "LOKI") modelData->ctrl[25] = (0.1 * goal_suctForce);
