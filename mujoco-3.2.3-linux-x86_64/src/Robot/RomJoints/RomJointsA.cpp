@@ -66,7 +66,8 @@ void MotorSimulation::loop(int number)
 
       torqueForce = (float)Propor_vel + (float)Der_vel; // La fuerza que se le va a dar al motor
       //if(moduleName == "THOR" && id == 2)printf("Fuerza torque: %f\n", torqueForce);
-      modelData->ctrl[num] = torqueForce; // Se da la fuerza al motor
+      modelData->ctrl[num] = (torque) ? torqueForce : 0;   // Se da la fuerza al motor
+      
       
       ep_old = ep; //Se guarda el error para la siguiente iteración
       ev_old = ev; //Se guarda el error para la siguiente iteración
