@@ -21,3 +21,8 @@ a la superficie como un valor positivo, si no hay contacto el valor es nulo.
 
 14/04/2025
 Sensor torque: al colocarlo en un joint solo mide el par producido por el motor
+
+26/04/2025
+Cambios:
+    - modulesimulator: executeMessage() -> reboot -> torque = on;
+    - Robot: sincronizado a tiempo real.

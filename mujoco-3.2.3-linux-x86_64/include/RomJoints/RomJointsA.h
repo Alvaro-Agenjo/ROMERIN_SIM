@@ -50,7 +50,7 @@ struct MotorSimulation{
 
     bool setup = false;
     uint8_t id;
-    bool torque = true;
+    bool torque {};
     uint8_t status{};
     uint8_t control_mode;
     float mass = 0;

@@ -140,6 +140,7 @@ RomerinMsg ModuleSimulator::executeMessage(const RomerinMsg &m)
         break;
       case ROM_REBOOT_MOTOR:
         joints.reboot(m.info[0]);
+        joints.torque(m.info[0]);
         BT_DEBUG_PRINT("REBOOT %i", m.info[0]);
         break;
       case ROM_GET_FIXED_MOTOR_INFO:
