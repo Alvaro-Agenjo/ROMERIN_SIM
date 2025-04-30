@@ -59,7 +59,8 @@
         <motor name="Q6_FRIGG_motor" joint="FRIGG_Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>
 
 
-        <adhesion name="Ventosa_THOR" body="adhesion_contact_THOR" ctrlrange="0 100" gain="117.72"/> <!-- modificar gain de manera que gain * ctrl_max = f_max-->
+        <!-- <adhesion name="Ventosa_THOR" body="adhesion_contact_THOR" ctrlrange="0 100" gain="117.72"/> modificar gain de manera que gain * ctrl_max = f_max -->
+        <adhesion name="Ventosa_THOR" body="adhesion_contact_THOR" ctrlrange="0 100" gain="0.2"/> <!-- modificar gain de manera que gain * ctrl_max = f_max-->
         <adhesion name="Ventosa_LOKI" body="adhesion_contact_LOKI" ctrlrange="0 1" gain="2000"/>
         <adhesion name="Ventosa_ODIN" body="adhesion_contact_ODIN" ctrlrange="0 1" gain="2000"/>
         <adhesion name="Ventosa_FRIGG" body="adhesion_contact_FRIGG" ctrlrange="0 1" gain="2000"/>
