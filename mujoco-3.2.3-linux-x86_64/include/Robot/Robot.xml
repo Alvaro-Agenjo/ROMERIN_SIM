@@ -1,4 +1,5 @@
 <mujoco model="Romerin">
+  <!-- <option steptime="0.006"/> -->
   <compiler eulerseq="XYZ"/>
   <default>
     <default class="unused"/>

@@ -1,4 +1,6 @@
 <mujoco>
+
+    <!-- <option timestep="0.05"/> -->
     <asset>
         <texture name="grid" type="2d" builtin="checker" rgb1="0.1 0.2 0.3" rgb2="0.2 0.3 0.4" width="512" height="512"/>
         <material name="grid" texture="grid" texrepeat="1 1" reflectance="0.2"/>

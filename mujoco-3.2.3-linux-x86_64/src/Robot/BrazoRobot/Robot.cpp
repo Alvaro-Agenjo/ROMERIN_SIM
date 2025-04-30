@@ -20,7 +20,7 @@ double lastx = 0;
 double lasty = 0;
 
 // render synchronicer
-double refresh_rate = 1.0/20.0;
+double refresh_rate = 1.0/40.0;
 
 
 // keyboard callback
