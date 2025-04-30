@@ -32,14 +32,13 @@
                             <geom name="colision_FRIGG_b6_contact_FRIGG" type="cylinder" size="0.095 0.011" euler="0 90 0" rgba="1 1 1 0.5"/>
                             
                             <site name="sensor_FRIGG_b6" pos="-0.087 0 0"/>
+                            <site name="FRIGG_prx_1" pos="0.0031 0.022 0.0381" euler="0 90 0"/>
+                            <site name="FRIGG_prx_2" pos="0.0031 -0.044 0" euler="0 90 0"/>
+                            <site name="FRIGG_prx_3" pos="0.0031 0.022 -0.0381" euler="0 90 0"/>
                                                     
                             <joint name="FRIGG_Q6" type="hinge" pos="-0.087 0 0" axis="1 0 -0" limited="true" range="-180 180"  stiffness="1" damping="1" frictionloss="0.5"/>
                             <body name="adhesion_contact_FRIGG" pos="0.011 0 0">
                                 <geom name="contact_FRIGG" type="cylinder" size="0.09 0.0005" pos="0.0005 0 0" euler="0 90 0" rgba="5 5 5 0"/>
-
-                                <site name="FRIGG_prx_1" pos="0.0001 0.022 0.0381" euler="0 90 0"/>
-                                <site name="FRIGG_prx_2" pos="0.0001 -0.044 0" euler="0 90 0"/>
-                                <site name="FRIGG_prx_3" pos="0.0001 0.022 -0.0381" euler="0 90 0"/>
                                 <site name="FRIGG_prss" type="cylinder" size="0.095 0.0005" pos="0.002 0 0" euler="0 90 0" rgba="1 1 1 0"/>
                             </body>
                         </body>
