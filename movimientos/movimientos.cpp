@@ -19,20 +19,24 @@ int main(){
 
 //         // Creacion del socket escucha
 
-        int sock_fd = socket(AF_INET, SOCK_DGRAM, 0);
+        int sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
         if (sock_fd < 0) {
             perror("socket");
             return -1;
         }
 
         int opt = 1;
-        if(setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))<0) return -1;
-        if(setsockopt(sock_fd, SOL_SOCKET, SO_BROADCAST, &opt, sizeof(opt))<0) return -1;
+        // if(setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))<0) return -1;
+        // if(setsockopt(sock_fd, SOL_SOCKET, SO_BROADCAST, &opt, sizeof(opt))<0) return -1;
+
+        setsockopt(sock_fd, SOL_SOCKET, SO_BROADCAST, &opt, sizeof(opt) );
+        //setsockopt(sock_fd, SOL_SOCKET, SOCKOPT_RECV_NONBLOCK, &optvalue_block, optlen);
+        //fcntl(sock_fd, O_NONBLOCK);
 
         sockaddr_in local{};
         local.sin_family = AF_INET;
         local.sin_port = htons(12001);
-        local.sin_addr.s_addr = inet_addr("10.0.2.15");
+        local.sin_addr.s_addr = inet_addr("127.0.0.1");
 
         if (bind(sock_fd, (struct sockaddr*)&local, sizeof(local)) < 0) {
             perror("bind");
@@ -41,10 +45,18 @@ int main(){
             return -1;
         }
 
+        // unsigned char byte; 
+        // while(read( 0, &byte, 1) == 1) {
+        //     sendto(sock_fd, &byte, 1, 0, (struct sockaddr *)&s_ain, &size);
+        //     recvfrom(sock_fd, &byte, 1, 0, (struct sockaddr *)&s_ain, &size);
+        //     write(1, &byte, 1);
+        // }
+
+
 //         //Broadcast de señal
         
         while(dispositivos_conectados <4){
-            std::cout << "inicio while" << std::endl;
+            //std::cout << "inicio while" << std::endl;
             static int count = 0;
             if(count++>20)count=0;
             if (count == 0) {
@@ -60,10 +72,10 @@ int main(){
                 if (sent < 0) {
                     perror("sendto");
                 }
-                std::cout << "datos enviados" << std::endl;
+                else std::cout << "datos enviados" << std::endl;
             }
 
-//         //recepcion de señal rom_name
+        //recepcion de señal rom_name
             char buffer[1024];            
             std::cout << "Esperando mensajes UDP en el puerto " << 12001 << "...\n";
 
