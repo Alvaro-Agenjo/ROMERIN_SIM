@@ -1,0 +1,3 @@
+/home/Alvaro-Agenjo/Escritorio/ROMERIN/movimientos/build/CMakeFiles/mov_try.dir
+/home/Alvaro-Agenjo/Escritorio/ROMERIN/movimientos/build/CMakeFiles/edit_cache.dir
+/home/Alvaro-Agenjo/Escritorio/ROMERIN/movimientos/build/CMakeFiles/rebuild_cache.dir
