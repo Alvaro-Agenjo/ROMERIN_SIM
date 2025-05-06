@@ -21,3 +21,30 @@ a la superficie como un valor positivo, si no hay contacto el valor es nulo.
 
 14/04/2025
 Sensor torque: al colocarlo en un joint solo mide el par producido por el motor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+06/05/2025
+modelo dynamyxels:
+    - Si el _goal angle_ ha cambiado recalcular perfil de velocidad
+
+    profileVel = max vel; rev/min
+    profileAcc = acc (const); rev/min2
+
+    t<t1; vel(i) = (max_vel-vel_0)/t1 *t + vel_0; t1 = 64*max_vel/acc;
+    t1<t<t2; vel(i) = max_vel;
+    t>t2; vel(i) = (vel_0-max_vel)/t1 *(t-t2)
