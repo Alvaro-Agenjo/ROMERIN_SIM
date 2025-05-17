@@ -1,0 +1,16 @@
+#ifndef MODULESHANDLER_H
+#define MODULESHANDLER_H
+
+#include "modulecontroller.h"
+class ModulesHandler
+{
+public:
+    static std::list<ModuleController *> module_list;
+    static ModuleController *getWithName(const QString &name);
+    static ModuleController *getWithAddress(const QHostAddress &addr);
+    static ModuleController *getWithSimulatedId(uint8_t virtualid);
+    static void clear(){for(auto m:module_list)delete m;}
+    static void loop();
+};
+
+#endif // MODULESHANDLER_H
