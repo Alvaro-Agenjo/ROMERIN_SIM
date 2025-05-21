@@ -20,9 +20,9 @@ void ModuleController::loop()
         reset_bt_watchdog();
     }
     */
-    //tab->setEnabled(isConnected());
-    //to detect reconeections  and initial connections
-    // if((!conected)&&(isConnected()))getConfig();
+    mod->setEnabled(isConnected());
+    // to detect reconeections  and initial connections
+    if((!conected)&&(isConnected()))getConfig();
     conected=isConnected();
     /*
     //log handler
@@ -60,49 +60,50 @@ bool  ModuleController::isConnected(){
     //return((bt_watch_dog<WATCHDOG)||(wifi_watch_dog<WATCHDOG));
     return(wifi_watch_dog<WATCHDOG);
 }
-// void ModuleController::sendConfig(ConfigurationInfo &info)
-// {
-//     RomerinMsg m(ROM_CONFIG);
-//     uchar_t *punt=m.info;
-//     for(int i=0;i<4;i++)punt+=romerin_writeUChar(punt, info.ip[i]);
-//     for(int i=0;i<4;i++)punt+=romerin_writeUChar(punt, info.gateway[i]);
-//     for(int i=0;i<4;i++)punt+=romerin_writeUChar(punt, info.mask[i]);
-//     punt+=romerin_writeString(punt,info.name.toStdString().c_str());
-//     punt+=romerin_writeString(punt,info.wifi.toStdString().c_str());
-//     punt+=romerin_writeString(punt,info.key.toStdString().c_str());
-//     m.size=(punt-m.info)+1;
-//     sendMessage(m);
-// }
-// void ModuleController::sendConfigV2(ConfigurationInfoV2 &info)
-// {
-//     RomerinMsg m(ROM_CONFIG_V2);
-//     uchar_t *punt=m.info;
-//     for(int i=0;i<6;i++){ //6*(2+2+2+1+1+1)
-//         punt+=romerin_writeUInt16(punt, info.lenghts[i]);
-//         punt+=romerin_writeUInt16(punt, info.min[i]);
-//         punt+=romerin_writeUInt16(punt, info.max[i]);
-//         punt+=romerin_writeUChar(punt,info.offset[i]);
-//         punt+=romerin_writeUChar(punt,info.vel_profile[i]);
-//         punt+=romerin_writeUChar(punt,info.acc_profile[i]);
-//     }
-//     for(int i=0;i<3;i++)punt+=romerin_writeInt16(punt, info.position[i]);
-//     for(int i=0;i<3;i++)punt+=romerin_writeInt16(punt, info.orientation[i]);
-//     uint8_t init_configuration=0;
-//     if(info.diRsable_bt)init_configuration|=0x10;
-//     if(info.compact_mode)init_configuration|=0x01;
-//     punt+=romerin_writeUChar(punt,init_configuration);
-//     m.size=(punt-m.info)+1;
-//     sendMessage(m);
-// }
+void ModuleController::sendConfig(ConfigurationInfo &info)
+{
+    RomerinMsg m(ROM_CONFIG);
+    uchar_t *punt=m.info;
+    for(int i=0;i<4;i++)punt+=romerin_writeUChar(punt, info.ip[i]);
+    for(int i=0;i<4;i++)punt+=romerin_writeUChar(punt, info.gateway[i]);
+    for(int i=0;i<4;i++)punt+=romerin_writeUChar(punt, info.mask[i]);
+    punt+=romerin_writeString(punt,info.name.toStdString().c_str());
+    punt+=romerin_writeString(punt,info.wifi.toStdString().c_str());
+    punt+=romerin_writeString(punt,info.key.toStdString().c_str());
+    m.size=(punt-m.info)+1;
+    sendMessage(m);
+}
+void ModuleController::sendConfigV2(ConfigurationInfoV2 &info)
+{
+    RomerinMsg m(ROM_CONFIG_V2);
+    uchar_t *punt=m.info;
+    for(int i=0;i<6;i++){ //6*(2+2+2+1+1+1)
+        punt+=romerin_writeUInt16(punt, info.lenghts[i]);
+        punt+=romerin_writeUInt16(punt, info.min[i]);
+        punt+=romerin_writeUInt16(punt, info.max[i]);
+        punt+=romerin_writeUChar(punt,info.offset[i]);
+        punt+=romerin_writeUChar(punt,info.vel_profile[i]);
+        punt+=romerin_writeUChar(punt,info.acc_profile[i]);
+    }
+    for(int i=0;i<3;i++)punt+=romerin_writeInt16(punt, info.position[i]);
+    for(int i=0;i<3;i++)punt+=romerin_writeInt16(punt, info.orientation[i]);
+    uint8_t init_configuration=0;
+    // if(info.diRsable_bt)init_configuration|=0x10;
+    if(info.compact_mode)init_configuration|=0x01;
+    punt+=romerin_writeUChar(punt,init_configuration);
+    m.size=(punt-m.info)+1;
+    sendMessage(m);
+}
 RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
 {
     MainWindow::info("Message id: "+ QString::number(m.id));
     switch(m.id){
       case ROM_MOTOR_INFO:{
         int m_id=m.info[0];
-        //MotorInfoData &&minfo=romerin_getMotorInfo(m.info);
-        //if(tab)tab->getMotorUI(m_id)->updateInfo(minfo);
-        mod->setMotorInfo(m_id, romerin_getMotorInfo(m.info));
+        MotorInfoData &&minfo=romerin_getMotorInfo(m.info);
+        // if(tab)tab->getMotorUI(m_id)->updateInfo(minfo);
+        mod->getMotorUI(m_id)->updateInfo(minfo);
+
         }
       break;
       case ROM_ANALOG_INFO:{
@@ -114,10 +115,12 @@ RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
         robot_state=m.info[0];
         robot_cicle_time=m.info[1];
         //if(tab)tab->updateRobotState();
+        mod->updateRobotState();
     break;
     case ROM_SUCTIONCUP_INFO:{
         auto sc=romerin_getSuctionCupInfo(m.info);
         //if(tab)tab->updateInfo(sc);
+        mod->updateInfo(sc);
     }
     break;
     case ROM_TEXT:
@@ -136,11 +139,13 @@ RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
            auto cad=QByteArray((const char*)(m.info),m.size-1);
            ConfigurationInfo &&conf=ConfigurationInfo::getFromQByte(cad);
            //if(tab)tab->setConfigInfo(conf);
+           mod->setConfigInfo(conf);
     }
     break;
     case ROM_CONFIG_V2:{
            ConfigurationInfoV2 &&conf=ConfigurationInfoV2::getFromBuffer(m.info);
            //if(tab)tab->setConfigInfo(conf);
+           mod->setConfigInfo(conf);
     }
     break;
     case ROM_COMPACT_ROBOT_DATA:{

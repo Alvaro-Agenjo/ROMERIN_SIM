@@ -2,7 +2,7 @@
 #include "ui_configdlg.h"
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
-#include "romerinmodule.h"
+#include "module.h"
 
 ConfigDlg::ConfigDlg(QWidget *parent) :
     QDialog(parent),
@@ -132,8 +132,8 @@ void ConfigDlg::on_button_flash_clicked()
     val=ui->e_RZ->text().toInt(&ok); if(ok) _infoV2.orientation[2]=val;
     _infoV2.compact_mode=ui->cb_compact_mode->isChecked();
     _infoV2.disable_bt=ui->cb_disable_bt->isChecked();
-    ((RomerinModule *)parent())->sendConfig(_info);
-    ((RomerinModule *)parent())->sendConfigV2(_infoV2);
+    ((Module *)parent())->sendConfig(_info);
+    ((Module *)parent())->sendConfigV2(_infoV2);
 }
 
 void ConfigDlg::on_button_ok_clicked()

@@ -10,6 +10,7 @@
 
 #include "../include/RomerinMessage.h"
 #include "modulecontroller.h"
+#include "module.h"
 
 
 

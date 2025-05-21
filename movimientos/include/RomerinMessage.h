@@ -130,6 +130,7 @@ struct AnalogInfoData{
     float ibus;
 };
 struct SuctionCupInfoData{
+    float percentaje;
     float pressure;
     float temperature;
     float force;

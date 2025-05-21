@@ -10,6 +10,7 @@
 //--------------------------------------------//
 #include <list>
 #include "../include/RomerinMessage.h"
+#include "configdlg.h"
 
 
 //class RomerinModule;
@@ -45,8 +46,8 @@ public:
     //void reset_bt_watchdog(){bt_watch_dog=0;}
     void reset_wifi_watchdog(){wifi_watch_dog=0;}
     bool isConnected();
-    // void sendConfig(ConfigurationInfo &info);
-    // void sendConfigV2(ConfigurationInfoV2 &info);
+    void sendConfig(ConfigurationInfo &info);
+    void sendConfigV2(ConfigurationInfoV2 &info);
     void loop();
     void getConfig();
     void init_rec(ulong init_t,const QString &directory);

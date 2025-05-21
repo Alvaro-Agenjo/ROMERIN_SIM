@@ -7,7 +7,7 @@
 #include <QNetworkDatagram>
 
 
-#include "module.h";
+#include "module.h"
 //#include "QtSerialPort/QSerialPortInfo"
 //#include <QFileDialog>
 
@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 MainWindow::~MainWindow()
 {
     delete ui;
+    ModulesHandler::clear();
 }
 
 
@@ -89,6 +90,15 @@ void MainWindow::loop(){
     ui->timerInfo->setText(QString::number(counter));
 
     loop_wifi();
+    ModulesHandler::loop();
+
+    //update the tab view:
+    for(auto m:ModulesHandler::module_list){
+        int ind=ui->tabWidget->indexOf(m->mod);
+        if(m->isConnected())ui->tabWidget->setTabText(ind, m->name);
+        else ui->tabWidget->setTabText(ind, m->name+"[OFF]");
+
+    }
 }
 void MainWindow::loop_wifi(){
     //si está activa, entonces manda el ping broadcast y gestiona los mensajes pasándoselos a cada modulo

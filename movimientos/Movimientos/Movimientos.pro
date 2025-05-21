@@ -21,26 +21,32 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    configdlg.cpp \
     main.cpp \
     mainwindow.cpp \
     module.cpp \
     modulecontroller.cpp \
     moduleshandler.cpp \
     ../shared/romkin.cpp \
+    motor.cpp \
     trayectorygenerator.cpp
 
 HEADERS += \
     ../include/RomerinMessage.h \
     ../shared/romkin.h \
+    configdlg.h \
     module.h \
     modulecontroller.h \
     moduleshandler.h \
     mainwindow.h \
+    motor.h \
     trayectorygenerator.h
 
 FORMS += \
+    configdlg.ui \
     mainwindow.ui \
-    module.ui
+    module.ui \
+    motor.ui
 
 INCLUDEPATH += "../include/"
 INCLUDEPATH += "../shared/"
