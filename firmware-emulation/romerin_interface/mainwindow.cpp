@@ -61,9 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBoxIPs->addItem("127.0.0.1");
     ui->l_log_dir->setText(QCoreApplication::applicationDirPath());
 
-    ////////////////////////// Comunicacion mediante fichero ////////////////////////////////
-    fd = creat("../../../../movimientos/build/com.txt", 0666);
-    ////////////////////////////////////////////////////////////////////////////////////////
+   
     timer.start(MAIN_TIMER_MS);//antes 50ms
 }
 void MainWindow::info(const QString &mens)
@@ -88,7 +86,6 @@ void MainWindow::updateTable()
 }
 MainWindow::~MainWindow()
 {
-    ::close(fd);
     delete ui;
     ModulesHandler::clear();
 }
@@ -105,14 +102,6 @@ void MainWindow::loop_wifi()
         ModuleController::ip_port=ip_port;
         QHostAddress local(ui->comboBoxIPs->currentText());
         ip_port->bind(local, 12001);
-        
-        ////////////////////////// Comunicacion mediante fichero ////////////////////////////////
-        if(::write(fd, &local, sizeof(QHostAddress))<0){
-            perror("Error al escribir en el fichero");
-            ::close(fd);
-        }
-        ////////////////////////////////////////////////////////////////////////////////////////
-        
         connect(ip_port, &QUdpSocket::readyRead,
                     this, &MainWindow::read_ip_port);
     }
