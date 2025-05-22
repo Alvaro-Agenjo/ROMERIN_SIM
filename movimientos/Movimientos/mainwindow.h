@@ -11,7 +11,7 @@
 #include "../include/RomerinMessage.h"
 #include "modulecontroller.h"
 #include "module.h"
-
+#include "trayectorygenerator.h"
 
 
 
@@ -57,6 +57,8 @@ private slots:
 
 
 
+    void on_btn_relax_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -65,10 +67,10 @@ private:
     QTimer timer;
     MsgReader udp_reader;
     //RomerinModel robot;
+    trayectoryGenerator commander;
     static QStatusBar *sbar;
     static MainWindow *_this;
 
     void loop_wifi();
-    void sendVel(float max_vel, int motor_id);
 };
 #endif // MAINWINDOW_H

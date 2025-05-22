@@ -27,8 +27,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     tb->setColumnCount(4);
     tb->setColumnWidth(0, 50);
     tb->setColumnWidth(1, 110);
-    tb->setColumnWidth(2, 50);
-    tb->setColumnWidth(3, 40);
+    tb->setColumnWidth(2, 80);
+    tb->setColumnWidth(3, 100);
     tb->setStyleSheet("QHeaderView::section { background-color:lightGray }");
     m_TableHeader<<"Module"<<"IP"<<"BT COM"<<"Status";
     tb->setHorizontalHeaderLabels(m_TableHeader);
@@ -178,37 +178,37 @@ void MainWindow::read_ip_port(){
 void MainWindow::on_txt_motor1_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor1_maxvel->text().toFloat();
-    sendVel(velMax, 1);
+    commander.setVel(velMax, 1);
 }
 
 void MainWindow::on_txt_motor2_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor2_maxvel->text().toFloat();
-    sendVel(velMax, 2);
+    commander.setVel(velMax, 2);
 }
 
 void MainWindow::on_txt_motor3_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor3_maxvel->text().toFloat();
-    sendVel(velMax, 3);
+    commander.setVel(velMax, 3);
 }
 
 void MainWindow::on_txt_motor4_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor4_maxvel->text().toFloat();
-    sendVel(velMax, 4);
+    commander.setVel(velMax, 4);
 }
 
 void MainWindow::on_txt_motor5_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor5_maxvel->text().toFloat();
-    sendVel(velMax, 5);
+    commander.setVel(velMax, 5);
 }
 
 void MainWindow::on_txt_motor6_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor6_maxvel->text().toFloat();
-    sendVel(velMax, 6);
+    commander.setVel(velMax, 6);
 }
 
 void MainWindow::on_txt_masterVel_editingFinished()
@@ -223,16 +223,9 @@ void MainWindow::on_txt_masterVel_editingFinished()
     ui->txt_motor6_maxvel->setText(QString::number(velMax));
 
     for(int i = 1; i<= 6; i++){
-        sendVel(velMax, i);
+        commander.setVel(velMax, i);
     }
 
-}
-
-void MainWindow::sendVel(float max_vel, int motor_id){
-    RomerinMsg m = romerinMsg_VelocityProfile(motor_id, max_vel);
-    for(auto mod : ModulesHandler::module_list){
-        mod->sendMessage(m);
-    }
 }
 
 void MainWindow::on_btn_enableMotors_clicked(bool checked)
@@ -240,5 +233,11 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
     for(auto mod : ModulesHandler::module_list){
         mod->activateMotors(checked);
     }
+}
+
+
+void MainWindow::on_btn_relax_clicked()
+{
+    commander.relax(ui->txt_motor1_maxvel->text().toInt(), ui->txt_motor2_maxvel->text().toInt(), ui->txt_motor3_maxvel->text().toInt());
 }
 
