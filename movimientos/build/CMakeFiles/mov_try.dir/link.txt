@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/mov_try.dir/movimientos.cpp.o -o mov_try  -lpthread 

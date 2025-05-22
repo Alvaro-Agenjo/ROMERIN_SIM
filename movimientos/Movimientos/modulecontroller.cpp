@@ -100,7 +100,7 @@ RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
     switch(m.id){
       case ROM_MOTOR_INFO:{
         int m_id=m.info[0];
-        MotorInfoData &&minfo=romerin_getMotorInfo(m.info);
+          MotorInfoData &&minfo=romerin_getMotorInfo(m.info);
         // if(tab)tab->getMotorUI(m_id)->updateInfo(minfo);
         mod->getMotorUI(m_id)->updateInfo(minfo);
 
