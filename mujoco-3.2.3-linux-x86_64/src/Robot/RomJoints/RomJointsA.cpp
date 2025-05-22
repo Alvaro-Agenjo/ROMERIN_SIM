@@ -301,7 +301,7 @@ void RomJoints::setupMotor(int8_t id)
 
    MotorSimulation &m=dynamixels[id];
 
-  m.id=ROM_MOTOR_IDS[id];
+   m.id=ROM_MOTOR_IDS[id];
    m.status=0;
    m.torque=false;
    m.min=romdefs->limits[id].min;
@@ -403,7 +403,7 @@ void RomJoints::loop(QString module_name)
   suction_cup.suctionPressure = suctioncup.suctForce/ (M_PI* 0.095 * 0.095);
   
   ///////////TEMPERATURE STORAGE
-  suction_cup.temperature = 21.0;
+  suction_cup.temperature = suctioncup.goal_suctForce;
   
   ///////////DISTANCES STORAGE
   for(int i = 0; i < 3; i++){
@@ -506,7 +506,7 @@ const char * sforce, *sdist[3];
   else printf("MODULE NAME INCORRECTO");
 
   ////////////// ACTUALIZACIÓN DE FUERZA
-  modelData->ctrl[num] = (0.1 * goal_suctForce);
+  modelData->ctrl[num] = goal_suctForce;
 
   ////////////// LECTURA DE SENSORES DE FUERZA
   int sensor_id = mj_name2id(model, mjOBJ_SENSOR, sforce);

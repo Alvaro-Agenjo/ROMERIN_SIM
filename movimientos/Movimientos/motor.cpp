@@ -20,7 +20,7 @@ void Motor::updateInfo(MotorInfoData &minfo)
     ui->num_angulo->display(QString::number(minfo.position, 'f', 1));
     ui->num_vel->display(QString::number(minfo.velocity, 'f', 1));
     float torque;
-    torque = minfo.voltage * minfo.intensity / minfo.velocity;// T *w = V *I
+    torque = minfo.voltage * minfo.intensity;// T = V *I
     ui->num_torque->display(QString::number((torque, 'f', 1)));
 
     //ui->intensity->display(QString::number(minfo.intensity, 'f', 1));
