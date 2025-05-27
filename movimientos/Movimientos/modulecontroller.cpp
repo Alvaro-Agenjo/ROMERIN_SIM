@@ -53,7 +53,7 @@ static int num{};
             ip_port->writeDatagram((const char *)(mv.data),mv.size+3,ip,12000);
         }
         else ip_port->writeDatagram((const char *)(m.data),m.size+3,ip,12000);
-        qDebug()<<"mensaje: "<<++num;
+        // qDebug()<<"mensaje: "<<++num;
     }
 }
 bool  ModuleController::isConnected(){

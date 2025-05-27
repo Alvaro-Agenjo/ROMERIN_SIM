@@ -59,6 +59,14 @@ private slots:
 
     void on_btn_relax_clicked();
 
+    void on_btn_stand_clicked();
+
+    void on_btn_reset_clicked();
+
+    void on_btn_test1_clicked();
+
+    void on_btn_test_2_clicked();
+
 private:
     Ui::MainWindow *ui;
 

@@ -47,7 +47,6 @@
             <property name="font">
              <font>
               <pointsize>18</pointsize>
-              <weight>75</weight>
               <italic>true</italic>
               <bold>true</bold>
              </font>
@@ -337,34 +336,34 @@
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="btn_test_2">
               <property name="text">
-               <string>PushButton</string>
+               <string>test 2</string>
               </property>
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QPushButton" name="btn_stand">
+             <widget class="QPushButton" name="btn_reset">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="btn_stand">
               <property name="text">
                <string>Stand</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="pushButton_3">
-              <property name="text">
-               <string>PushButton</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1">
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="btn_test1">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -372,7 +371,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>PushButton</string>
+               <string>test 1</string>
               </property>
              </widget>
             </item>
@@ -392,7 +391,7 @@
      <x>0</x>
      <y>0</y>
      <width>1007</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

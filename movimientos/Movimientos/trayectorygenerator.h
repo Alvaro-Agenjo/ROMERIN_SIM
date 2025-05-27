@@ -3,8 +3,8 @@
 
 #include "modulecontroller.h"
 //#include "../include/RomerinMessage.h"
-
-#define slowMove 12
+#include <QTimer>
+#define slowMove 15
 
 class trayectoryGenerator
 {
@@ -13,11 +13,15 @@ public:
 
     void setVel(float max_vel, int motor_id);
 
-    void stand();
-    void relax(int x, int y, int z);
-private:
+    void reset();
+    void relax(float x, float y, float z, float ori[3]);
+    bool moveLeg(QString leg, float x, float y, float z, double ori[][3], bool fixed = false);
     bool moveLeg(QString leg, float x, float y, float z, bool fixed = false);
-    void sendM(ModuleController *module, double *m);
+    void rotation(double orientation[][3], float rot[]);
+    void sendM(ModuleController *module, double angle[]);
+    bool objetiveReached(ModuleController *module);
+    float a = 0;
+    void loopTest(bool elbow);
 };
 
 #endif // TRAYECTORYGENERATOR_H
