@@ -46,6 +46,8 @@ public:
     void get_torques(double *t);
     void get_motor_info(MotorInfoData *m);
     ConfigurationInfoV2 getConfigInfoV2(){return config.getConfigInvoV2();}
+
+    bool checkJointsLimits(double m[], bool simple = false);
     bool objetiveReached();
 
 private:

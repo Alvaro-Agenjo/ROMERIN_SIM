@@ -25,6 +25,45 @@ void trayectoryGenerator::reset()
 
 }
 
+bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, bool elbow, bool fixed)
+{
+    ModuleController *module = ModulesHandler::getWithName(leg);
+    double m[6], q[6];
+
+    //Check if position is geometricaly possible
+    if(!module->mod->romkin.IKwrist(q,x, y, z, elbow)){
+        qDebug()<<"Out of range position";
+        return false;
+    }
+    module->mod->romkin.q2m(m,q, true);
+
+
+    /* Maintain angle of q4,q5,q6 */
+    MotorInfoData minfo[6];
+    module->mod->get_motor_info(minfo);
+    for(int i = 3; i< 6;i++){
+        m[i] = minfo[i].position;
+    }
+
+    //Check if joint physical limits are not surpassed
+    if(module->mod->checkJointsLimits(m, true)) {
+        qDebug()<<"Joint limit surpassed";
+        return false;
+    }
+
+    //Sends suction power command if necessary
+    if(fixed){
+        RomerinMsg m = romerinMsg_SuctionCupPWM(50);
+        module->sendMessage(m);
+    }
+
+    //Sends movement commands
+    sendM(module, m);
+    qDebug()<<"Q1: "<<q[0]<<" Q2: "<<q[1]<<" Q3: "<<q[2];
+    //Return true movement command successfull
+    return true;
+}
+
 void trayectoryGenerator::relax(float x, float y, float z, float ori[3] )
 {
 
@@ -107,7 +146,7 @@ void trayectoryGenerator::sendM(ModuleController *module, double angle[])
     for(int i = 0; i<6; i++){
         RomerinMsg m = romerinMsg_ServoGoalAngle(i, angle[i]);
         module->sendMessage(m);
-        qDebug()<<angle[i];
+        qDebug()<<"Motor "<< i<< ": "<<angle[i];
     }
 
 }

@@ -235,13 +235,6 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
     }
 }
 
-
-void MainWindow::on_btn_relax_clicked()
-{
-
-}
-
-
 void MainWindow::on_btn_stand_clicked()
 {
     // commander.stand();
@@ -264,3 +257,16 @@ void MainWindow::on_btn_test_2_clicked()
     commander.a= commander.a +5;
     commander.loopTest(false);
 }
+
+void MainWindow::on_btn_thor_test_clicked()
+{
+    bool elbow = ui->chk_elbow->isChecked();
+    bool fix = ui->chk_fixed->isChecked();
+
+    double x = ui->txt_THOR_X->text().toDouble();   x/=1000.0;
+    double y = ui->txt_THOR_Y->text().toDouble();   y/=1000.0;
+    double z = ui->txt_THOR_Z->text().toDouble();   z/=1000.0;
+
+    commander.moveLeg("THOR", x, y, z, elbow, fix);
+}
+

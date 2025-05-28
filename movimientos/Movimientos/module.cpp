@@ -79,6 +79,18 @@ void Module::get_motor_info(MotorInfoData *m)
     for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info();
 }
 
+/* Funcion para comprobar que los valores articulares están dentro de límites.
+ * Devuelve true si se superan los límites para alguna articulación */
+bool Module::checkJointsLimits(double m[], bool simple)
+{
+    for( int i = 0; i < (6 - 3 * simple); i++){
+        if(motors[i]->get_motor_limits().min_angle > m[i] || motors[i]->get_motor_limits().max_angle < m[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
 
 
 

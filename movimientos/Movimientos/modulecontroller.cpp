@@ -133,6 +133,7 @@ RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
             if((m_id<0)||(m_id>6))break;
             FixedMotorInfoData &&minfo=romerin_getFixedMotorInfo(m.info+1);
             //if(tab)tab->getMotorUI(m_id)->updateFixedInfo(minfo);
+            mod->getMotorUI(m_id)->updateFixedInfo(minfo);
     }
     break;
     case ROM_CONFIG:{

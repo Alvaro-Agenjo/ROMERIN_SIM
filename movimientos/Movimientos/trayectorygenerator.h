@@ -14,6 +14,8 @@ public:
     void setVel(float max_vel, int motor_id);
 
     void reset();
+    bool moveLeg(QString leg, double x, double y, double z, bool elbow = true, bool fixed = false);
+
     void relax(float x, float y, float z, float ori[3]);
     bool moveLeg(QString leg, float x, float y, float z, double ori[][3], bool fixed = false);
     bool moveLeg(QString leg, float x, float y, float z, bool fixed = false);
