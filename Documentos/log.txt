@@ -26,3 +26,14 @@ Sensor torque: al colocarlo en un joint solo mide el par producido por el motor
 Cambios:
     - modulesimulator: executeMessage() -> reboot -> torque = on;
     - Robot: sincronizado a tiempo real.
+
+28/05/2025
+
+tras crear la nueva interfaz, cambios:
+    -romkin: IKwrist() -> al calcular num no usar valor absoluto dado que elimina una de las dos soluciones. Esto provocaba que el punto 115,0,0 se 
+    diera como valido generando los valores de m[]; sin embargo, los valores obtenidos posicionaban el modulo totalmente extendido (posicion que se 
+    deberia obtener solo en puntos como 518,0,0).
+
+    -motor (motorWidget): añadido un atributo de tipo _FixedMotorInfoData_ para realizar la comprobacion de limites articulares.
+
+    -module (RomerinModule): checkJointLimit() nueva función comprueba si alguno de los angulos obtenidos supera los limites de dicha articulación.
