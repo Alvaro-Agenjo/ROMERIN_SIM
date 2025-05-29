@@ -8,8 +8,7 @@
 
 
 #include "module.h"
-//#include "QtSerialPort/QSerialPortInfo"
-//#include <QFileDialog>
+
 
 
 QStatusBar * MainWindow::sbar;
@@ -21,11 +20,39 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::Main
     sbar=ui->statusbar;
     _this=this;
 
+
+
+
+    auto *series = new QLineSeries();
+    series->append(0,3);
+    series->append(3,6);
+    series->append(4,9);
+    series->append(6,5);
+    series->append(6,3);
+    series->append(43,1);
+    series->append(1,7);
+
+    auto *chart = new QChart();
+    chart->legend()->hide();
+    chart->addSeries(series);
+    chart->createDefaultAxes();
+    //chart->setVisible(true);
+
+    //ui->graphicsView = new QChartView(chart, ui->graphicsView);
+    // ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+    //ui->graphicsView->setVisible(true);
+
+     QChartView *chartview = new QChartView(chart);
+     chartview->setRenderHint(QPainter::Antialiasing);
+     chartview->setVisible(true);
+
+
+
     //Actualizacion de la tabla donde se informa de los módulos conectados
     QTableWidget *tb=ui->table_modules;
     QStringList m_TableHeader;
     tb->setColumnCount(4);
-    tb->setColumnWidth(0, 50);
+    tb->setColumnWidth(0, 100);
     tb->setColumnWidth(1, 110);
     tb->setColumnWidth(2, 80);
     tb->setColumnWidth(3, 100);
@@ -237,6 +264,7 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
 
 void MainWindow::on_btn_stand_clicked()
 {
+
     // commander.stand();
 }
 
