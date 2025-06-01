@@ -1,3 +1,4 @@
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -178,37 +179,37 @@ void MainWindow::read_ip_port(){
 void MainWindow::on_txt_motor1_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor1_maxvel->text().toFloat();
-    // commander.setVel(velMax, 1);
+    commander.setVel(velMax, 1);
 }
 
 void MainWindow::on_txt_motor2_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor2_maxvel->text().toFloat();
-    // commander.setVel(velMax, 2);
+    commander.setVel(velMax, 2);
 }
 
 void MainWindow::on_txt_motor3_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor3_maxvel->text().toFloat();
-    // commander.setVel(velMax, 3);
+    commander.setVel(velMax, 3);
 }
 
 void MainWindow::on_txt_motor4_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor4_maxvel->text().toFloat();
-    // commander.setVel(velMax, 4);
+    commander.setVel(velMax, 4);
 }
 
 void MainWindow::on_txt_motor5_maxvel_editingFinished()
 {
-    // float velMax = ui->txt_motor5_maxvel->text().toFloat();
-    // commander.setVel(velMax, 5);
+    float velMax = ui->txt_motor5_maxvel->text().toFloat();
+    commander.setVel(velMax, 5);
 }
 
 void MainWindow::on_txt_motor6_maxvel_editingFinished()
 {
-    // float velMax = ui->txt_motor6_maxvel->text().toFloat();
-    // commander.setVel(velMax, 6);
+    float velMax = ui->txt_motor6_maxvel->text().toFloat();
+    commander.setVel(velMax, 6);
 }
 
 void MainWindow::on_txt_masterVel_editingFinished()
@@ -237,7 +238,7 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
 
 void MainWindow::on_btn_stand_clicked()
 {
-    // commander.stand();
+    commander.stand();
 }
 
 
@@ -248,14 +249,13 @@ void MainWindow::on_btn_reset_clicked()
 
 void MainWindow::on_btn_test1_clicked()
 {
-    commander.a= commander.a +5;
-    commander.loopTest(true);
+    commander.test(true);
 }
 
 void MainWindow::on_btn_test_2_clicked()
 {
     commander.a= commander.a +5;
-    commander.loopTest(false);
+    //commander.loopTest(false);
 }
 
 void MainWindow::on_btn_thor_test_clicked()

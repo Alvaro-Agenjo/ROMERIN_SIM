@@ -1,4 +1,4 @@
-#include "trayectorygenerator.h"
+  #include "trayectorygenerator.h"
 
 #include "moduleshandler.h"
 #include "module.h"
@@ -62,6 +62,16 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, boo
     qDebug()<<"Q1: "<<q[0]<<" Q2: "<<q[1]<<" Q3: "<<q[2];
     //Return true movement command successfull
     return true;
+}
+
+bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, double orientation[][], bool elbow, bool fixed)
+{
+
+}
+
+void trayectoryGenerator::stand()
+{
+
 }
 
 void trayectoryGenerator::relax(float x, float y, float z, float ori[3] )
@@ -162,7 +172,7 @@ bool trayectoryGenerator::objetiveReached(ModuleController *module)
     return true;
 }
 
-void trayectoryGenerator::loopTest(bool elbow)
+void trayectoryGenerator::test(bool elbow)
 {
     ModuleController *module = ModulesHandler::getWithName("THOR");
     qDebug()<<"pos: "<<a;
@@ -172,6 +182,7 @@ void trayectoryGenerator::loopTest(bool elbow)
         if(objetiveReached(module)) qDebug()<<"continue";
     }
     else qDebug()<<"Fuera de alcance";
+    a += 5;
 }
 
 
