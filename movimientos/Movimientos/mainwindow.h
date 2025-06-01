@@ -13,6 +13,9 @@
 #include "module.h"
 #include "trayectorygenerator.h"
 
+#include <QtCharts>
+#include <QChartView>
+
 
 
 constexpr int  MAIN_TIMER_MS=40; //ms before 50
