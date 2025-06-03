@@ -366,7 +366,7 @@ void RomJoints::loop(QString module_name)
 
     ///////////READ POS VEL ETC.
 
-    motors[i].intensity= 0.1; //mamp
+    motors[i].intensity= dynamixels[i].getTorqueForce(); //mamp
     motors[i].position= q2m(i);// Manda el ángulo en grados
     //motors[i].position= dynamixels[i].angle * romkin.rad2deg;
     motors[i].velocity=dynamixels[i].velocity; //grad/sec
@@ -393,7 +393,17 @@ void RomJoints::loop(QString module_name)
         goal_ang5 = dynamixels[i].goal_angle;
         q5 = dynamixels[i].q5;
     }
-  }
+  
+  //////////////////////////////////////////////////////////
+  //        Codified torque into current (sym_only)       //
+  //////////////////////////////////////////////////////////
+
+  if(i == 0) motors[i].intensity *= 4.0 / 6.0;  // 4A / 6Nm
+  else if( i < 3) motors[i].intensity *= 5.0 / 10.0; // 5A / 10 Nm
+  else motors[i].intensity *= 1.4 / 1.9; // 1.4A / 1.9Nm
+  
+  motors[i].intensity *= 1000.0; //conversion to mA
+}
   setGoalAnglesConversions();
 
   ///////////FORCE STORAGE
