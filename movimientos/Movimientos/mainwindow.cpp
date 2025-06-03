@@ -24,28 +24,28 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::Main
 
 
 
-    auto *series = new QLineSeries();
-    series->append(0,3);
-    series->append(3,6);
-    series->append(4,9);
-    series->append(6,5);
-    series->append(6,3);
-    series->append(43,1);
-    series->append(1,7);
+    // auto *series = new QLineSeries();
+    // series->append(0,3);
+    // series->append(3,6);
+    // series->append(4,9);
+    // series->append(6,5);
+    // series->append(6,3);
+    // series->append(43,1);
+    // series->append(1,7);
 
-    auto *chart = new QChart();
-    chart->legend()->hide();
-    chart->addSeries(series);
-    chart->createDefaultAxes();
-    //chart->setVisible(true);
+    // auto *chart = new QChart();
+    // chart->legend()->hide();
+    // chart->addSeries(series);
+    // chart->createDefaultAxes();
+    // //chart->setVisible(true);
 
-    //ui->graphicsView = new QChartView(chart, ui->graphicsView);
-    // ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-    //ui->graphicsView->setVisible(true);
+    // //ui->graphicsView = new QChartView(chart, ui->graphicsView);
+    // // ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+    // //ui->graphicsView->setVisible(true);
 
-     QChartView *chartview = new QChartView(chart);
-     chartview->setRenderHint(QPainter::Antialiasing);
-     chartview->setVisible(true);
+    //  QChartView *chartview = new QChartView(chart);
+    //  chartview->setRenderHint(QPainter::Antialiasing);
+    //  chartview->setVisible(true);
 
 
 
@@ -224,19 +224,19 @@ void MainWindow::on_txt_motor3_maxvel_editingFinished()
 void MainWindow::on_txt_motor4_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor4_maxvel->text().toFloat();
-    commander.setVel(velMax, 4);
+    // commander.setVel(velMax, 4);
 }
 
 void MainWindow::on_txt_motor5_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor5_maxvel->text().toFloat();
-    commander.setVel(velMax, 5);
+    // commander.setVel(velMax, 5);
 }
 
 void MainWindow::on_txt_motor6_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor6_maxvel->text().toFloat();
-    commander.setVel(velMax, 6);
+    // commander.setVel(velMax, 6);
 }
 
 void MainWindow::on_txt_masterVel_editingFinished()
@@ -265,7 +265,7 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
 
 void MainWindow::on_btn_stand_clicked()
 {
-    commander.stand();
+    // commander.stand();
 }
 
 
@@ -276,13 +276,25 @@ void MainWindow::on_btn_reset_clicked()
 
 void MainWindow::on_btn_test1_clicked()
 {
-    commander.test(true);
+    bool elbow = ui->chk_elbow->isChecked();
+    bool fix = ui->chk_fixed->isChecked();
+
+    double x = ui->txt_THOR_X->text().toDouble();   x/=1000.0;
+    double y = ui->txt_THOR_Y->text().toDouble();   y/=1000.0;
+    double z = ui->txt_THOR_Z->text().toDouble();   z/=1000.0;
+
+    float giro[3] = {ui->txt_motor4_maxvel->text().toFloat(),
+                     ui->txt_motor5_maxvel->text().toFloat(),
+                     ui->txt_motor6_maxvel->text().toFloat()};
+
+    double orientacion[3][3];
+    commander.Calc3x3ROT(giro, orientacion);
+    commander.moveLeg("THOR", x, y, z, orientacion, elbow, fix);
 }
 
 void MainWindow::on_btn_test_2_clicked()
 {
-    commander.a= commander.a +5;
-    //commander.loopTest(false);
+    commander.test(true);
 }
 
 void MainWindow::on_btn_thor_test_clicked()

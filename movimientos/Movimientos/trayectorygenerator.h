@@ -14,19 +14,19 @@ public:
     void setMotorAngle(ModuleController *module, double angle[]);
     void setAdhesion(ModuleController *module, int percentaje);
 
-    void reset();
     bool moveLeg(QString leg, double x, double y, double z, bool elbow = true, bool fixed = false);
     bool moveLeg(QString leg, double x, double y, double z, double orientation [][3], bool elbow = true, bool fixed = false);
+    void Calc3x3ROT(float giro[3], double ortientacion[][3]);
 
+    void reset();
     void stand();
     void relax(float x, float y, float z, float ori[3]);
-    bool moveLeg(QString leg, float x, float y, float z, double ori[][3], bool fixed = false);
-    bool moveLeg(QString leg, float x, float y, float z, bool fixed = false);
-    void rotation(double orientation[][3], float rot[]);
 
-    bool objetiveReached(ModuleController *module);
-    float a = 0;
+
     void test(bool elbow);
+
+private:
+    float a = 0;
 };
 
 #endif // TRAYECTORYGENERATOR_H
