@@ -8,7 +8,7 @@ Module::Module(QWidget *parent) : QWidget(parent),ui(new Ui::Module), config(thi
     for(int i = 0; i<6; i++)
     {
         motors[i]=new Motor((QWidget *)this, i);
-        ui->motorsLayOut->addWidget(motors[i], i%2,i%3 );
+        ui->motorsLayOut->addWidget(motors[i], i<3? 0:1, i%3 );
     }
     connect(&timer, &QTimer::timeout, this, &Module::loop);
     timer.start(40);
