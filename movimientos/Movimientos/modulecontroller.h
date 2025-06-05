@@ -4,7 +4,7 @@
 #include <QString>
 #include <QUdpSocket>
 //#include <memory>
-//#include <QFile>
+#include <QFile>
 //#include "btport.h"
 
 //--------------------------------------------//
@@ -20,6 +20,7 @@ struct ConfigurationInfoV2;
 class ModuleController
 {
 public:
+    QFile * _file;
     QString name;
     bool simulated=false;
     uint8_t virtualid=0;
@@ -53,8 +54,9 @@ public:
     void init_rec(ulong init_t,const QString &directory);
     void stop_rec();
     void save_data();
+    void setFile(QFile *file){_file = file;}
     //std::unique_ptr<QFile> file;
-    //ulong init_t;
+    ulong init_t;
 
     //--------------------------------------------//
     void activateMotors(bool on = true);

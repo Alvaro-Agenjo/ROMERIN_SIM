@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <QNetworkInterface>
 #include <QNetworkDatagram>
+#include <QDateTime>
+#include <QTextStream>
 
 
 #include "module.h"
@@ -14,6 +16,7 @@
 
 QStatusBar * MainWindow::sbar;
 MainWindow * MainWindow::_this;
+static bool activo = false;
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::MainWindow), ip_port(0)
 {
@@ -53,10 +56,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::Main
     QTableWidget *tb=ui->table_modules;
     QStringList m_TableHeader;
     tb->setColumnCount(4);
-    tb->setColumnWidth(0, 100);
+    tb->setColumnWidth(0, 110);
     tb->setColumnWidth(1, 110);
     tb->setColumnWidth(2, 80);
-    tb->setColumnWidth(3, 100);
+    tb->setColumnWidth(3, 110);
     tb->setStyleSheet("QHeaderView::section { background-color:lightGray }");
     m_TableHeader<<"Module"<<"IP"<<"BT COM"<<"Status";
     tb->setHorizontalHeaderLabels(m_TableHeader);
@@ -85,6 +88,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     ModulesHandler::clear();
+    if(activo) file.close();
 }
 
 
@@ -194,6 +198,7 @@ void MainWindow::read_ip_port(){
                         module->mod->setModule(module);
                         module->reset_wifi_watchdog();
                     }
+                    module->setFile(&file);
                     updateTable();
 
                 }
@@ -224,19 +229,19 @@ void MainWindow::on_txt_motor3_maxvel_editingFinished()
 void MainWindow::on_txt_motor4_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor4_maxvel->text().toFloat();
-    // commander.setVel(velMax, 4);
+    commander.setVel(velMax, 4);
 }
 
 void MainWindow::on_txt_motor5_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor5_maxvel->text().toFloat();
-    // commander.setVel(velMax, 5);
+    commander.setVel(velMax, 5);
 }
 
 void MainWindow::on_txt_motor6_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor6_maxvel->text().toFloat();
-    // commander.setVel(velMax, 6);
+    commander.setVel(velMax, 6);
 }
 
 void MainWindow::on_txt_masterVel_editingFinished()
@@ -276,20 +281,9 @@ void MainWindow::on_btn_reset_clicked()
 
 void MainWindow::on_btn_test1_clicked()
 {
-    bool elbow = ui->chk_elbow->isChecked();
-    bool fix = ui->chk_fixed->isChecked();
+    QTextStream out(&file);
+    out << "contenido";
 
-    double x = ui->txt_THOR_X->text().toDouble();   x/=1000.0;
-    double y = ui->txt_THOR_Y->text().toDouble();   y/=1000.0;
-    double z = ui->txt_THOR_Z->text().toDouble();   z/=1000.0;
-
-    float giro[3] = {ui->txt_motor4_maxvel->text().toFloat(),
-                     ui->txt_motor5_maxvel->text().toFloat(),
-                     ui->txt_motor6_maxvel->text().toFloat()};
-
-    double orientacion[3][3];
-    commander.Calc3x3ROT(giro, orientacion);
-    commander.moveLeg("THOR", x, y, z, orientacion, elbow, fix);
 }
 
 void MainWindow::on_btn_test_2_clicked()
@@ -297,7 +291,8 @@ void MainWindow::on_btn_test_2_clicked()
     commander.test(true);
 }
 
-void MainWindow::on_btn_thor_test_clicked()
+
+void MainWindow::on_btn_thor_test_simple_clicked()
 {
     bool elbow = ui->chk_elbow->isChecked();
     bool fix = ui->chk_fixed->isChecked();
@@ -309,3 +304,51 @@ void MainWindow::on_btn_thor_test_clicked()
     commander.moveLeg("THOR", x, y, z, elbow, fix);
 }
 
+
+void MainWindow::on_btn_thor_test_complete_clicked()
+{
+    bool elbow = ui->chk_elbow->isChecked();
+    bool fix = ui->chk_fixed->isChecked();
+
+    double x = ui->txt_THOR_X->text().toDouble();   x/=1000.0;
+    double y = ui->txt_THOR_Y->text().toDouble();   y/=1000.0;
+    double z = ui->txt_THOR_Z->text().toDouble();   z/=1000.0;
+
+    float giro[3] = {ui->txt_THOR_alfa->text().toFloat(),
+                     ui->txt_THOR_beta->text().toFloat(),
+                     ui->txt_THOR_gamma->text().toFloat()};
+
+
+    commander.moveLeg("THOR", x, y, z, giro, elbow, fix);
+}
+
+
+void MainWindow::on_btn_record_clicked()
+{
+    if(activo){
+        activo = false;
+        file.close();
+        ui->btn_record->setText("Record");
+        qDebug()<<"Fichero cerrado";
+    }
+    else{
+        activo = true;
+        QDateTime fecha = QDateTime::currentDateTime();
+        QString str_fecha = fecha.toString("log_yyyyMMdd_hhmmss");
+        str_fecha = "../../../../Datalogs/" +str_fecha + ".txt";
+        qDebug() << str_fecha;
+
+        file.setFileName(str_fecha);        
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            qDebug() << "Error al abrir el archivo: " << file.errorString();
+            return;
+        }
+
+        ulong tiempo = millis();
+        for(auto module : ModulesHandler::module_list){
+            module->init_t = tiempo;
+        }
+        ui->btn_record->setText("Stop Recording");
+
+    }
+}

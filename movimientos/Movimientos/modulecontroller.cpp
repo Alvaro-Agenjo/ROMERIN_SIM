@@ -5,7 +5,7 @@
 //#include "romerinmodule.h"
 #include "configdlg.h"
 //#include <QDir>
-//#include <QTextStream>
+#include <QTextStream>
 
 QUdpSocket * ModuleController::ip_port=0;
 void ModuleController::loop()
@@ -28,12 +28,14 @@ void ModuleController::loop()
     //log handler
     if(file)save_data();
     */
+
+    save_data();
 }
  void ModuleController::getConfig()
 {
-     sendMessage(RomerinMsg(ROM_GET_CONFIG));
-     sendMessage(RomerinMsg(ROM_GET_CONFIG_V2));
-     for(int i=0;i<6;i++)sendMessage(RomerinMsg(ROM_GET_FIXED_MOTOR_INFO,i));
+    sendMessage(RomerinMsg(ROM_GET_CONFIG));
+    sendMessage(RomerinMsg(ROM_GET_CONFIG_V2));
+    for(int i=0;i<6;i++)sendMessage(RomerinMsg(ROM_GET_FIXED_MOTOR_INFO,i));
 }
 void ModuleController::sendMessage(const RomerinMsg &m){
 
@@ -193,20 +195,23 @@ void ModuleController::stop_rec()
 
 void ModuleController::save_data()
 {
-    /*
+
     double qs[6],mt[6];
     MotorInfoData mi[6];
-    if(!file->isOpen())return;
-    tab->get_qs(qs);
-    tab->get_torques(mt);
-    tab->get_motor_info(mi);
-    QTextStream out(file.get());
+    //if(!file->isOpen())return;
+    mod->get_qs(qs);
+    mod->get_torques(mt);
+    mod->get_motor_info(mi);
+    QTextStream fichero(_file);
 
-    for(auto q:qs)out<<q<<" ; ";
-    for(auto m:mt)out<<m<<" ; ";
-    for(auto m:mi)out<<m.position<<" ; "<<m.velocity<<" ; " << m.intensity << " ; ";
-    out<<millis()-init_t<<"\n";
-*/
+    fichero << name << ":\n Q: ";
+    for(auto q:qs)fichero<<q<<" ;\t";
+    fichero << "\nTorque: ";
+    for(auto m:mt)fichero<<m<<" ;\t ";
+    fichero << "\n MotorD: ";
+    for(auto m:mi)fichero<<m.position<<" ;\t "<<m.velocity<<" ;\t " << m.intensity << " ;\n ";
+    fichero<<"\n" << millis()-init_t<<"\n";
+
 
 }
 

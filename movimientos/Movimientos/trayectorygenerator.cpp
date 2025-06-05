@@ -59,10 +59,11 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, boo
 
     return true; //Return true movement command successfull
 }
-bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, double orientation[][3], bool elbow, bool fixed)
+bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow, bool fixed)
 {
     ModuleController *module = ModulesHandler::getWithName(leg);
-    double m[6]={}, q[6]= {}, p[3] = {x,y,z};
+    double m[6]={}, q[6]= {}, p[3] = {x,y,z}, orientation[3][3];
+    Calc3x3ROT(RPY, orientation);
 
     if(!module->mod->romkin.IKfast(q, orientation, p, elbow, true)) {
         qDebug()<<"Fuera de rango";

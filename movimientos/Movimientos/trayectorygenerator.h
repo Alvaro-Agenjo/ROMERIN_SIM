@@ -15,7 +15,7 @@ public:
     void setAdhesion(ModuleController *module, int percentaje);
 
     bool moveLeg(QString leg, double x, double y, double z, bool elbow = true, bool fixed = false);
-    bool moveLeg(QString leg, double x, double y, double z, double orientation [][3], bool elbow = true, bool fixed = false);
+    bool moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
     void Calc3x3ROT(float giro[3], double ortientacion[][3]);
 
     void reset();

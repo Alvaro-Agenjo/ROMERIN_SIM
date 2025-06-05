@@ -7,11 +7,13 @@
 #include <QUdpSocket>
 #include <list>
 #include <QTimer>
+#include <QFile>
 
 #include "../include/RomerinMessage.h"
 #include "modulecontroller.h"
 #include "module.h"
 #include "trayectorygenerator.h"
+#include "components/utils.h"
 
 #include <QtCharts>
 #include <QChartView>
@@ -56,6 +58,8 @@ private slots:
 
     void on_btn_enableMotors_clicked(bool checked);
 
+    void on_btn_thor_test_simple_clicked();
+    void on_btn_thor_test_complete_clicked();
 
 
 
@@ -68,7 +72,8 @@ private slots:
 
     void on_btn_test_2_clicked();
 
-    void on_btn_thor_test_clicked();
+
+    void on_btn_record_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -78,9 +83,12 @@ private:
     QTimer timer;
     MsgReader udp_reader;
     //RomerinModel robot;
-    trayectoryGenerator commander;
+
     static QStatusBar *sbar;
     static MainWindow *_this;
+
+    trayectoryGenerator commander;
+    QFile file;
 
     void loop_wifi();
 };
