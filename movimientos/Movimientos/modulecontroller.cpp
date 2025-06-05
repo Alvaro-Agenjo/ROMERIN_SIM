@@ -198,7 +198,7 @@ void ModuleController::save_data()
 
     double qs[6],mt[6];
     MotorInfoData mi[6];
-    //if(!file->isOpen())return;
+    if(!_file->isOpen())return;
     mod->get_qs(qs);
     mod->get_torques(mt);
     mod->get_motor_info(mi);

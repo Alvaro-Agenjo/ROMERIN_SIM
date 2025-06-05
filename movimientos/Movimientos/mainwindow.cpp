@@ -301,7 +301,7 @@ void MainWindow::on_btn_thor_test_simple_clicked()
     double y = ui->txt_THOR_Y->text().toDouble();   y/=1000.0;
     double z = ui->txt_THOR_Z->text().toDouble();   z/=1000.0;
 
-    commander.moveLeg("THOR", x, y, z, elbow, fix);
+    commander.moveLeg("LOKI", x, y, z, elbow, fix);
 }
 
 
@@ -319,7 +319,7 @@ void MainWindow::on_btn_thor_test_complete_clicked()
                      ui->txt_THOR_gamma->text().toFloat()};
 
 
-    commander.moveLeg("THOR", x, y, z, giro, elbow, fix);
+    commander.moveLeg("LOKI", x, y, z, giro, elbow, fix);
 }
 
 
@@ -347,6 +347,7 @@ void MainWindow::on_btn_record_clicked()
         ulong tiempo = millis();
         for(auto module : ModulesHandler::module_list){
             module->init_t = tiempo;
+            //module->setFile(&file);
         }
         ui->btn_record->setText("Stop Recording");
 

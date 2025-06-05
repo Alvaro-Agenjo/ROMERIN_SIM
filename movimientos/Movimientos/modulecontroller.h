@@ -20,7 +20,7 @@ struct ConfigurationInfoV2;
 class ModuleController
 {
 public:
-    QFile * _file;
+    QFile * _file = nullptr;
     QString name;
     bool simulated=false;
     uint8_t virtualid=0;
