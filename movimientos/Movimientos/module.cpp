@@ -74,6 +74,17 @@ void Module::get_torques(double *t)
     romkin.mt2qt(t,mi);
 }
 
+void Module::get_pos(double pos[])
+{
+    double q[6];
+    get_qs(q);
+    auto posicion = romkin.FKwrist(q[0],q[1],q[2]);
+
+    for(int i = 0; i< 3; i++){
+        pos[i] = posicion(i);
+    }
+}
+
 void Module::get_motor_info(MotorInfoData *m)
 {
     for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info();
@@ -89,6 +100,14 @@ bool Module::checkJointsLimits(double m[], bool simple)
         }
     }
     return false;
+}
+
+bool Module::objetiveReached()
+{
+    for(const Motor *motor : motors){
+        if(motor->isMoving()) return false;
+    }
+    return true;
 }
 
 

@@ -44,6 +44,7 @@ public:
     void sendConfigV2(ConfigurationInfoV2 &info){if(module)module->sendConfigV2(info);}
     void get_qs(double *q);
     void get_torques(double *t);
+    void get_pos(double pos[3]);
     void get_motor_info(MotorInfoData *m);
     ConfigurationInfoV2 getConfigInfoV2(){return config.getConfigInvoV2();}
 
