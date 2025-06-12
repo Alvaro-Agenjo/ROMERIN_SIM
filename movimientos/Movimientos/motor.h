@@ -23,12 +23,15 @@ public:
     MotorInfoData get_motor_info(){return info_motor;}
     FixedMotorInfoData get_motor_limits(){return limits_motor;}
 
+    bool isMoving() const {return moving;}
+
 private:
     Ui::Motor *ui;
     MotorInfoData info_motor;
     FixedMotorInfoData limits_motor;
     ModuleController *_module;
     int motor_id;
+    bool moving = false;
 };
 
 #endif // MOTOR_H

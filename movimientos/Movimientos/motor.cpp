@@ -20,7 +20,9 @@ void Motor::updateInfo(MotorInfoData &minfo)
 {
     info_motor=minfo;
     ui->num_angulo->display(QString::number(minfo.position, 'f', 1));
+
     ui->num_vel->display(QString::number(minfo.velocity, 'f', 1));
+    moving = abs(minfo.velocity) < 0.2 ? false : true;
 
     float torque = minfo.intensity;
     if(minfo.id == 0) torque/= (4.0 / 6.0);  // 4A / 6Nm
