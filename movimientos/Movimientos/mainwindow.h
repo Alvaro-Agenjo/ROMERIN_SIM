@@ -95,5 +95,7 @@ private:
     QFile file;
 
     void loop_wifi();
+
+    QString test_subject = "FREYJA";
 };
 #endif // MAINWINDOW_H

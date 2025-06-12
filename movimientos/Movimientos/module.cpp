@@ -10,6 +10,15 @@ Module::Module(QWidget *parent) : QWidget(parent),ui(new Ui::Module), config(thi
         motors[i]=new Motor((QWidget *)this, i);
         ui->motorsLayOut->addWidget(motors[i], i<3? 0:1, i%3 );
     }
+
+    //------------------------------------Temporal hasta actualización de software---------------------------------//
+    config.setConfigInfo(*new ConfigurationInfoV2);
+    for(int i= 0; i< 6; i++){
+        ConfigurationInfoV2 info = config.getConfigInvoV2();
+        FixedMotorInfoData limits; limits.max_angle = info.max[i]; limits.min_angle = info.min[i];
+        motors[i]->updateFixedInfo(limits);
+    }
+    //------------------------------------Temporal hasta actualización de software---------------------------------//
     connect(&timer, &QTimer::timeout, this, &Module::loop);
     timer.start(40);
 }

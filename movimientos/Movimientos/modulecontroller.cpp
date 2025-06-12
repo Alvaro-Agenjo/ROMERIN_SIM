@@ -157,6 +157,7 @@ RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
             for(uint8_t i=0;i<6;i++){
                 MotorInfoData &&minfo=compact_data2motor_info_data(data,i);
                 //if(tab)tab->getMotorUI(minfo.id)->updateInfo(minfo);
+                if(mod)mod->getMotorUI(minfo.id)->updateInfo(minfo);
             }
             //analogously with suction cup info
             auto &&sc=compact_data2sc_info_data(data);
