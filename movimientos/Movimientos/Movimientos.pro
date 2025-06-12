@@ -21,6 +21,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    MTHomogenea.cpp \
     components/joypad.cpp \
     configdlg.cpp \
     main.cpp \
@@ -30,12 +31,12 @@ SOURCES += \
     moduleshandler.cpp \
     ../shared/romkin.cpp \
     motor.cpp \
-    point_3d.cpp \
     trayectorygenerator.cpp
 
 HEADERS += \
     ../include/RomerinMessage.h \
     ../shared/romkin.h \
+    MTHomogenea.h \
     components/QtGamepadFake.h \
     components/joypad.h \
     components/utils.h \
@@ -45,7 +46,6 @@ HEADERS += \
     moduleshandler.h \
     mainwindow.h \
     motor.h \
-    point_3d.h \
     trayectorygenerator.h
 
 FORMS += \
