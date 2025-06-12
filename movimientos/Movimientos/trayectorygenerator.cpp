@@ -6,13 +6,40 @@
 
 trayectoryGenerator::trayectoryGenerator() {
     center = {0,0,-100};
-    up_left = {-0.6961458360738, 0.7179003934511,-0.1};
-    up_right = {0.6961458360738, 0.7179003934511,-0.1};
-    down_left = {-0.6961458360738, -0.7179003934511,-0.1};
-    down_right = {0.6961458360738, -0.7179003934511,-0.1};
+    // up_left = {-0.6961458360738, 0.7179003934511,-0.1};
+    // up_right = {0.6961458360738, 0.7179003934511,-0.1};
+    // down_left = {-0.6961458360738, -0.7179003934511,-0.1};
+    // down_right = {0.6961458360738, -0.7179003934511,-0.1};
+
+
+    double m[3][3], p[] ={0.08,0.0825,0};
+    Calc3x3ROT(0,0,45.5, m);
+    centro2leg_DU = *new Matriz_Transformacion(m, p);
+
+    p[0] = -0.08;   p[1] = 0.0825;
+    Calc3x3ROT(0,0,180.0-45.5, m);
+    centro2leg_ID = *new Matriz_Transformacion(m,p);
+    //    centro2leg_ID = centro2leg_DD* *new Matriz_Transformacion(m);
+
+    p[0] = -0.08;   p[1] = -0.0825;
+    Calc3x3ROT(0,0,-(180.0-45.5), m);
+    centro2leg_ID = *new Matriz_Transformacion(m, p);
+
+    p[0] = 0.08;   p[1] = -0.0825;
+    Calc3x3ROT(0,0,-45.5, m);
+    centro2leg_DD = centro2leg_DD* *new Matriz_Transformacion(m, p);
+
+    //centro2leg_ID = centro2leg_DU * -1;
 
     connect(&timer, &QTimer::timeout, this, &trayectoryGenerator::nextOrder);
     timer.start(30);//antes 50ms
+}
+
+bool trayectoryGenerator::isMoving(){
+    for(auto modulo :ModulesHandler::module_list){
+        if(!modulo->mod->objetiveReached()) return true;
+    }
+    return false;
 }
 
 void trayectoryGenerator::setVel(float max_vel, int motor_id){
@@ -188,6 +215,11 @@ void trayectoryGenerator::moveBot(Point_3D new_center)
     }
 }
 
+void trayectoryGenerator::moveBot(Vector3D new_center)
+{
+    Vector3D rel_move = new_center - Center;
+}
+
 void trayectoryGenerator::reset()
 {
     qDebug()<<"Reset";
@@ -249,10 +281,5 @@ void trayectoryGenerator::test(bool elbow)
     else qDebug()<<"Fuera de alcance";
     a += 5;
 }
-bool trayectoryGenerator::isMoving(){
-    for(auto modulo :ModulesHandler::module_list){
-        if(!modulo->mod->objetiveReached()) return true;
-    }
-    return false;
-}
+
 
