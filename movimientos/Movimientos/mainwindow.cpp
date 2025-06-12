@@ -268,30 +268,20 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
     }
 }
 
-void MainWindow::on_btn_stand_clicked()
-{
-    // commander.stand();
-}
-
-
 void MainWindow::on_btn_reset_clicked()
 {
-    commander.reset();
+    commander.addOrder(order_t::RESET);
 }
-
-void MainWindow::on_btn_test1_clicked()
+void MainWindow::on_btn_stand_clicked()
 {
-    QTextStream out(&file);
-    out << "contenido";
-
+    commander.addOrder(order_t::RESET);
+    commander.addOrder(order_t::STAND);
 }
-
-void MainWindow::on_btn_test_2_clicked()
+void MainWindow::on_btn_relax_clicked()
 {
-    commander.test(true);
+    commander.addOrder(order_t::RESET);
+    commander.addOrder(order_t::RELAX);
 }
-
-
 void MainWindow::on_btn_thor_test_simple_clicked()
 {
     bool elbow = ui->chk_elbow->isChecked();
@@ -303,8 +293,6 @@ void MainWindow::on_btn_thor_test_simple_clicked()
 
     commander.moveLeg("LOKI", x, y, z, elbow, fix);
 }
-
-
 void MainWindow::on_btn_thor_test_complete_clicked()
 {
     bool elbow = ui->chk_elbow->isChecked();
@@ -321,7 +309,14 @@ void MainWindow::on_btn_thor_test_complete_clicked()
 
     commander.moveLeg("LOKI", x, y, z, giro, elbow, fix);
 }
-
+void MainWindow::on_btn_test1_clicked()
+{
+    commander.moveBot(Point_3D{100, 0,0});
+}
+void MainWindow::on_btn_test_2_clicked()
+{
+    commander.test(true);
+}
 
 void MainWindow::on_btn_record_clicked()
 {
@@ -353,3 +348,10 @@ void MainWindow::on_btn_record_clicked()
 
     }
 }
+
+
+void MainWindow::on_btn_fixRot_clicked()
+{
+
+}
+

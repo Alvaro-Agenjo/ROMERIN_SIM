@@ -4,7 +4,16 @@
 #include "module.h"
 
 
-trayectoryGenerator::trayectoryGenerator() {}
+trayectoryGenerator::trayectoryGenerator() {
+    center = {0,0,-100};
+    up_left = {-0.6961458360738, 0.7179003934511,-0.1};
+    up_right = {0.6961458360738, 0.7179003934511,-0.1};
+    down_left = {-0.6961458360738, -0.7179003934511,-0.1};
+    down_right = {0.6961458360738, -0.7179003934511,-0.1};
+
+    connect(&timer, &QTimer::timeout, this, &trayectoryGenerator::nextOrder);
+    timer.start(30);//antes 50ms
+}
 
 void trayectoryGenerator::setVel(float max_vel, int motor_id){
     RomerinMsg m = romerinMsg_VelocityProfile(motor_id, max_vel);
@@ -14,10 +23,11 @@ void trayectoryGenerator::setVel(float max_vel, int motor_id){
 }
 void trayectoryGenerator::setMotorAngle(ModuleController *module, double angle[])
 {
+    // qDebug()<<module->name;
     for(int i = 0; i<6; i++){
         RomerinMsg m = romerinMsg_ServoGoalAngle(i, angle[i]);
         module->sendMessage(m);
-        qDebug()<<"Motor "<< i<< ": "<<angle[i];
+        // qDebug()<<"Motor "<< i<< ": "<<angle[i];
     }
 
 }
@@ -63,7 +73,7 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, flo
 {
     ModuleController *module = ModulesHandler::getWithName(leg);
     double m[6]={}, q[6]= {}, p[3] = {x,y,z}, orientation[3][3];
-    Calc3x3ROT(RPY, orientation);
+    Calc3x3ROT(RPY[0], RPY[1], RPY[2], orientation);
 
     if(!module->mod->romkin.IKfast(q, orientation, p, elbow, true)) {
         qDebug()<<"Fuera de rango";
@@ -90,16 +100,47 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, flo
 
     return true; //Return true movement command successfull
 }
-void trayectoryGenerator::Calc3x3ROT(float giro[3], double orientacion[3][3])
+bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, double z, float RPY[3], bool elbow, bool fixed)
 {
-    // Convertir grados a radianes
-    for (int i = 0; i < 3; i++) {
-        giro[i] /= RomKin::rad2deg;
+    double m[6]={}, q[6]= {}, p[3] = {x,y,z}, orientation[3][3];
+    Calc3x3ROT(RPY[0], RPY[1], RPY[2], orientation);
+
+    if(!module->mod->romkin.IKfast(q, orientation, p, elbow, true)) {
+        qDebug()<<"Fuera de rango";
+        return false;
+    }
+    module->mod->romkin.q2m(m,q);
+
+    //Check if joint physical limits are not surpassed
+    if(module->mod->checkJointsLimits(m, true)) {
+        qDebug()<<"Joint limit surpassed";
+        return false;
     }
 
-    double cx = cos(giro[0]), sx = sin(giro[0]);
-    double cy = cos(giro[1]), sy = sin(giro[1]);
-    double cz = cos(giro[2]), sz = sin(giro[2]);
+    //Sends suction power command if necessary
+    RomerinMsg msg;
+    if(fixed) msg = romerinMsg_SuctionCupPWM(50);
+    else msg = romerinMsg_SuctionCupPWM(standby);
+    module->sendMessage(msg);
+
+
+    //Sends movement commands
+    setMotorAngle(module, m);
+    // qDebug()<<"Q1: "<<q[0]<<" Q2: "<<q[1]<<" Q3: "<<q[2];
+
+    return true; //Return true movement command successfull
+}
+void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientacion[][3])
+{
+
+    // Convertir grados a radianes
+    a /= RomKin::rad2deg;
+    b /= RomKin::rad2deg;
+    c /= RomKin::rad2deg;
+
+    double cx = cos(a), sx = sin(a);
+    double cy = cos(b), sy = sin(b);
+    double cz = cos(c), sz = sin(c);
 
     // Matriz de rotación sobre ejes globales (Rx * Ry * Rz)
     orientacion[0][0] = cy * cz;
@@ -115,11 +156,43 @@ void trayectoryGenerator::Calc3x3ROT(float giro[3], double orientacion[3][3])
     orientacion[2][2] = cx * cy;
 }
 
+void trayectoryGenerator::moveBot(Point_3D new_center)
+{
+
+    Point_3D diff = new_center - center;
+    diff /= 1000.0;
+
+    if(diff.module() > 0.008){
+        float plana[3] = {0, -180,0};
+        // up_left += diff; up_right += diff;
+        // down_left += diff; down_right += diff;
+        bool oka = true;
+        for(auto modulo :ModulesHandler::module_list){
+            double pos[3]{};
+            modulo->mod->get_pos(pos);
+            Point_3D obj = pos - diff;
+            //Point_3D obj = {400,0,0}; obj -= new_center;
+            //obj/=1000.0;
+
+            oka &= moveLeg(modulo,obj.x, obj.y, obj.z,plana ,true, false);
+        }
+        if(oka){
+            qDebug()<<"Movimiento valido";
+            center = new_center;
+            int counter = 0;
+            while(isMoving() && counter <10){counter ++;}
+        }
+        else{
+            qDebug()<<"Movimiento no alcanzable";
+        }
+    }
+}
 
 void trayectoryGenerator::reset()
 {
     qDebug()<<"Reset";
-    double m[6] = {185,246,197,180,233,127};
+    center = {0,0,0};
+    double m[6] = {185,246,197,180,102,-12};
     for(const auto module : ModulesHandler::module_list){
         setMotorAngle(module, m);
         setAdhesion(module, standby);
@@ -127,11 +200,41 @@ void trayectoryGenerator::reset()
 }
 void trayectoryGenerator::stand()
 {
-
+    moveBot(Point_3D{0,0, 200});
 }
-void trayectoryGenerator::relax(float x, float y, float z, float ori[3] )
+void trayectoryGenerator::relax()
 {
+    moveBot(Point_3D{0,0,-100});
+    // for(auto modulo :ModulesHandler::module_list){
+    //     moveLeg(modulo, 0.5, 0.0, 0.2,RPY,true, false);
+    // }
+}
 
+bool trayectoryGenerator::nextOrder()
+{
+    if(order_list.size() == 0) return false;
+    if(isMoving()) return false;
+
+    order_t input = *order_list.begin();
+    switch(input){
+    case order_t::STAND:
+        stand();
+        break;
+
+    case order_t::RELAX:
+        relax();
+        break;
+    case order_t::RESET:
+        reset();
+        break;
+    case order_t::FIXED_ROTATION:
+        break;
+    case order_t::MOVE_TO_POINT:
+        moveBot(Point_3D{0,0,0});
+        break;
+    }
+    order_list.pop_front();
+    return true;
 }
 
 
@@ -146,5 +249,10 @@ void trayectoryGenerator::test(bool elbow)
     else qDebug()<<"Fuera de alcance";
     a += 5;
 }
-
+bool trayectoryGenerator::isMoving(){
+    for(auto modulo :ModulesHandler::module_list){
+        if(!modulo->mod->objetiveReached()) return true;
+    }
+    return false;
+}
 

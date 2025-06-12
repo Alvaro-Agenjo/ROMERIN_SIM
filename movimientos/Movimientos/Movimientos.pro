@@ -30,6 +30,7 @@ SOURCES += \
     moduleshandler.cpp \
     ../shared/romkin.cpp \
     motor.cpp \
+    point_3d.cpp \
     trayectorygenerator.cpp
 
 HEADERS += \
@@ -44,6 +45,7 @@ HEADERS += \
     moduleshandler.h \
     mainwindow.h \
     motor.h \
+    point_3d.h \
     trayectorygenerator.h
 
 FORMS += \

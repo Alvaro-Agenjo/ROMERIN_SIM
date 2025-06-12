@@ -557,28 +557,23 @@
              <number>40</number>
             </property>
             <item row="0" column="2">
-             <widget class="QPushButton" name="btn_fixRot">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+             <widget class="QPushButton" name="btn_relax">
               <property name="text">
-               <string>Fixed Rotation</string>
+               <string>Relax</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="btn_test1">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="btn_stand">
               <property name="text">
-               <string>test 1</string>
+               <string>Stand</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QPushButton" name="btn_thor_test_simple">
+              <property name="text">
+               <string>THOR_simple</string>
               </property>
              </widget>
             </item>
@@ -595,31 +590,43 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QPushButton" name="btn_thor_test_simple">
-              <property name="text">
-               <string>THOR_simple</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="btn_test_2">
-              <property name="text">
-               <string>test 2</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
+            <item row="1" column="1">
              <widget class="QPushButton" name="btn_thor_test_complete">
               <property name="text">
                <string>THOR_full</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="btn_stand">
+            <item row="1" column="2">
+             <widget class="QPushButton" name="btn_fixRot">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
-               <string>Stand</string>
+               <string>Fixed Rotation</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QPushButton" name="btn_test1">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>test 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="btn_test_2">
+              <property name="text">
+               <string>test 2</string>
               </property>
              </widget>
             </item>

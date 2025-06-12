@@ -75,6 +75,10 @@ private slots:
 
     void on_btn_record_clicked();
 
+    void on_btn_relax_clicked();
+
+    void on_btn_fixRot_clicked();
+
 private:
     Ui::MainWindow *ui;
 
