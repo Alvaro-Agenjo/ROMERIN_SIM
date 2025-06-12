@@ -28,16 +28,16 @@ struct ConfigurationInfo
 
 };
 struct ConfigurationInfoV2{
-    uint16_t lenghts[6]{};
-    uint16_t min[6]{};
-    uint16_t max[6]{};
-    int8_t offset[6]{};
-    uint8_t vel_profile[6]{};
-    uint8_t acc_profile[6]{};
+    uint16_t lenghts[6]{68,236,15,280,22,87};
+    uint16_t min[6]{70,70,55,0,0,0};
+    uint16_t max[6]{290,290,260,360,360,360};
+    int8_t offset[6]{0,0,0,0,0,0};
+    uint8_t vel_profile[6]{5,5,5,5,5,5};
+    uint8_t acc_profile[6]{25,25,25,25,25,25};
     int16_t position[3];
     int16_t orientation[3];
-    bool disable_bt{};
-    bool compact_mode{};
+    bool disable_bt{false};
+    bool compact_mode{false};
     static ConfigurationInfoV2 getFromBuffer(const unsigned char *buffer)
     {
         ConfigurationInfoV2 aux;
@@ -57,7 +57,6 @@ struct ConfigurationInfoV2{
         return aux;
     }
 };
-
 
 
 namespace Ui {
