@@ -86,7 +86,7 @@ private:
 
     //--------------------------------------------//
     QUdpSocket * ip_port;
-    QTimer timer;
+    QTimer timer, test_timer;
     MsgReader udp_reader;
     //RomerinModel robot;
 
@@ -97,7 +97,5 @@ private:
     QFile file;
 
     void loop_wifi();
-
-    QString test_subject = "LOKI";
 };
 #endif // MAINWINDOW_H

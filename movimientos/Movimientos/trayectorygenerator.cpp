@@ -40,11 +40,11 @@ void trayectoryGenerator::setVel(float max_vel, int motor_id){
 }
 void trayectoryGenerator::setMotorAngle(ModuleController *module, double angle[])
 {
-    // qDebug()<<module->name;
+    qDebug()<<module->name;
     for(int i = 0; i<6; i++){
         RomerinMsg m = romerinMsg_ServoGoalAngle(i, angle[i]);
         module->sendMessage(m);
-        // qDebug()<<"Motor "<< i<< ": "<<angle[i];
+        qDebug()<<"Motor "<< i<< ": "<<angle[i];
     }
 
 }
@@ -128,7 +128,7 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, flo
     //Sends suction power command if necessary
     RomerinMsg msg;
     if(fixed) msg = romerinMsg_SuctionCupPWM(50);
-    else msg = romerinMsg_SuctionCupPWM(standby);
+    else msg = romerinMsg_SuctionCupPWM(5);
     module->sendMessage(msg);
 
 
@@ -229,7 +229,6 @@ bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[])
         center = new_center;
     }
 }
-
 bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3])
 {
     std::list<MotorsAngles> points;
@@ -288,7 +287,6 @@ void trayectoryGenerator::reset()
 }
 void trayectoryGenerator::stand()
 {
-
     moveBotAbsolute(Vector3D{0,0, 0.2}, def_orientation);
 }
 void trayectoryGenerator::relax()
@@ -329,7 +327,6 @@ bool trayectoryGenerator::nextOrder()
 
 void trayectoryGenerator::test(bool elbow)
 {
-    ModuleController *module = ModulesHandler::getWithName("THOR");
     qDebug()<<"pos: "<<a;
 
     if(moveLeg("THOR", a/1000.0, 0,0, elbow)){

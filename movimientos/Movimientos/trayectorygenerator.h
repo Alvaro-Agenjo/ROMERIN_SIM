@@ -5,7 +5,7 @@
 #include "modulecontroller.h"
 #include "MTHomogenea.h"
 
-#define standby 5
+#define standby 15
 enum class command_t { STAND, RELAX, FIXED_ROTATION, RESET, MOVE_TO_POINT};
 enum class order{};
 class trayectoryGenerator : public QObject
