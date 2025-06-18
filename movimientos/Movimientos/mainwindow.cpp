@@ -373,6 +373,7 @@ void MainWindow::on_btn_fixRot_clicked()
 
 void MainWindow::on_btn_test_3_clicked()
 {
-    commander.moveBotRelative(Vector3D {0.1,0,0});
+    float RPY[] = {0,180,0};
+    commander.moveBotRelative(Vector3D {0.1,0,0}, RPY);
 }
 

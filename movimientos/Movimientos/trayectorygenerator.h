@@ -25,8 +25,8 @@ public:
 
     void Calc3x3ROT(float a, float b, float c, double ortientacion[][3]);
 
-    bool moveBotAbsolute(Vector3D new_center, float RPY[3] = nullptr);
-    bool moveBotRelative(Vector3D new_center, float RPY[3] = nullptr);
+    bool moveBotAbsolute(Vector3D new_center, float RPY[3]);
+    bool moveBotRelative(Vector3D new_center, float RPY[3]);
     void reset();
     void stand();
     void relax();
@@ -42,6 +42,17 @@ private:
 
     Vector3D center;
     Matriz_Transformacion centro2leg_DU, centro2leg_IU, centro2leg_ID, centro2leg_DD;
+
+    float def_orientation[3] = {0, 180, 0};
+};
+
+struct MotorsAngles{
+    double angle[6];
+
+    MotorsAngles(double angulo[6]){
+        for(int i = 0; i<6; i++)
+            angle[i] = angulo[i];
+    }
 };
 
 #endif // TRAYECTORYGENERATOR_H

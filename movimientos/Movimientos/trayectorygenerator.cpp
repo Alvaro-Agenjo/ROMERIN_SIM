@@ -70,7 +70,10 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
         qDebug()<<"Joint limit surpassed";
         return false;
     }
-    angle = m;
+
+    for(int i = 0; i< 6; i++){
+        angle[i] = m[i];
+    }
     return true;
 }
 bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, bool elbow, bool fixed)
@@ -227,14 +230,9 @@ bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[])
     }
 }
 
-bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[])
+bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3])
 {
-    if(RPY == nullptr){
-        float def[] = {0, 180, 0};
-        RPY = def;
-    }
-
-    std::list<double *> points;
+    std::list<MotorsAngles> points;
     Matriz_Transformacion movimiento(new_center);
     bool oka = true;
 
@@ -267,11 +265,12 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[])
         oka &= validateMovement(angle, modulo,TCP.x, TCP.y, TCP.z,RPY ,true);
 
         if(!oka)    return false;
-        points.push_back(angle);
+        points.push_back(MotorsAngles(angle));
+
     }
 
     for(auto module : ModulesHandler::module_list){
-        setMotorAngle(module, points.front());
+        setMotorAngle(module, points.front().angle);
         points.pop_front();
     }
     return true;
@@ -289,11 +288,12 @@ void trayectoryGenerator::reset()
 }
 void trayectoryGenerator::stand()
 {
-    moveBotAbsolute(Vector3D{0,0, 0.2});
+
+    moveBotAbsolute(Vector3D{0,0, 0.2}, def_orientation);
 }
 void trayectoryGenerator::relax()
 {
-    moveBotAbsolute(Vector3D{0,0,-0.1});
+    moveBotAbsolute(Vector3D{0,0,-0.1}, def_orientation);
     // for(auto modulo :ModulesHandler::module_list){
     //     moveLeg(modulo, 0.5, 0.0, 0.2,RPY,true, false);
     // }
@@ -319,7 +319,7 @@ bool trayectoryGenerator::nextOrder()
     case command_t::FIXED_ROTATION:
         break;
     case command_t::MOVE_TO_POINT:
-        moveBotRelative(Vector3D{0,0,0});
+        moveBotRelative(Vector3D{0,0,0}, def_orientation);
         break;
     }
     order_list.pop_front();
