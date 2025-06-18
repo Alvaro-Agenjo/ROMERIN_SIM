@@ -79,6 +79,8 @@ private slots:
 
     void on_btn_fixRot_clicked();
 
+    void on_btn_test_3_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -96,6 +98,6 @@ private:
 
     void loop_wifi();
 
-    QString test_subject = "FREYJA";
+    QString test_subject = "LOKI";
 };
 #endif // MAINWINDOW_H

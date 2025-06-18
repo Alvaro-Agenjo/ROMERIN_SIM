@@ -270,17 +270,17 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
 
 void MainWindow::on_btn_reset_clicked()
 {
-    commander.addOrder(order_t::RESET);
+    commander.addOrder(command_t::RESET);
 }
 void MainWindow::on_btn_stand_clicked()
 {
-    commander.addOrder(order_t::RESET);
-    commander.addOrder(order_t::STAND);
+    commander.addOrder(command_t::RESET);
+    commander.addOrder(command_t::STAND);
 }
 void MainWindow::on_btn_relax_clicked()
 {
-    commander.addOrder(order_t::RESET);
-    commander.addOrder(order_t::RELAX);
+    commander.addOrder(command_t::RESET);
+    commander.addOrder(command_t::RELAX);
 }
 
 
@@ -314,11 +314,19 @@ void MainWindow::on_btn_thor_test_complete_clicked()
 }
 void MainWindow::on_btn_test1_clicked()
 {
-    commander.moveBot(Point_3D{100, 0,0});
+    float RPY[] = {0,180,0};
+    commander.moveLeg(ModulesHandler::getWithName("THOR"),0.332385, 0.10679,0.037,RPY, true, false);
+    commander.moveLeg(ModulesHandler::getWithName("FRIGG"),0.471615, 0.10679,0.037,RPY, true, false);
+    commander.moveLeg(ModulesHandler::getWithName("ODIN"),0.471615, -0.03679,0.037,RPY, true, false);
+    commander.moveLeg(ModulesHandler::getWithName("LOKI"),0.332385, -0.03679,0.037,RPY, true, false);
 }
 void MainWindow::on_btn_test_2_clicked()
 {
-    commander.test(true);
+    float RPY[] = {0,180,0};
+    commander.moveLeg(ModulesHandler::getWithName("THOR"), 0.402, 0.035, 0.037 ,RPY, true, false);
+    commander.moveLeg(ModulesHandler::getWithName("FRIGG"), 0.402, 0.035, 0.037 ,RPY, true, false);
+    commander.moveLeg(ModulesHandler::getWithName("ODIN"), 0.402, 0.035, 0.037 ,RPY, true, false);
+    commander.moveLeg(ModulesHandler::getWithName("LOKI"), 0.402, 0.035, 0.037 ,RPY, true, false);
 }
 
 void MainWindow::on_btn_record_clicked()
@@ -355,6 +363,16 @@ void MainWindow::on_btn_record_clicked()
 
 void MainWindow::on_btn_fixRot_clicked()
 {
+    float RPY[] = {0,180,0};
+    double pos[3];
+    ModuleController *test = ModulesHandler::getWithName("THOR");
+    test->mod->get_pos(pos);
+    commander.moveLeg("THOR", pos[0], pos[1], pos[2], RPY);
+}
 
+
+void MainWindow::on_btn_test_3_clicked()
+{
+    commander.moveBotRelative(Vector3D {0.1,0,0});
 }
 

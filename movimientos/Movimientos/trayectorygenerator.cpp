@@ -2,34 +2,24 @@
 
 #include "moduleshandler.h"
 #include "module.h"
-
+#include <vector>
 
 trayectoryGenerator::trayectoryGenerator() {
-    center = {0,0,-100};
-    // up_left = {-0.6961458360738, 0.7179003934511,-0.1};
-    // up_right = {0.6961458360738, 0.7179003934511,-0.1};
-    // down_left = {-0.6961458360738, -0.7179003934511,-0.1};
-    // down_right = {0.6961458360738, -0.7179003934511,-0.1};
-
-
     double m[3][3], p[] ={0.08,0.0825,0};
-    Calc3x3ROT(0,0,45.5, m);
+    Calc3x3ROT(0,0,45.8814, m);
     centro2leg_DU = *new Matriz_Transformacion(m, p);
 
     p[0] = -0.08;   p[1] = 0.0825;
-    Calc3x3ROT(0,0,180.0-45.5, m);
-    centro2leg_ID = *new Matriz_Transformacion(m,p);
-    //    centro2leg_ID = centro2leg_DD* *new Matriz_Transformacion(m);
+    Calc3x3ROT(0,0,134.1186, m);
+    centro2leg_IU = *new Matriz_Transformacion(m,p);
 
     p[0] = -0.08;   p[1] = -0.0825;
-    Calc3x3ROT(0,0,-(180.0-45.5), m);
+    Calc3x3ROT(0,0,-134.1186, m);
     centro2leg_ID = *new Matriz_Transformacion(m, p);
 
     p[0] = 0.08;   p[1] = -0.0825;
-    Calc3x3ROT(0,0,-45.5, m);
+    Calc3x3ROT(0,0,-45.8814, m);
     centro2leg_DD = centro2leg_DD* *new Matriz_Transformacion(m, p);
-
-    //centro2leg_ID = centro2leg_DU * -1;
 
     connect(&timer, &QTimer::timeout, this, &trayectoryGenerator::nextOrder);
     timer.start(30);//antes 50ms
@@ -64,7 +54,25 @@ void trayectoryGenerator::setAdhesion(ModuleController *module, int percentaje)
     module->sendMessage(m);
 }
 
+bool trayectoryGenerator::validateMovement(double angle[], ModuleController *module, double x, double y, double z, float RPY[3], bool elbow)
+{
+    double m[6]={}, q[6]= {}, p[3] = {x,y,z}, orientation[3][3];
+    Calc3x3ROT(RPY[0], RPY[1], RPY[2], orientation);
 
+    if(!module->mod->romkin.IKfast(q, orientation, p, elbow, true)) {
+        qDebug()<<"Fuera de rango";
+        return false;
+    }
+    module->mod->romkin.q2m(m,q);
+
+    //Check if joint physical limits are not surpassed
+    if(module->mod->checkJointsLimits(m, true)) {
+        qDebug()<<"Joint limit surpassed";
+        return false;
+    }
+    angle = m;
+    return true;
+}
 bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, bool elbow, bool fixed)
 {
     ModuleController *module = ModulesHandler::getWithName(leg);
@@ -129,20 +137,23 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, flo
 }
 bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, double z, float RPY[3], bool elbow, bool fixed)
 {
-    double m[6]={}, q[6]= {}, p[3] = {x,y,z}, orientation[3][3];
-    Calc3x3ROT(RPY[0], RPY[1], RPY[2], orientation);
+    // double m[6]={}, q[6]= {}, p[3] = {x,y,z}, orientation[3][3];
+    // Calc3x3ROT(RPY[0], RPY[1], RPY[2], orientation);
 
-    if(!module->mod->romkin.IKfast(q, orientation, p, elbow, true)) {
-        qDebug()<<"Fuera de rango";
-        return false;
-    }
-    module->mod->romkin.q2m(m,q);
+    // if(!module->mod->romkin.IKfast(q, orientation, p, elbow, true)) {
+    //     qDebug()<<"Fuera de rango";
+    //     return false;
+    // }
+    // module->mod->romkin.q2m(m,q);
 
-    //Check if joint physical limits are not surpassed
-    if(module->mod->checkJointsLimits(m, true)) {
-        qDebug()<<"Joint limit surpassed";
-        return false;
-    }
+    // //Check if joint physical limits are not surpassed
+    // if(module->mod->checkJointsLimits(m, true)) {
+    //     qDebug()<<"Joint limit surpassed";
+    //     return false;
+    // }
+
+    double m[6]={};
+    if(!validateMovement(m, module, x, y, z, RPY, elbow)) return false;
 
     //Sends suction power command if necessary
     RomerinMsg msg;
@@ -157,6 +168,7 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
 
     return true; //Return true movement command successfull
 }
+
 void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientacion[][3])
 {
 
@@ -171,53 +183,98 @@ void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientaci
 
     // Matriz de rotación sobre ejes globales (Rx * Ry * Rz)
     orientacion[0][0] = cy * cz;
-    orientacion[0][1] = sy * sz;
-    orientacion[0][2] = -sy;
+    orientacion[0][1] = -cy * sz;
+    orientacion[0][2] = sy;
 
-    orientacion[1][0] = -sz * cx +cz * sx * sy;
-    orientacion[1][1] = cz * cx + sz * sy * sx;
-    orientacion[1][2] = sx * cy;
+    orientacion[1][0] = sx * sy * cz + cx * sz;
+    orientacion[1][1] = -sx * sy * sz + cx * cz;
+    orientacion[1][2] = -sx * cy;
 
-    orientacion[2][0] = sz * sx + cz * sy * cx;
-    orientacion[2][1] = -cz * sx + sz * sy * cx;
+    orientacion[2][0] = -cx * sy * cz * + sx * sz;
+    orientacion[2][1] = cx * sy * sz + sx * cz;
     orientacion[2][2] = cx * cy;
 }
 
-void trayectoryGenerator::moveBot(Point_3D new_center)
+/* New_center in m*/
+bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[])
 {
+    Vector3D diff = new_center - center;
+    if(diff.module() > 0.001){
+        moveBotRelative(diff, RPY);
+        // bool oka = true;
+        // for(auto modulo :ModulesHandler::module_list){
+        //     double pos[3]{};
+        //     modulo->mod->get_pos(pos);
+        //     Point_3D obj = pos - diff;
+        //     //Point_3D obj = {400,0,0}; obj -= new_center;
+        //     //obj/=1000.0;
 
-    Point_3D diff = new_center - center;
-    diff /= 1000.0;
-
-    if(diff.module() > 0.008){
-        float plana[3] = {0, -180,0};
-        // up_left += diff; up_right += diff;
-        // down_left += diff; down_right += diff;
-        bool oka = true;
-        for(auto modulo :ModulesHandler::module_list){
-            double pos[3]{};
-            modulo->mod->get_pos(pos);
-            Point_3D obj = pos - diff;
-            //Point_3D obj = {400,0,0}; obj -= new_center;
-            //obj/=1000.0;
-
-            oka &= moveLeg(modulo,obj.x, obj.y, obj.z,plana ,true, false);
-        }
-        if(oka){
-            qDebug()<<"Movimiento valido";
-            center = new_center;
-            int counter = 0;
-            while(isMoving() && counter <10){counter ++;}
-        }
-        else{
-            qDebug()<<"Movimiento no alcanzable";
-        }
+        //     oka &= moveLeg(modulo,obj.x, obj.y, obj.z,plana ,true, false);
+        // }
+        // if(oka){
+        //     qDebug()<<"Movimiento valido";
+        //     center = new_center;
+        //     Center.x = new_center.x;
+        //     Center.y = new_center.y;
+        //     Center.z = new_center.z;
+        //     int counter = 0;
+        //     while(isMoving() && counter <10){counter ++;}
+        // }
+        // else{
+        //     qDebug()<<"Movimiento no alcanzable";
+        // }
+        center = new_center;
     }
 }
 
-void trayectoryGenerator::moveBot(Vector3D new_center)
+bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[])
 {
-    Vector3D rel_move = new_center - Center;
+    if(RPY == nullptr){
+        float def[] = {0, 180, 0};
+        RPY = def;
+    }
+
+    std::list<double *> points;
+    Matriz_Transformacion movimiento(new_center);
+    bool oka = true;
+
+    for(auto modulo :ModulesHandler::module_list){
+        double pos[3]{};
+        modulo->mod->get_pos(pos);
+        Vector3D TCP = {pos[0], pos[1], pos[2]};
+
+        if(modulo->name == "THOR"){
+            Vector3D TCP_global = Transformacion(TCP, centro2leg_DU);
+            TCP = Transformacion(TCP_global, (movimiento*centro2leg_DU).Inversa());
+        }
+        else if(modulo->name == "FRIGG"){
+            Vector3D TCP_global = Transformacion(TCP, centro2leg_IU);
+            TCP = Transformacion(TCP_global, (movimiento*centro2leg_IU).Inversa());
+        }
+        else if(modulo->name == "ODIN"){
+            Vector3D TCP_global = Transformacion(TCP, centro2leg_ID);
+            TCP = Transformacion(TCP_global, (movimiento*centro2leg_ID).Inversa());
+        }
+        else if(modulo->name == "LOKI"){
+            Vector3D TCP_global = Transformacion(TCP, centro2leg_DD);
+            TCP = Transformacion(TCP_global, (movimiento*centro2leg_DD).Inversa());
+        }
+        else
+            qDebug()<< "Leg not found";
+
+        //obj /= 1000.0;
+        double angle[6];
+        oka &= validateMovement(angle, modulo,TCP.x, TCP.y, TCP.z,RPY ,true);
+
+        if(!oka)    return false;
+        points.push_back(angle);
+    }
+
+    for(auto module : ModulesHandler::module_list){
+        setMotorAngle(module, points.front());
+        points.pop_front();
+    }
+    return true;
 }
 
 void trayectoryGenerator::reset()
@@ -232,11 +289,11 @@ void trayectoryGenerator::reset()
 }
 void trayectoryGenerator::stand()
 {
-    moveBot(Point_3D{0,0, 200});
+    moveBotAbsolute(Vector3D{0,0, 0.2});
 }
 void trayectoryGenerator::relax()
 {
-    moveBot(Point_3D{0,0,-100});
+    moveBotAbsolute(Vector3D{0,0,-0.1});
     // for(auto modulo :ModulesHandler::module_list){
     //     moveLeg(modulo, 0.5, 0.0, 0.2,RPY,true, false);
     // }
@@ -247,22 +304,22 @@ bool trayectoryGenerator::nextOrder()
     if(order_list.size() == 0) return false;
     if(isMoving()) return false;
 
-    order_t input = *order_list.begin();
+    command_t input = *order_list.begin();
     switch(input){
-    case order_t::STAND:
+    case command_t::STAND:
         stand();
         break;
 
-    case order_t::RELAX:
+    case command_t::RELAX:
         relax();
         break;
-    case order_t::RESET:
+    case command_t::RESET:
         reset();
         break;
-    case order_t::FIXED_ROTATION:
+    case command_t::FIXED_ROTATION:
         break;
-    case order_t::MOVE_TO_POINT:
-        moveBot(Point_3D{0,0,0});
+    case command_t::MOVE_TO_POINT:
+        moveBotRelative(Vector3D{0,0,0});
         break;
     }
     order_list.pop_front();
