@@ -44,3 +44,11 @@ Consegida la gestion de movimiento en cualquier direccion mediante matrices de t
 *! a pesar de que la traslación en z es nula, al ejecutar moveLeg la pata asciende unos 80 mm. Causa desconocida
 
     --> posible causa, el modelo de mujoco envia como posicion el centro de la muñeca y la interfaz lo interpreta como el TCP.
+
+18/06/2025
+    <-- Causa encontrada, cuando se ejecuta la cinematica directa el punto obtenido no es el TCP sino el centro de la muñeca
+
+
+test angular muñeca esférica, es posible que los motores no acepten valores angulares negativos lo que explicaria la incoherencia 
+con los giros.
+Asegurar que el envio de 6 mensajes (posicion de motores) pueden ser enviados sin esperas.
