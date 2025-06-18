@@ -37,3 +37,10 @@ tras crear la nueva interfaz, cambios:
     -motor (motorWidget): añadido un atributo de tipo _FixedMotorInfoData_ para realizar la comprobacion de limites articulares.
 
     -module (RomerinModule): checkJointLimit() nueva función comprueba si alguno de los angulos obtenidos supera los limites de dicha articulación.
+
+17/06/2025
+
+Consegida la gestion de movimiento en cualquier direccion mediante matrices de transformacion homogenea
+*! a pesar de que la traslación en z es nula, al ejecutar moveLeg la pata asciende unos 80 mm. Causa desconocida
+
+    --> posible causa, el modelo de mujoco envia como posicion el centro de la muñeca y la interfaz lo interpreta como el TCP.
