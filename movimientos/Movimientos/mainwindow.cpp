@@ -339,7 +339,7 @@ void MainWindow::on_btn_test_3_clicked()
 //    float RPY[] = {0,180,0};
 //    commander.moveBotRelative(Vector3D {0.1,0,0}, RPY);
 
-//    test_timer.start(5000);
+   test_timer.start(5000);
 
 
 }
