@@ -118,6 +118,12 @@ double Vector3D::module()
     return cbrt(this->x * this->x + this->y * this->y + this->z *this->z);
 }
 
+Vector3D &Vector3D::operator=(const double pos[])
+{
+    this->x= pos[0]; this->y= pos[1]; this->z = pos[2];
+    return *this;
+}
+
 
 Vector3D operator+(Vector3D lhs, const Vector3D& rhs)
 {

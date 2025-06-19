@@ -266,21 +266,21 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
     for(auto mod : ModulesHandler::module_list){
         mod->activateMotors(checked);
     }
+    commander.setlegs(ModulesHandler::module_list.front()->simulated);
 }
 
 void MainWindow::on_btn_reset_clicked()
 {
-    commander.addOrder(command_t::RESET);
+    commander.reset();
 }
 void MainWindow::on_btn_stand_clicked()
 {
-    commander.addOrder(command_t::RESET);
-    commander.addOrder(command_t::STAND);
+    commander.stand();
 }
 void MainWindow::on_btn_relax_clicked()
 {
-    commander.addOrder(command_t::RESET);
-    commander.addOrder(command_t::RELAX);
+    //commander.addOrder(command_t::RESET);
+    //commander.addOrder(command_t::RELAX);
 }
 
 
@@ -326,20 +326,26 @@ void MainWindow::on_btn_test1_clicked()
 }
 void MainWindow::on_btn_test_2_clicked()
 {
-//    float RPY[] = {0,180,0};
-//    commander.moveLeg(ModulesHandler::getWithName("THOR"), 0.402, 0.035, 0.037 ,RPY, true, false);
-//    commander.moveLeg(ModulesHandler::getWithName("FRIGG"), 0.402, 0.035, 0.037 ,RPY, true, false);
-//    commander.moveLeg(ModulesHandler::getWithName("ODIN"), 0.402, 0.035, 0.037 ,RPY, true, false);
-//    commander.moveLeg(ModulesHandler::getWithName("LOKI"), 0.402, 0.035, 0.037 ,RPY, true, false);
-    test_timer.stop();
+   float RPY[] = {0,180,0};
+   commander.moveLeg(ModulesHandler::getWithName("THOR"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   commander.moveLeg(ModulesHandler::getWithName("FRIGG"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   commander.moveLeg(ModulesHandler::getWithName("ODIN"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   commander.moveLeg(ModulesHandler::getWithName("LOKI"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   // test_timer.stop();
 }
 
 void MainWindow::on_btn_test_3_clicked()
 {
-//    float RPY[] = {0,180,0};
-//    commander.moveBotRelative(Vector3D {0.1,0,0}, RPY);
+    float RPY[] = {0,180,0};
+    for(int i = 0; i< 20; i++){
+        commander.addMovement(ModulesHandler::module_list.front()->name, 0.4, 0, 0.01 * i, RPY,true, false);
+    }
+    //commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
 
-//    test_timer.start(5000);
+    // float RPY[] = {0,180,0};
+    // commander.moveBotRelative(Vector3D {0.1,0,0}, RPY);
+
+    //test_timer.start(5000);
 
 
 }
@@ -379,6 +385,34 @@ float RPY[] = {0,0,0};
 int counter = 0;
 void MainWindow::on_btn_fixRot_clicked()
 {
+    // int plus = 10;
+    // float margen = 180.0/plus;
+    // for(int i = 0; i< margen *3 +1;i++){
+    //     int plus = 10;
+    //     float margen = 180.0/plus;
+    //     if (i < margen){
+    //         RPY[0] += plus;
+    //         RPY[1] = 0;
+    //         RPY[2] = 0;
+    //     }
+    //     else if (i < margen*2){
+    //         RPY[0] = 0;
+    //         RPY[1] += plus;
+    //         RPY[2] = 0;
+    //     }
+    //     else if(i < margen * 3){
+    //         RPY[0] = 0;
+    //         RPY[1] = 0;
+    //         RPY[2] += plus;
+
+    //     }
+    //     qDebug()<< "X: "<< RPY[0]<< "Y: "<<RPY[1]<<"Z: "<<RPY[2];
+    //     //double pos[3];
+    //     //ModuleController *test = ModulesHandler::getWithName("THOR");
+    //     //test->mod->get_pos(pos);
+    //     commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
+    // }
+
     counter ++;
     int plus = 10;
     float margen = 180.0/plus;
@@ -401,13 +435,11 @@ void MainWindow::on_btn_fixRot_clicked()
     else{
         counter = 0;
     }
-
-
     qDebug()<< "X: "<< RPY[0]<< "Y: "<<RPY[1]<<"Z: "<<RPY[2];
     //double pos[3];
     //ModuleController *test = ModulesHandler::getWithName("THOR");
     //test->mod->get_pos(pos);
-    commander.moveLeg(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
+    commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
 }
 
 
