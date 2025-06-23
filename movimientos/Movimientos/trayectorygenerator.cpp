@@ -61,9 +61,9 @@ void trayectoryGenerator::addMovement(QString leg, double x, double y, double z,
     orders_list.push_back(new_mov);
 }
 
-void trayectoryGenerator::addMovement(ModuleController *module, double angulo[], int suctForce)
+void trayectoryGenerator::addMovement(ModuleController *module, double angulo[], int suctForce, int batch)
 {
-    MovimientoV2 new_mov = MovimientoV2(module, angulo, suctForce);
+    MovimientoV2 new_mov = MovimientoV2(module, angulo, suctForce, batch);
     orders_listV2.push_back(new_mov);
 }
 
@@ -177,7 +177,7 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
     if(!validateMovement(m, module, x, y, z, RPY, elbow)) return false;
 
     int power;
-    addMovement(module, m,power = fixed? 20 : standby);
+    addMovement(module, m,power = fixed? 20 : standby, millis.msecsSinceReference());
     /*
     //Sends suction power command if necessary
     RomerinMsg msg;
@@ -220,11 +220,11 @@ void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientaci
 }
 
 /* New_center in meters */
-bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[])
+bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int batch)
 {
     Vector3D diff = new_center - center;
     if(diff.module() > 0.001){
-        moveBotRelative(diff, RPY);
+        moveBotRelative(diff, RPY, batch);
         // bool oka = true;
         // for(auto modulo :ModulesHandler::module_list){
         //     double pos[3]{};
@@ -303,7 +303,7 @@ bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[])
 //     return true;
 // }
 
-bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3])
+bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int batch)
 {
     std::list<MotorsAngles> points;
     Matriz_Transformacion movimiento(new_center);
@@ -312,7 +312,7 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3])
     Vector3D TCPs[4];
     for(auto modulo :ModulesHandler::module_list){
         // double pos[3]{};
-        // modulo->mod->get_pos(pos);
+        // modulo->mod->get_pos_TCP(pos);
         // Vector3D TCP = {pos[0], pos[1], pos[2]};
 
         Vector3D TCP;
@@ -355,7 +355,7 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3])
 
     for(auto module : ModulesHandler::module_list){
 
-        addMovement(module, points.front().angle, 5);
+        addMovement(module, points.front().angle, 5, batch );
         // setMotorAngle(module, points.front().angle);
         points.pop_front();
     }
@@ -378,21 +378,22 @@ void trayectoryGenerator::stand()
     float def[3] = {0,180,0};
     Vector3D up{0,0,0.2};
     double pos[3];
-    ModulesHandler::getWithName(legs[0])->mod->get_pos(pos);
+    ModulesHandler::getWithName(legs[0])->mod->get_pos_TCP(pos);
     THOR_TCP = pos;
 
-    ModulesHandler::getWithName(legs[1])->mod->get_pos(pos);
+    ModulesHandler::getWithName(legs[1])->mod->get_pos_TCP(pos);
     FRIGG_TCP = pos;
 
-    ModulesHandler::getWithName(legs[2])->mod->get_pos(pos);
+    ModulesHandler::getWithName(legs[2])->mod->get_pos_TCP(pos);
     ODIN_TCP = pos;
 
-    ModulesHandler::getWithName(legs[3])->mod->get_pos(pos);
+    ModulesHandler::getWithName(legs[3])->mod->get_pos_TCP(pos);
     LOKI_TCP = pos;
 
     up /= 20.0;
     for(int i= 0; i< 20; i++){
-        moveBotRelative(up, def);
+        moveBotAbsolute(up, def, i);
+        //moveBotRelative;
     }
 }
 void trayectoryGenerator::relax()
@@ -413,11 +414,19 @@ bool trayectoryGenerator::nextOrder()
     if(isMoving()) return false;
 
     MovimientoV2 movement = orders_listV2.front();
+    int num = movement.batch;
 
     setAdhesion(movement.module, movement.suctionPercentaje);
     setMotorAngle(movement.module, movement.angulos);
 
     orders_listV2.pop_front();
+    while(orders_listV2.front().batch == num){
+        movement = orders_listV2.front();
+        setAdhesion(movement.module, movement.suctionPercentaje);
+        setMotorAngle(movement.module, movement.angulos);
+
+        orders_listV2.pop_front();
+    }
 
     //------------------------------------V1------------------------------------------//
     // if(orders_list.size() == 0) return false;
@@ -503,11 +512,23 @@ Movimiento::Movimiento(const Movimiento &mov)
     this->fixed = mov.fixed;
 }
 
-MovimientoV2::MovimientoV2(ModuleController *module, double angulos[], int suctforce)
+MovimientoV2::MovimientoV2(ModuleController *module, double angulos[], int suctforce, int batch)
 {
     this->module = module;
     suctionPercentaje = suctforce;
     for(int i= 0; i<6; i++){
         this->angulos[i] = angulos[i];
     }
+    this->batch = batch;
+}
+
+MovimientoV2::MovimientoV2(ModuleController *module, double angulos[], double vel[], int suctforce, int batch)
+{
+    this->module = module;
+    suctionPercentaje = suctforce;
+    for(int i= 0; i<6; i++){
+        this->angulos[i] = angulos[i];
+        this->vel[i] = vel[i];
+    }
+    this->batch = batch;
 }

@@ -11,10 +11,12 @@
 
 struct MovimientoV2{
     ModuleController* module;
-    double angulos[6];
+    double angulos[6]{180,180,90,180,180,180};
+    double vel[6]{1,1,1,1,1,1};
     int suctionPercentaje{};
-
-    MovimientoV2(ModuleController* module, double angulos[], int suctforce);
+    int batch{};
+    MovimientoV2(ModuleController* module, double angulos[], int suctforce, int batch);
+    MovimientoV2(ModuleController* module, double angulos[], double vel [], int suctforce, int batch);
 };
 struct Movimiento{
     union{
@@ -55,7 +57,7 @@ public:
     void setAdhesion(ModuleController *module, int percentaje);
 
     void addMovement(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
-    void addMovement(ModuleController *module, double angulo[6], int suctForce);
+    void addMovement(ModuleController *module, double angulo[6], int suctForce, int batch);
     bool validateMovement(double angle[],ModuleController *module, double x, double y, double z, float RPY[3], bool elbow = true);
     bool moveLeg(QString leg, double x, double y, double z, bool elbow = true, bool fixed = false);
     bool moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
@@ -63,8 +65,8 @@ public:
 
     void Calc3x3ROT(float a, float b, float c, double ortientacion[][3]);
 
-    bool moveBotAbsolute(Vector3D new_center, float RPY[3]);
-    bool moveBotRelative(Vector3D new_center, float RPY[3]);
+    bool moveBotAbsolute(Vector3D new_center, float RPY[3], int batch);
+    bool moveBotRelative(Vector3D new_center, float RPY[3], int batch);
     void reset();
     void stand();
     void relax();
