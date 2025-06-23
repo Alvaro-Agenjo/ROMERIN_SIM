@@ -94,6 +94,17 @@ void Module::get_pos(double pos[])
     }
 }
 
+void Module::get_pos_TCP(double pos[])
+{
+    double q[6];
+    get_qs(q);
+    auto posicion = romkin.FK(q[0],q[1], q[2], q[3], q[4], q[5]);
+
+    for(int i = 0; i< 3; i++){
+        pos[i] = posicion(i, 3);
+    }
+}
+
 void Module::get_motor_info(MotorInfoData *m)
 {
     for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info();

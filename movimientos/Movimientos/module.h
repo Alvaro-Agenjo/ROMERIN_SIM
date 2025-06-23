@@ -49,6 +49,7 @@ public:
     void get_qs(double *q);
     void get_torques(double *t);
     void get_pos(double pos[3]);
+    void get_pos_TCP(double pos[3]);
     void get_motor_info(MotorInfoData *m);
     ConfigurationInfoV2 getConfigInfoV2(){return config.getConfigInvoV2();}
 
