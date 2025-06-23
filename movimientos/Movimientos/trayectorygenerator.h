@@ -7,33 +7,16 @@
 #include "MTHomogenea.h"
 
 #define standby 15
-// enum class command_t { STAND, RELAX, FIXED_ROTATION, RESET, MOVE_TO_POINT};
+//enum class state_t { STAND, RELAX, FIXED_ROTATION, RESET};
 
-struct MovimientoV2{
+struct Movimiento{
     ModuleController* module;
     double angulos[6]{180,180,90,180,180,180};
     double vel[6]{1,1,1,1,1,1};
     int suctionPercentaje{};
-    int batch{};
-    MovimientoV2(ModuleController* module, double angulos[], int suctforce, int batch);
-    MovimientoV2(ModuleController* module, double angulos[], double vel [], int suctforce, int batch);
-};
-struct Movimiento{
-    union{
-        QString name;
-        ModuleController* module;
-    };
-    Vector3D pos;
-    float rot[3];
-    bool elbow, fixed;
-    bool type_name;
-
-    Movimiento(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
-    Movimiento(ModuleController* modulo, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
-    Movimiento(const Movimiento& mov);
-    ~Movimiento(){
-        if(type_name) name.~QString();
-    }
+    int time_code{};
+    Movimiento(ModuleController* module, double angulos[], int suctforce, int time_code);
+    Movimiento(ModuleController* module, double angulos[], double vel [], int suctforce, int time_code);
 };
 
 class trayectoryGenerator : public QObject
@@ -41,6 +24,8 @@ class trayectoryGenerator : public QObject
 
 public:
     trayectoryGenerator();
+
+    bool isMoving();
 
     void setlegs(bool sim){
         if (sim){
@@ -52,13 +37,17 @@ public:
             legs[2] = "FREYJA";   legs[3] = "LOKI";
         }
     }
-    void setVel(float max_vel, int motor_id);
-    void setMotorAngle(ModuleController *module, double angle[]);
+    void setTorque(ModuleController* modulo, int motor_id, bool torque = true);
+    void setTorque(ModuleController* modulo, bool torques []);
+    void setMotorVel(ModuleController * modulo, float max_vel, int motor_id);
+    void setMotorVel(ModuleController * modulo, float max_vels[]);
+    void setMotorAngles(ModuleController *module, double angle[]);
     void setAdhesion(ModuleController *module, int percentaje);
 
-    void addMovement(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
     void addMovement(ModuleController *module, double angulo[6], int suctForce, int batch);
+    bool validateMovement(double angle[],ModuleController *module, double x, double y, double z, bool elbow = true);
     bool validateMovement(double angle[],ModuleController *module, double x, double y, double z, float RPY[3], bool elbow = true);
+
     bool moveLeg(QString leg, double x, double y, double z, bool elbow = true, bool fixed = false);
     bool moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
     bool moveLeg(ModuleController *module, double x, double y, double z, float RPY[], bool elbow, bool fixed);
@@ -67,23 +56,22 @@ public:
 
     bool moveBotAbsolute(Vector3D new_center, float RPY[3], int batch);
     bool moveBotRelative(Vector3D new_center, float RPY[3], int batch);
+
+
     void reset();
     void stand();
     void relax();
 
     //void addOrder(command_t order){ order_list.push_back(order);}
     bool nextOrder();
-    void test(bool elbow);
-    bool isMoving();
+
 private:
-    float a = 0;
     QTimer timer;
     QElapsedTimer millis;
 
     QString legs[4];
-    //std::list<command_t> order_list{};
+
     std::list<Movimiento> orders_list;
-    std::list<MovimientoV2> orders_listV2;
     Vector3D center, THOR_TCP, FRIGG_TCP, ODIN_TCP, LOKI_TCP;
     Matriz_Transformacion centro2leg_DU, centro2leg_IU, centro2leg_ID, centro2leg_DD;
 };
