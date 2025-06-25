@@ -21,15 +21,57 @@ trayectoryGenerator::trayectoryGenerator() {
     Calc3x3ROT(0,0,-45.8814, m);
     centro2leg_DD = centro2leg_DD* *new Matriz_Transformacion(m, p);
 
-    connect(&timer, &QTimer::timeout, this, &trayectoryGenerator::nextOrder);
-    timer.start(50);//antes 50ms
-    millis.start();
+    //connect(&timer, &QTimer::timeout, this, &trayectoryGenerator::nextOrder);
+    //timer.start(50);//antes 50ms
+    //millis.start();
 }
 bool trayectoryGenerator::isMoving(){
     for(auto modulo :ModulesHandler::module_list){
         if(!modulo->mod->objetiveReached()) return true;
     }
     return false;
+}
+
+void trayectoryGenerator::setMatrizTransformacion(ModuleController *modulo)
+{
+    static int id = 0;
+    switch(id){
+    case 0:
+        modulo->mod->setMatrizTransformacion(centro2leg_DU);
+        break;
+    case 1:
+        modulo->mod->setMatrizTransformacion(centro2leg_IU);
+        break;
+    case 2:
+        modulo->mod->setMatrizTransformacion(centro2leg_ID);
+        break;
+    case 3:
+        modulo->mod->setMatrizTransformacion(centro2leg_DU);
+        break;
+    case 4:
+        id = -1;
+        //modulo->mod->setMatrizTransformacion();
+        break;
+    case 5:
+        //moulo->mod->setMatrizTransformacion();
+        break;
+    default:
+        id = 0;
+        break;
+    }
+
+    id++;
+}
+
+void trayectoryGenerator::resetTCPs()
+{
+    double pos[3];
+    int n = 0;
+    for(auto module : ModulesHandler::module_list){
+        module->mod->get_pos_TCP(pos);
+        TCPs[n] = pos;
+        n++;
+    }
 }
 
 void trayectoryGenerator::setTorque(ModuleController *modulo, int motor_id, bool torque)
@@ -164,7 +206,7 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
     if(!validateMovement(m, module, x, y, z, RPY, elbow)) return false;
 
     int power;
-    addMovement(module, m,power = fixed? 20 : standby, millis.msecsSinceReference());
+    addMovement(module, m,power = fixed? 20 : standby, time + 100.0/40.0);
 
     return true; //Return true movement command successfull
 }
@@ -209,40 +251,44 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int
     Matriz_Transformacion movimiento(new_center);
     bool oka = true;
 
-    Vector3D TCPs[4];
+    Vector3D TCPs_it[4];
+    int n = 0;
     for(auto modulo :ModulesHandler::module_list){
+
         // double pos[3]{};
         // modulo->mod->get_pos_TCP(pos);
         // Vector3D TCP = {pos[0], pos[1], pos[2]};
 
         Vector3D TCP;
-
-        if(modulo->name == legs[0]){
-            TCP = THOR_TCP;
-            Vector3D TCP_global = Transformacion(TCP, centro2leg_DU);
-            TCP = Transformacion(TCP_global, (movimiento*centro2leg_DU).Inversa());
-            TCPs[0] = TCP;
-        }
-        else if(modulo->name == legs[1]){
-            TCP = FRIGG_TCP;
-            Vector3D TCP_global = Transformacion(TCP, centro2leg_IU);
-            TCP = Transformacion(TCP_global, (movimiento*centro2leg_IU).Inversa());
-            TCPs[1] = TCP;
-        }
-        else if(modulo->name == legs[2]){
-            TCP = ODIN_TCP;
-            Vector3D TCP_global = Transformacion(TCP, centro2leg_ID);
-            TCP = Transformacion(TCP_global, (movimiento*centro2leg_ID).Inversa());
-            TCPs[2] = TCP;
-        }
-        else if(modulo->name == legs[3]){
-            TCP = LOKI_TCP;
-            Vector3D TCP_global = Transformacion(TCP, centro2leg_DD);
-            TCP = Transformacion(TCP_global, (movimiento*centro2leg_DD).Inversa());
-            TCPs[3] = TCP;
-        }
-        else
-            qDebug()<< "Leg not found";
+        modulo->mod->newTCP_mov(TCPs[n], &TCP, movimiento);
+        TCPs[n] = TCP;
+        n++;
+        // if(modulo->name == legs[0]){
+        //     TCP = THOR_TCP;
+        //     Vector3D TCP_global = Transformacion(TCP, centro2leg_DU);
+        //     TCP = Transformacion(TCP_global, (movimiento*centro2leg_DU).Inversa());
+        //     TCPs[0] = TCP;
+        // }
+        // else if(modulo->name == legs[1]){
+        //     TCP = FRIGG_TCP;
+        //     Vector3D TCP_global = Transformacion(TCP, centro2leg_IU);
+        //     TCP = Transformacion(TCP_global, (movimiento*centro2leg_IU).Inversa());
+        //     TCPs[1] = TCP;
+        // }
+        // else if(modulo->name == legs[2]){
+        //     TCP = ODIN_TCP;
+        //     Vector3D TCP_global = Transformacion(TCP, centro2leg_ID);
+        //     TCP = Transformacion(TCP_global, (movimiento*centro2leg_ID).Inversa());
+        //     TCPs[2] = TCP;
+        // }
+        // else if(modulo->name == legs[3]){
+        //     TCP = LOKI_TCP;
+        //     Vector3D TCP_global = Transformacion(TCP, centro2leg_DD);
+        //     TCP = Transformacion(TCP_global, (movimiento*centro2leg_DD).Inversa());
+        //     TCPs[3] = TCP;
+        // }
+        // else
+        //     qDebug()<< "Leg not found";
 
         //obj /= 1000.0;
         double angle[6];
@@ -257,12 +303,13 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int
         // setMotorAngle(module, points.front().angle);
         points.pop_front();
     }
-    THOR_TCP = TCPs[0]; FRIGG_TCP = TCPs[1]; ODIN_TCP = TCPs[2]; LOKI_TCP = TCPs[3];
+    //THOR_TCP = TCPs[0]; FRIGG_TCP = TCPs[1]; ODIN_TCP = TCPs[2]; LOKI_TCP = TCPs[3];
     return true;
 }
 
 void trayectoryGenerator::reset()
 {
+
     qDebug()<<"Reset";
     center = {0,0,0};
     double m[6] = {185,246,197,180,102,-12};
@@ -270,62 +317,59 @@ void trayectoryGenerator::reset()
         setMotorAngles(module, m);
         setAdhesion(module, standby);
     }
+    resetTCPs();
 }
 void trayectoryGenerator::stand()
 {
+    constexpr int sec = 1500;
+    long request_time = time + (sec/40.0); //3s at 40ms interval
     float def[3] = {0,180,0};
     Vector3D up{0,0,0.2};
     double pos[3];
-    ModulesHandler::getWithName(legs[0])->mod->get_pos_TCP(pos);
-    THOR_TCP = pos;
 
-    ModulesHandler::getWithName(legs[1])->mod->get_pos_TCP(pos);
-    FRIGG_TCP = pos;
+    resetTCPs();
 
-    ModulesHandler::getWithName(legs[2])->mod->get_pos_TCP(pos);
-    ODIN_TCP = pos;
 
-    ModulesHandler::getWithName(legs[3])->mod->get_pos_TCP(pos);
-    LOKI_TCP = pos;
-
-    up /= 20.0;
-    for(int i= 0; i< 20; i++){
+    for(int i= 0; i< sec/100.0; i++){
         //moveBotAbsolute(up, def, i);
-        moveBotRelative(up, def, i);
+        moveBotRelative(up/(sec/100), def, request_time + counterTG2MW * i);
     }
 }
 void trayectoryGenerator::relax()
 {
+    constexpr int sec = 3000;
+    long request_time = time + (sec/40.0); //3s at 40ms interval
     float def[3] = {0,180,0};
     Vector3D down{0,0,-0.2};
     double pos[3];
-    ModulesHandler::getWithName(legs[0])->mod->get_pos_TCP(pos);
-    THOR_TCP = pos;
+    // ModulesHandler::getWithName(legs[0])->mod->get_pos_TCP(pos);
+    // THOR_TCP = pos;
 
-    ModulesHandler::getWithName(legs[1])->mod->get_pos_TCP(pos);
-    FRIGG_TCP = pos;
+    // ModulesHandler::getWithName(legs[1])->mod->get_pos_TCP(pos);
+    // FRIGG_TCP = pos;
 
-    ModulesHandler::getWithName(legs[2])->mod->get_pos_TCP(pos);
-    ODIN_TCP = pos;
+    // ModulesHandler::getWithName(legs[2])->mod->get_pos_TCP(pos);
+    // ODIN_TCP = pos;
 
-    ModulesHandler::getWithName(legs[3])->mod->get_pos_TCP(pos);
-    LOKI_TCP = pos;
+    // ModulesHandler::getWithName(legs[3])->mod->get_pos_TCP(pos);
+    // LOKI_TCP = pos;
 
-    down /= 20.0;
-    for(int i= 0; i< 20; i++){
+
+    for(int i= 0; i< sec/100.0; i++){
         //moveBotAbsolute(down, def, i);
-        moveBotRelative(down, def, i);
+        moveBotRelative(down/(sec/100), def, request_time + counterTG2MW * i);
     }
 }
 
 bool trayectoryGenerator::nextOrder()
 {
-    if(millis.elapsed() < 100)  return false;
+    static long last_time=0;
+    if(time - last_time < 100.0/40.0)  return false;
 
-    millis.start();
+    last_time = time;
 
     if(orders_list.size() == 0) return false;
-    if(isMoving()) return false;
+    //if(isMoving()) return false;
 
     Movimiento movement = orders_list.front();
     int num = movement.time_code;
@@ -390,7 +434,6 @@ Movimiento::Movimiento(ModuleController *module, double angulos[], int suctforce
     }
     time_code = batch;
 }
-
 Movimiento::Movimiento(ModuleController *module, double angulos[], double vel[], int suctforce, int batch)
 {
     this->module = module;

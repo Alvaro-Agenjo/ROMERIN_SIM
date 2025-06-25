@@ -7,6 +7,7 @@
 #include "MTHomogenea.h"
 
 #define standby 15
+constexpr float counterTG2MW = 100/40;
 //enum class state_t { STAND, RELAX, FIXED_ROTATION, RESET};
 
 struct Movimiento{
@@ -26,17 +27,10 @@ public:
     trayectoryGenerator();
 
     bool isMoving();
+    void setMatrizTransformacion(ModuleController * modulo);
+    void resetTCPs();
 
-    void setlegs(bool sim){
-        if (sim){
-            legs[1] = "FRIGG";    legs[0] = "THOR";
-            legs[2] = "ODIN";     legs[3] = "LOKI";
-        }
-        else{
-            legs[1] = "FRIGG";    legs[0] = "TYR";
-            legs[2] = "FREYJA";   legs[3] = "LOKI";
-        }
-    }
+    void setTime(long counter){time = counter;}
     void setTorque(ModuleController* modulo, int motor_id, bool torque = true);
     void setTorque(ModuleController* modulo, bool torques []);
     void setMotorVel(ModuleController * modulo, float max_vel, int motor_id);
@@ -66,13 +60,14 @@ public:
     bool nextOrder();
 
 private:
-    QTimer timer;
-    QElapsedTimer millis;
+    long time= 0;
+    //QTimer timer;
+    //QElapsedTimer millis;
 
     QString legs[4];
 
     std::list<Movimiento> orders_list;
-    Vector3D center, THOR_TCP, FRIGG_TCP, ODIN_TCP, LOKI_TCP;
+    Vector3D center, TCPs[4];
     Matriz_Transformacion centro2leg_DU, centro2leg_IU, centro2leg_ID, centro2leg_DD;
 };
 

@@ -130,6 +130,14 @@ bool Module::objetiveReached()
     return true;
 }
 
+bool Module::newTCP_mov(Vector3D actualTCP, Vector3D *futureTCP, Matriz_Transformacion movimiento)
+{
+
+    actualTCP = Transformacion(actualTCP, T);
+    *futureTCP = Transformacion(actualTCP, (movimiento*T).Inversa());
+    return true;
+}
+
 
 
 

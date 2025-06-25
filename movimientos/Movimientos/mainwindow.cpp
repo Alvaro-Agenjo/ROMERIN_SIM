@@ -131,6 +131,8 @@ void MainWindow::loop(){
         else ui->tabWidget->setTabText(ind, m->name+"[OFF]");
 
     }
+    commander.setTime(counter);
+    commander.nextOrder();
 }
 void MainWindow::loop_wifi(){
     //si está activa, entonces manda el ping broadcast y gestiona los mensajes pasándoselos a cada modulo
@@ -200,7 +202,7 @@ void MainWindow::read_ip_port(){
                     }
                     module->setFile(&file);
                     updateTable();
-
+                    commander.setMatrizTransformacion(module);
                 }
             }
         }
@@ -279,7 +281,7 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
     for(auto mod : ModulesHandler::module_list){
         mod->activateMotors(checked);
     }
-    commander.setlegs(ModulesHandler::module_list.front()->simulated);
+    //commander.setlegs(ModulesHandler::module_list.front()->simulated);
 }
 
 void MainWindow::on_btn_reset_clicked()
@@ -347,6 +349,8 @@ void MainWindow::on_btn_test_2_clicked()
 
 void MainWindow::on_btn_test_3_clicked()
 {
+    float RPY[] = {0,180,0};
+    commander.moveBotRelative(Vector3D{0.05,0,0}, RPY, ui->timerInfo->text().toInt());
     //commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
 
     // float RPY[] = {0,180,0};

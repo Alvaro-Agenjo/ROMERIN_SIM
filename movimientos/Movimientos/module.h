@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTimer>
 
+#include "MTHomogenea.h"
 #include "modulecontroller.h"
 #include "motor.h"
 #include "configdlg.h"
@@ -53,8 +54,10 @@ public:
     void get_motor_info(MotorInfoData *m);
     ConfigurationInfoV2 getConfigInfoV2(){return config.getConfigInvoV2();}
 
+    void setMatrizTransformacion(Matriz_Transformacion h){ T = h;}
     bool checkJointsLimits(double m[], bool simple = false);
     bool objetiveReached();
+    bool newTCP_mov(Vector3D actualTCP, Vector3D * futureTCP, Matriz_Transformacion movimiento);
 
 private:
     Ui::Module *ui;
@@ -65,6 +68,8 @@ private:
     QTimer timer;
     ConfigDlg config;
     uchar_t robot_state{};
+
+    Matriz_Transformacion T;
 
 public:
     RomKin romkin{};
