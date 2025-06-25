@@ -17,9 +17,9 @@ void MotorSimulation::loop(int number)
   float velocityRad;
 
   if(moduleName == "THOR") num = number + 0;
-  else if(moduleName == "LOKI") num = number + 6;
+  else if(moduleName == "FRIGG") num = number + 6;
   else if(moduleName == "ODIN") num = number + 12;
-  else if(moduleName == "FRIGG") num = number + 18;
+  else if(moduleName == "LOKI") num = number + 18;
 
     float Kp_pos = 18;
     float Ki_pos = 0; // Es 0 porque sino, con el tiempo va a segruir moviéndose
@@ -87,9 +87,9 @@ float MotorSimulation::getAngle(int numMotor){
   // const char* Q4[] = {"Q_FRIGG_2", "Q_FRIGG_3", "Q_FRIGG_4", "Q_FRIGG_5", "Q_FRIGG_6", "Q_FRIGG_7"};
 
   const char* Q1[] = {"THOR_Q1", "THOR_Q2", "THOR_Q3", "THOR_Q4", "THOR_Q5", "THOR_Q6"};
-  const char* Q2[] = {"ODIN_Q1", "ODIN_Q2", "ODIN_Q3", "ODIN_Q4", "ODIN_Q5", "ODIN_Q6"};
-  const char* Q3[] = {"LOKI_Q1", "LOKI_Q2", "LOKI_Q3", "LOKI_Q4", "LOKI_Q5", "LOKI_Q6"};
-  const char* Q4[] = {"FRIGG_Q1", "FRIGG_Q2", "FRIGG_Q3", "FRIGG_Q4", "FRIGG_Q5", "FRIGG_Q6"};
+  const char* Q2[] = {"FRIGG_Q1", "FRIGG_Q2", "FRIGG_Q3", "FRIGG_Q4", "FRIGG_Q5", "FRIGG_Q6"};
+  const char* Q3[] = {"ODIN_Q1", "ODIN_Q2", "ODIN_Q3", "ODIN_Q4", "ODIN_Q5", "ODIN_Q6"};
+  const char* Q4[] = {"LOKI_Q1", "LOKI_Q2", "LOKI_Q3", "LOKI_Q4", "LOKI_Q5", "LOKI_Q6"};
   
   const char* Q[6];
 
@@ -97,15 +97,15 @@ float MotorSimulation::getAngle(int numMotor){
     for(int i = 0; i < 6; ++i) {
       Q[i] = Q1[i];
     }
-  } else if (moduleName == "ODIN") {
+  } else if (moduleName == "FRIGG") {
     for(int i = 0; i < 6; ++i) {
       Q[i] = Q2[i];
     }
-  } else if (moduleName == "LOKI") {
+  } else if (moduleName == "ODIN") {
     for(int i = 0; i < 6; ++i) {
       Q[i] = Q3[i];
     }
-  } else if (moduleName == "FRIGG") {
+  } else if (moduleName == "LOKI") {
     for(int i = 0; i < 6; ++i) {
       Q[i] = Q4[i];
     }
@@ -135,9 +135,9 @@ float MotorSimulation::getVelocity(int numMotor){
   // const char* Q4[] = {"Q_FRIGG_2", "Q_FRIGG_3", "Q_FRIGG_4", "Q_FRIGG_5", "Q_FRIGG_6", "Q_FRIGG_7"};
   
   const char* Q1[] = {"THOR_Q1", "THOR_Q2", "THOR_Q3", "THOR_Q4", "THOR_Q5", "THOR_Q6"};
-  const char* Q2[] = {"ODIN_Q1", "ODIN_Q2", "ODIN_Q3", "ODIN_Q4", "ODIN_Q5", "ODIN_Q6"};
-  const char* Q3[] = {"LOKI_Q1", "LOKI_Q2", "LOKI_Q3", "LOKI_Q4", "LOKI_Q5", "LOKI_Q6"};
-  const char* Q4[] = {"FRIGG_Q1", "FRIGG_Q2", "FRIGG_Q3", "FRIGG_Q4", "FRIGG_Q5", "FRIGG_Q6"};
+  const char* Q2[] = {"FRIGG_Q1", "FRIGG_Q2", "FRIGG_Q3", "FRIGG_Q4", "FRIGG_Q5", "FRIGG_Q6"};
+  const char* Q3[] = {"ODIN_Q1", "ODIN_Q2", "ODIN_Q3", "ODIN_Q4", "ODIN_Q5", "ODIN_Q6"};
+  const char* Q4[] = {"LOKI_Q1", "LOKI_Q2", "LOKI_Q3", "LOKI_Q4", "LOKI_Q5", "LOKI_Q6"};
   
   const char* Q[6];
 
@@ -145,15 +145,15 @@ float MotorSimulation::getVelocity(int numMotor){
     for(int i = 0; i < 6; ++i) {
       Q[i] = Q1[i];
     }
-  } else if (moduleName == "ODIN") {
+  } else if (moduleName == "FRIGG") {
     for(int i = 0; i < 6; ++i) {
       Q[i] = Q2[i];
     }
-  } else if (moduleName == "LOKI") {
+  } else if (moduleName == "ODIN") {
     for(int i = 0; i < 6; ++i) {
       Q[i] = Q3[i];
     }
-  } else if (moduleName == "FRIGG") {
+  } else if (moduleName == "LOKI") {
     for(int i = 0; i < 6; ++i) {
       Q[i] = Q4[i];
     }
@@ -337,9 +337,9 @@ void RomJoints::loop(QString module_name)
   uint8_t i, j;
   //dxl.ledOn(1);
   if(moduleName == "THOR") j = 0;
-  else if(moduleName == "ODIN") j = 6;
-  else if(moduleName == "LOKI") j = 12;
-  else if(moduleName == "FRIGG") j = 18;
+  else if(moduleName == "FRIGG") j = 6;
+  else if(moduleName == "ODIN") j = 12;
+  else if(moduleName == "LOKI") j = 18;
   
 
   //dynamixel simulations.
@@ -510,9 +510,9 @@ const char * sforce, *sdist[3];
   // else printf("MODULE NAME INCORRECTO");
 
   if(name == "THOR"){ num = 24; sforce = "Preassure_THOR"; sdist[0] = "THOR_prx_1"; sdist[1] = "THOR_prx_2"; sdist[2] = "THOR_prx_3";}
-  else if(name == "LOKI"){ num = 25; sforce = "Preassure_LOKI"; sdist[0] = "LOKI_prx_1"; sdist[1] = "LOKI_prx_2"; sdist[2] = "LOKI_prx_3";}
+  else if(name == "FRIGG"){ num = 25; sforce = "Preassure_FRIGG"; sdist[0] = "FRIGG_prx_1"; sdist[1] = "FRIGG_prx_2"; sdist[2] = "FRIGG_prx_3";}
   else if(name == "ODIN"){ num = 26; sforce = "Preassure_ODIN"; sdist[0] = "ODIN_prx_1"; sdist[1] = "ODIN_prx_2"; sdist[2] = "ODIN_prx_3";}
-  else if(name == "FRIGG"){ num = 27; sforce = "Preassure_FRIGG"; sdist[0] = "FRIGG_prx_1"; sdist[1] = "FRIGG_prx_2"; sdist[2] = "FRIGG_prx_3";}
+  else if(name == "LOKI"){ num = 27; sforce = "Preassure_LOKI"; sdist[0] = "LOKI_prx_1"; sdist[1] = "LOKI_prx_2"; sdist[2] = "LOKI_prx_3";}
   else printf("MODULE NAME INCORRECTO");
 
   ////////////// ACTUALIZACIÓN DE FUERZA
