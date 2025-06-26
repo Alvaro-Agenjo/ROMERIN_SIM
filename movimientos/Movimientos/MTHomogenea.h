@@ -29,6 +29,7 @@ struct Vector3D{
     Vector3D& operator +=(const Vector3D & rhs);
     Vector3D& operator -=(const Vector3D& rhs);
     Vector3D& operator /=(const float& rhs);
+    Vector3D& operator /=(const int& rhs);
     double module();
 
     Vector3D &operator=(const double pos[3]);
@@ -36,8 +37,8 @@ struct Vector3D{
 
 Vector3D Transformacion(const Vector3D& v, const Matriz_Transformacion &matriz);
 Vector3D operator +( Vector3D lhs, const Vector3D& rhs);
-//Vector3D operator -( const double lhs[3], Vector3D rhs );
 Vector3D operator -( Vector3D lhs, const Vector3D& rhs);
+Vector3D operator /(Vector3D lhs, const int& rhs);
 
 bool operator ==(const Vector3D &lhs, const double &rhs);
 bool operator ==(const Vector3D &lhs, const Vector3D &rhs);

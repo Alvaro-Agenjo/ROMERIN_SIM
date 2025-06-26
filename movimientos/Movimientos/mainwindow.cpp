@@ -131,6 +131,8 @@ void MainWindow::loop(){
         else ui->tabWidget->setTabText(ind, m->name+"[OFF]");
 
     }
+    commander.setTime(counter);
+    commander.nextOrder();
 }
 void MainWindow::loop_wifi(){
     //si está activa, entonces manda el ping broadcast y gestiona los mensajes pasándoselos a cada modulo
@@ -200,7 +202,7 @@ void MainWindow::read_ip_port(){
                     }
                     module->setFile(&file);
                     updateTable();
-
+                    commander.setMatrizTransformacion(module);
                 }
             }
         }
@@ -211,42 +213,56 @@ void MainWindow::read_ip_port(){
 void MainWindow::on_txt_motor1_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor1_maxvel->text().toFloat();
-    commander.setVel(velMax, 1);
+    for(auto modulo : ModulesHandler::module_list){
+        commander.setMotorVel(modulo, velMax, 1);
+    }
 }
 
 void MainWindow::on_txt_motor2_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor2_maxvel->text().toFloat();
-    commander.setVel(velMax, 2);
+    for(auto modulo : ModulesHandler::module_list){
+        commander.setMotorVel(modulo, velMax, 1);
+    }
 }
 
 void MainWindow::on_txt_motor3_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor3_maxvel->text().toFloat();
-    commander.setVel(velMax, 3);
+    for(auto modulo : ModulesHandler::module_list){
+        commander.setMotorVel(modulo, velMax, 1);
+    }
 }
 
 void MainWindow::on_txt_motor4_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor4_maxvel->text().toFloat();
-    commander.setVel(velMax, 4);
+    for(auto modulo : ModulesHandler::module_list){
+        commander.setMotorVel(modulo, velMax, 1);
+    }
 }
 
 void MainWindow::on_txt_motor5_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor5_maxvel->text().toFloat();
-    commander.setVel(velMax, 5);
+    for(auto modulo : ModulesHandler::module_list){
+        commander.setMotorVel(modulo, velMax, 1);
+    }
 }
 
 void MainWindow::on_txt_motor6_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor6_maxvel->text().toFloat();
-    commander.setVel(velMax, 6);
+    for(auto modulo : ModulesHandler::module_list){
+        commander.setMotorVel(modulo, velMax, 1);
+    }
 }
 
 void MainWindow::on_txt_masterVel_editingFinished()
 {
     float velMax = ui->txt_masterVel->text().toFloat();
+    float master[6];
+    for(int i= 0; i< 6; i++) master[i] = velMax;
 
     ui->txt_motor1_maxvel->setText(QString::number(velMax));
     ui->txt_motor2_maxvel->setText(QString::number(velMax));
@@ -255,10 +271,9 @@ void MainWindow::on_txt_masterVel_editingFinished()
     ui->txt_motor5_maxvel->setText(QString::number(velMax));
     ui->txt_motor6_maxvel->setText(QString::number(velMax));
 
-    for(int i = 1; i<= 6; i++){
-        commander.setVel(velMax, i);
+    for(auto modulo : ModulesHandler::module_list){
+        commander.setMotorVel(modulo, master);
     }
-
 }
 
 void MainWindow::on_btn_enableMotors_clicked(bool checked)
@@ -266,7 +281,7 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
     for(auto mod : ModulesHandler::module_list){
         mod->activateMotors(checked);
     }
-    commander.setlegs(ModulesHandler::module_list.front()->simulated);
+    //commander.setlegs(ModulesHandler::module_list.front()->simulated);
 }
 
 void MainWindow::on_btn_reset_clicked()
@@ -279,8 +294,7 @@ void MainWindow::on_btn_stand_clicked()
 }
 void MainWindow::on_btn_relax_clicked()
 {
-    //commander.addOrder(command_t::RESET);
-    //commander.addOrder(command_t::RELAX);
+    commander.relax();
 }
 
 
@@ -321,7 +335,7 @@ void MainWindow::on_btn_test1_clicked()
 //    commander.moveLeg(ModulesHandler::getWithName("LOKI"),0.332385, -0.03679,0.037,RPY, true, false);
     double m[6] = {210,255,195,180,180,180};
     for(auto modulo : ModulesHandler::module_list){
-        commander.setMotorAngle(modulo, m);
+        commander.setMotorAngles(modulo, m);
     }
 }
 void MainWindow::on_btn_test_2_clicked()
@@ -331,15 +345,12 @@ void MainWindow::on_btn_test_2_clicked()
    commander.moveLeg(ModulesHandler::getWithName("FRIGG"), 0.402, 0.035, 0.037 ,RPY, true, false);
    commander.moveLeg(ModulesHandler::getWithName("ODIN"), 0.402, 0.035, 0.037 ,RPY, true, false);
    commander.moveLeg(ModulesHandler::getWithName("LOKI"), 0.402, 0.035, 0.037 ,RPY, true, false);
-   // test_timer.stop();
 }
 
 void MainWindow::on_btn_test_3_clicked()
 {
     float RPY[] = {0,180,0};
-    for(int i = 0; i< 20; i++){
-        commander.addMovement(ModulesHandler::module_list.front()->name, 0.4, 0, 0.01 * i, RPY,true, false);
-    }
+    commander.moveBotRelative(Vector3D{0.05,0,0}, RPY, ui->timerInfo->text().toInt());
     //commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
 
     // float RPY[] = {0,180,0};
@@ -439,7 +450,7 @@ void MainWindow::on_btn_fixRot_clicked()
     //double pos[3];
     //ModuleController *test = ModulesHandler::getWithName("THOR");
     //test->mod->get_pos(pos);
-    commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
+    //commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
 }
 
 

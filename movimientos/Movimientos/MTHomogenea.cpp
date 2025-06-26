@@ -44,17 +44,6 @@ Matriz_Transformacion Matriz_Transformacion::Inversa() const{
     return inv;
 }
 
-// Matriz_Transformacion Matriz_Transformacion::operator*(const float& num) const {
-//     Matriz_Transformacion result;
-//     for(int i = 0; i < 4; i++) {
-//         for(int j = 0; j < 4; j++) {
-//             result.m[i][j] *= num;
-//         }
-//     }
-//     return result;
-// }
-
-
 Matriz_Transformacion operator*(const Matriz_Transformacion& lhs, const Matriz_Transformacion& rhs) {
     Matriz_Transformacion result;
     for(int i = 0; i < 4; i++) {
@@ -113,6 +102,13 @@ Vector3D &Vector3D::operator /=(const float &rhs)
     this->z /= rhs;
     return *this;
 }
+Vector3D &Vector3D::operator /=(const int &rhs)
+{
+    this->x /= rhs;
+    this->y /= rhs;
+    this->z /= rhs;
+    return *this;
+}
 double Vector3D::module()
 {
     return cbrt(this->x * this->x + this->y * this->y + this->z *this->z);
@@ -130,21 +126,17 @@ Vector3D operator+(Vector3D lhs, const Vector3D& rhs)
     lhs += rhs;
     return lhs;
 }
-/*
-Vector3D operator-( const double lhs[3], Vector3D rhs ){
-    rhs.x = lhs[0]- rhs.x;
-    rhs.y = lhs[1]- rhs.y;
-    rhs.z = lhs[2]- rhs.z;
 
-    return rhs;
-}
-*/
 Vector3D operator-(Vector3D lhs, const Vector3D& rhs)
 {
     lhs -= rhs;
     return lhs;
 }
-
+Vector3D operator/(Vector3D lhs, const int& rhs)
+{
+    lhs /= rhs;
+    return lhs;
+}
 
 bool operator ==(const Vector3D &lhs, const double &rhs){
     return lhs.x==rhs & lhs.y == rhs & lhs.z==rhs;
