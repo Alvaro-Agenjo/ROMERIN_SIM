@@ -323,7 +323,6 @@ void MainWindow::on_btn_thor_test_complete_clicked()
                      ui->txt_THOR_beta->text().toFloat(),
                      ui->txt_THOR_gamma->text().toFloat()};
 
-
     commander.moveLeg(ModulesHandler::module_list.front(), x, y, z, giro, elbow, fix);
 }
 void MainWindow::on_btn_test1_clicked()
@@ -333,10 +332,13 @@ void MainWindow::on_btn_test1_clicked()
 //    commander.moveLeg(ModulesHandler::getWithName("FRIGG"),0.471615, 0.10679,0.037,RPY, true, false);
 //    commander.moveLeg(ModulesHandler::getWithName("ODIN"),0.471615, -0.03679,0.037,RPY, true, false);
 //    commander.moveLeg(ModulesHandler::getWithName("LOKI"),0.332385, -0.03679,0.037,RPY, true, false);
-    double m[6] = {210,255,195,180,180,180};
-    for(auto modulo : ModulesHandler::module_list){
-        commander.setMotorAngles(modulo, m);
-    }
+
+//    double m[6] = {210,255,195,180,180,180};
+//    for(auto modulo : ModulesHandler::module_list){
+//    commander.setMotorAngles(modulo, m);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , 180, 3);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_alfa->text().toFloat(), 4);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_beta->text().toFloat() , 5);
 }
 void MainWindow::on_btn_test_2_clicked()
 {

@@ -100,12 +100,23 @@ void trayectoryGenerator::setMotorVel(ModuleController *modulo, float max_vels[]
 }
 void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle[])
 {
+    QElapsedTimer millis;
     qDebug()<<module->name;
     for(int i = 0; i<6; i++){
+        millis.start();
         RomerinMsg m = romerinMsg_ServoGoalAngle(i, angle[i]);
         module->sendMessage(m);
         qDebug()<<"Motor "<< i<< ": "<<angle[i];
+        while(millis.elapsed() < 20){}
+
     }
+}
+void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle, int motor_id)
+{
+
+    RomerinMsg m = romerinMsg_ServoGoalAngle(motor_id, angle);
+    module->sendMessage(m);
+
 }
 void trayectoryGenerator::setAdhesion(ModuleController *module, int percentaje)
 {

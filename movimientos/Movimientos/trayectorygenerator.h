@@ -36,6 +36,7 @@ public:
     void setMotorVel(ModuleController * modulo, float max_vel, int motor_id);
     void setMotorVel(ModuleController * modulo, float max_vels[]);
     void setMotorAngles(ModuleController *module, double angle[]);
+    void setMotorAngles(ModuleController *module, double angle, int motor_id);
     void setAdhesion(ModuleController *module, int percentaje);
 
     void addMovement(ModuleController *module, double angulo[6], int suctForce, int batch);
@@ -58,6 +59,7 @@ public:
 
     //void addOrder(command_t order){ order_list.push_back(order);}
     bool nextOrder();
+
 
 private:
     long time= 0;
