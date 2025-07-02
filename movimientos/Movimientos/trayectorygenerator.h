@@ -28,9 +28,9 @@ public:
 
     bool isMoving();
     void setMatrizTransformacion(ModuleController * modulo);
-    void resetTCPs();
+    void refreshTCPs();
 
-    void setTime(long counter){time = counter;}
+    void setTime(unsigned long counter){time = counter;}
     void setTorque(ModuleController* modulo, int motor_id, bool torque = true);
     void setTorque(ModuleController* modulo, bool torques []);
     void setMotorVel(ModuleController * modulo, float max_vel, int motor_id);
@@ -56,13 +56,12 @@ public:
     void reset();
     void stand();
     void relax();
-
-    //void addOrder(command_t order){ order_list.push_back(order);}
+    void fixed_rotation(int n);
     bool nextOrder();
 
 
 private:
-    long time= 0;
+    unsigned long time= 0;
     //QTimer timer;
     //QElapsedTimer millis;
 

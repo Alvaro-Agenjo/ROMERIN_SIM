@@ -81,7 +81,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::Main
     ui->comboBoxIPs->addItem("127.0.0.1");
 
     timer.start(MAIN_TIMER_MS);//antes 50ms
-
 }
 
 MainWindow::~MainWindow()
@@ -117,7 +116,7 @@ void MainWindow::info(const QString &mens){
 
 
 void MainWindow::loop(){
-    static long counter = 0;
+    static unsigned long counter = 0;
     counter ++;
     ui->timerInfo->setText(QString::number(counter));
 
@@ -291,6 +290,7 @@ void MainWindow::on_btn_reset_clicked()
 void MainWindow::on_btn_stand_clicked()
 {
     commander.stand();
+    test_timer.start(2800);
 }
 void MainWindow::on_btn_relax_clicked()
 {
@@ -398,61 +398,8 @@ float RPY[] = {0,0,0};
 int counter = 0;
 void MainWindow::on_btn_fixRot_clicked()
 {
-    // int plus = 10;
-    // float margen = 180.0/plus;
-    // for(int i = 0; i< margen *3 +1;i++){
-    //     int plus = 10;
-    //     float margen = 180.0/plus;
-    //     if (i < margen){
-    //         RPY[0] += plus;
-    //         RPY[1] = 0;
-    //         RPY[2] = 0;
-    //     }
-    //     else if (i < margen*2){
-    //         RPY[0] = 0;
-    //         RPY[1] += plus;
-    //         RPY[2] = 0;
-    //     }
-    //     else if(i < margen * 3){
-    //         RPY[0] = 0;
-    //         RPY[1] = 0;
-    //         RPY[2] += plus;
-
-    //     }
-    //     qDebug()<< "X: "<< RPY[0]<< "Y: "<<RPY[1]<<"Z: "<<RPY[2];
-    //     //double pos[3];
-    //     //ModuleController *test = ModulesHandler::getWithName("THOR");
-    //     //test->mod->get_pos(pos);
-    //     commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
-    // }
-
-    counter ++;
-    int plus = 10;
-    float margen = 180.0/plus;
-    if (counter < margen){
-        RPY[0] += plus;
-        RPY[1] = 0;
-        RPY[2] = 0;
-    }
-    else if (counter < margen*2){
-        RPY[0] = 0;
-        RPY[1] += plus;
-        RPY[2] = 0;
-    }
-    else if(counter < margen * 3){
-        RPY[0] = 0;
-        RPY[1] = 0;
-        RPY[2] += plus;
-
-    }
-    else{
-        counter = 0;
-    }
-    qDebug()<< "X: "<< RPY[0]<< "Y: "<<RPY[1]<<"Z: "<<RPY[2];
-    //double pos[3];
-    //ModuleController *test = ModulesHandler::getWithName("THOR");
-    //test->mod->get_pos(pos);
-    //commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
+    commander.fixed_rotation(2);
+    test_timer.stop();
 }
 
 

@@ -46,7 +46,7 @@ void trayectoryGenerator::setMatrizTransformacion(ModuleController *modulo)
         modulo->mod->setMatrizTransformacion(centro2leg_ID);
         break;
     case 3:
-        modulo->mod->setMatrizTransformacion(centro2leg_DU);
+        modulo->mod->setMatrizTransformacion(centro2leg_DD);
         break;
     case 4:
         id = -1;
@@ -63,7 +63,7 @@ void trayectoryGenerator::setMatrizTransformacion(ModuleController *modulo)
     id++;
 }
 
-void trayectoryGenerator::resetTCPs()
+void trayectoryGenerator::refreshTCPs()
 {
     double pos[3];
     int n = 0;
@@ -72,6 +72,7 @@ void trayectoryGenerator::resetTCPs()
         TCPs[n] = pos;
         n++;
     }
+    //center = 0,0,0;
 }
 
 void trayectoryGenerator::setTorque(ModuleController *modulo, int motor_id, bool torque)
@@ -103,12 +104,9 @@ void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle[
     QElapsedTimer millis;
     qDebug()<<module->name;
     for(int i = 0; i<6; i++){
-        millis.start();
         RomerinMsg m = romerinMsg_ServoGoalAngle(i, angle[i]);
         module->sendMessage(m);
         qDebug()<<"Motor "<< i<< ": "<<angle[i];
-        while(millis.elapsed() < 20){}
-
     }
 }
 void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle, int motor_id)
@@ -160,11 +158,13 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
     }
     module->mod->romkin.q2m(m,q);
 
+
+    /* CHANGE
+    * Provisional hasta resolver problema con angulos muñeca
+    */
     //Check if joint physical limits are not surpassed
-    if(module->mod->checkJointsLimits(m, true)) {
-        qDebug()<<"Joint limit surpassed";
-        return false;
-    }
+    //if(module->mod->checkJointsLimits(m, false))    return false;
+    if(module->mod->checkJointsLimits(m, true))    return false;
 
     for(int i = 0; i< 6; i++){
         angle[i] = m[i];
@@ -248,13 +248,19 @@ void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientaci
 }
 
 /* New_center in meters */
-bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int batch)
+bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int tiempo)
 {
     Vector3D diff = new_center - center;
-    if(diff.module() > 0.001){
-        moveBotRelative(diff, RPY, batch);
+    int n_orders = tiempo / 100.0; // 100ms per order
+    unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
+    if(diff.module() > 0.01){
+        for(int i= 0; i< n_orders; i++){
+            if(!moveBotRelative(diff/n_orders, RPY, request_time + (i + 1) * counterTG2MW));  //und40 * 40ms/und40 + (i+1)*100ms) return false;
+        }
         center = new_center;
+        return true;
     }
+    return true;
 }
 bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int batch)
 {
@@ -262,46 +268,13 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int
     Matriz_Transformacion movimiento(new_center);
     bool oka = true;
 
-    Vector3D TCPs_it[4];
     int n = 0;
     for(auto modulo :ModulesHandler::module_list){
-
-        // double pos[3]{};
-        // modulo->mod->get_pos_TCP(pos);
-        // Vector3D TCP = {pos[0], pos[1], pos[2]};
-
         Vector3D TCP;
         modulo->mod->newTCP_mov(TCPs[n], &TCP, movimiento);
         TCPs[n] = TCP;
         n++;
-        // if(modulo->name == legs[0]){
-        //     TCP = THOR_TCP;
-        //     Vector3D TCP_global = Transformacion(TCP, centro2leg_DU);
-        //     TCP = Transformacion(TCP_global, (movimiento*centro2leg_DU).Inversa());
-        //     TCPs[0] = TCP;
-        // }
-        // else if(modulo->name == legs[1]){
-        //     TCP = FRIGG_TCP;
-        //     Vector3D TCP_global = Transformacion(TCP, centro2leg_IU);
-        //     TCP = Transformacion(TCP_global, (movimiento*centro2leg_IU).Inversa());
-        //     TCPs[1] = TCP;
-        // }
-        // else if(modulo->name == legs[2]){
-        //     TCP = ODIN_TCP;
-        //     Vector3D TCP_global = Transformacion(TCP, centro2leg_ID);
-        //     TCP = Transformacion(TCP_global, (movimiento*centro2leg_ID).Inversa());
-        //     TCPs[2] = TCP;
-        // }
-        // else if(modulo->name == legs[3]){
-        //     TCP = LOKI_TCP;
-        //     Vector3D TCP_global = Transformacion(TCP, centro2leg_DD);
-        //     TCP = Transformacion(TCP_global, (movimiento*centro2leg_DD).Inversa());
-        //     TCPs[3] = TCP;
-        // }
-        // else
-        //     qDebug()<< "Leg not found";
 
-        //obj /= 1000.0;
         double angle[6];
         oka &= validateMovement(angle, modulo,TCP.x, TCP.y, TCP.z,RPY ,true);
         if(!oka)    return false;
@@ -311,10 +284,8 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int
     for(auto module : ModulesHandler::module_list){
 
         addMovement(module, points.front().angle, 5, batch );
-        // setMotorAngle(module, points.front().angle);
         points.pop_front();
     }
-    //THOR_TCP = TCPs[0]; FRIGG_TCP = TCPs[1]; ODIN_TCP = TCPs[2]; LOKI_TCP = TCPs[3];
     return true;
 }
 
@@ -328,54 +299,67 @@ void trayectoryGenerator::reset()
         setMotorAngles(module, m);
         setAdhesion(module, standby);
     }
-    resetTCPs();
+    refreshTCPs();
 }
 void trayectoryGenerator::stand()
 {
-    constexpr int sec = 1500;
-    long request_time = time + (sec/40.0); //3s at 40ms interval
+    constexpr int ms = 2000;
+    unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
+    int n_orders = ms /100.0;
     float def[3] = {0,180,0};
     Vector3D up{0,0,0.2};
     double pos[3];
 
-    resetTCPs();
+    refreshTCPs();
 
 
-    for(int i= 0; i< sec/100.0; i++){
+    for(int i= 0; i< n_orders; i++){
         //moveBotAbsolute(up, def, i);
-        moveBotRelative(up/(sec/100), def, request_time + counterTG2MW * i);
+        moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW );  //und40 * 40ms/und40 + (i+1)*100ms
     }
+    center = center + up;
 }
 void trayectoryGenerator::relax()
 {
-    constexpr int sec = 3000;
-    long request_time = time + (sec/40.0); //3s at 40ms interval
+    constexpr int ms = 3000;
+    unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
+    int n_orders = ms /100.0;
     float def[3] = {0,180,0};
-    Vector3D down{0,0,-0.2};
+    Vector3D up{0,0,-0.2};
     double pos[3];
-    // ModulesHandler::getWithName(legs[0])->mod->get_pos_TCP(pos);
-    // THOR_TCP = pos;
 
-    // ModulesHandler::getWithName(legs[1])->mod->get_pos_TCP(pos);
-    // FRIGG_TCP = pos;
-
-    // ModulesHandler::getWithName(legs[2])->mod->get_pos_TCP(pos);
-    // ODIN_TCP = pos;
-
-    // ModulesHandler::getWithName(legs[3])->mod->get_pos_TCP(pos);
-    // LOKI_TCP = pos;
+    refreshTCPs();
 
 
-    for(int i= 0; i< sec/100.0; i++){
-        //moveBotAbsolute(down, def, i);
-        moveBotRelative(down/(sec/100), def, request_time + counterTG2MW * i);
+    for(int i= 0; i< ms/100.0; i++){
+        //moveBotAbsolute(up, def, i);
+        moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW );  //und40 * 40ms/und40 + (i+1)*100ms
     }
+}
+
+void trayectoryGenerator::fixed_rotation(int n)
+{
+    refreshTCPs();
+
+    constexpr double r = 0.1;
+    Vector3D pos = {r, 0, center.z};
+    float RPY[3] = {0,180,0};
+    moveBotAbsolute(pos, RPY, 1000);
+
+    for(int i = 0; i < n; i++ ){
+        for(int m = 1; m < 361; m+= 5 ){
+            pos.x = r * cos(m / RomKin::rad2deg); pos.y = r * sin(m / RomKin::rad2deg);
+            moveBotAbsolute(pos, RPY, 100);
+        }
+    }
+    pos.x = 0; pos.y = 0;
+    moveBotAbsolute(pos, RPY, 2000);
 }
 
 bool trayectoryGenerator::nextOrder()
 {
-    static long last_time=0;
-    if(time - last_time < 100.0/40.0)  return false;
+    static unsigned long last_time=0;
+    if(time - last_time < 100.0/40.0)  return false;    //und40 * ms/und40 < ms <====> und40 < ms/ms
 
     last_time = time;
 
