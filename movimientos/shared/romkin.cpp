@@ -135,8 +135,8 @@ void _RomKin<REAL>::q2m(REAL m[], REAL q[], bool gdl3)
     m[4] = rad2deg * (q[5] / factor_6 - q[4] ) + 180;
     m[5] = rad2deg * (q[4]  + q[5] / factor_6) + 180;
 
-    m[4]+= 360;
-    m[5]+= 360;
+    // m[4]+= 360;
+    // m[5]+= 360;
     // while(m[4]<0 || m[5]<0){
     //     m[4]+= 360;
     //     m[5]+= 360;
