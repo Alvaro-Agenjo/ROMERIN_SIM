@@ -1,1 +1,7 @@
+firmware-emulation/romerin_interface/build
+movimientos/build-Movimientos-Desktop-Debug
+movimientos/Movimientos/build
 mujoco-3.2.3-linux-x86_64/build
+
+.vscode
+mujoco-3.2.3-linux-x86_64/.vscode

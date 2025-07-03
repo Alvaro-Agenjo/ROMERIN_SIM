@@ -14,6 +14,7 @@ RomerinMsg configuration_message(RomDefs &romdefs);
 RomerinMsg configuration_message_v2(RomDefs &romdefs);
 RomerinMsg state_message(RomState &state);
 RomerinMsg suction_cup_info_message(float p, float f, float t, uint8_t dist[3]);
+RomerinMsg suction_cup_info_message(const SuctionCupInfo & sc_info);
 RomerinMsg text_message(const char *text);
 RomerinMsg name_message(const char *name);
 

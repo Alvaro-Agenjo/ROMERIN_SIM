@@ -13,15 +13,17 @@
             <body name="THOR" pos="0.08 0.0825 0" euler="0 0 45.8814">
                 <include file="../Pata/THOR.xml"/>
             </body>
+            <body name="FRIGG" pos="-0.08 0.0825 0" euler="0 0 134.1186">
+                <include file="../Pata/FRIGG.xml"/>
+            </body>
+            <body name="ODIN" pos="-0.08 -0.0825 0" euler="0 0 -134.1186">
+                <include file="../Pata/ODIN.xml"/>
+            </body>
             <body name="LOKI" pos="0.08 -0.0825 0" euler="0 0 -45.8814">
                 <include file="../Pata/LOKI.xml"/>
             </body>
-            <body name="ODIN" pos="-0.08 -0.0825 0" euler="0 0 -135.8814">
-                <include file="../Pata/ODIN.xml"/>
-            </body>
-            <body name="FRIGG" pos="-0.08 0.0825 0" euler="0 0 135.8814">
-                <include file="../Pata/FRIGG.xml"/>
-            </body>
+            
+            
         </body>
     
     </worldbody>
@@ -35,12 +37,15 @@
         <motor name="Q6_THOR_motor" joint="THOR_Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>   
 
 
-        <motor name="Q1_LOKI_motor" joint="LOKI_Q1" ctrllimited="true" ctrlrange="-7.3 7.3"/>    
-        <motor name="Q2_LOKI_motor" joint="LOKI_Q2" ctrllimited="true" ctrlrange="-7.3 7.3"/>
-        <motor name="Q3_LOKI_motor" joint="LOKI_Q3" ctrllimited="true" ctrlrange="-7.3 7.3"/>
-        <motor name="Q4_LOKI_motor" joint="LOKI_Q4" ctrllimited="true" ctrlrange="-7.3 7.3"/>
-        <motor name="Q5_LOKI_motor" joint="LOKI_Q5" ctrllimited="true" ctrlrange="-7.3 7.3"/>
-        <motor name="Q6_LOKI_motor" joint="LOKI_Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+
+        <motor name="Q1_FRIGG_motor" joint="FRIGG_Q1" ctrllimited="true" ctrlrange="-7.3 7.3"/>    
+        <motor name="Q2_FRIGG_motor" joint="FRIGG_Q2" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="Q3_FRIGG_motor" joint="FRIGG_Q3" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="Q4_FRIGG_motor" joint="FRIGG_Q4" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="Q5_FRIGG_motor" joint="FRIGG_Q5" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="Q6_FRIGG_motor" joint="FRIGG_Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+
+
 
 
         <motor name="Q1_ODIN_motor" joint="ODIN_Q1" ctrllimited="true" ctrlrange="-7.3 7.3"/>    
@@ -51,19 +56,20 @@
         <motor name="Q6_ODIN_motor" joint="ODIN_Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>
 
 
-        <motor name="Q1_FRIGG_motor" joint="FRIGG_Q1" ctrllimited="true" ctrlrange="-7.3 7.3"/>    
-        <motor name="Q2_FRIGG_motor" joint="FRIGG_Q2" ctrllimited="true" ctrlrange="-7.3 7.3"/>
-        <motor name="Q3_FRIGG_motor" joint="FRIGG_Q3" ctrllimited="true" ctrlrange="-7.3 7.3"/>
-        <motor name="Q4_FRIGG_motor" joint="FRIGG_Q4" ctrllimited="true" ctrlrange="-7.3 7.3"/>
-        <motor name="Q5_FRIGG_motor" joint="FRIGG_Q5" ctrllimited="true" ctrlrange="-7.3 7.3"/>
-        <motor name="Q6_FRIGG_motor" joint="FRIGG_Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+
+        <motor name="Q1_LOKI_motor" joint="LOKI_Q1" ctrllimited="true" ctrlrange="-7.3 7.3"/>    
+        <motor name="Q2_LOKI_motor" joint="LOKI_Q2" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="Q3_LOKI_motor" joint="LOKI_Q3" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="Q4_LOKI_motor" joint="LOKI_Q4" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="Q5_LOKI_motor" joint="LOKI_Q5" ctrllimited="true" ctrlrange="-7.3 7.3"/>
+        <motor name="Q6_LOKI_motor" joint="LOKI_Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>
 
 
-        <!-- <adhesion name="Ventosa_THOR" body="adhesion_contact_THOR" ctrlrange="0 100" gain="117.72"/> modificar gain de manera que gain * ctrl_max = f_max -->
-        <adhesion name="Ventosa_THOR" body="adhesion_contact_THOR" ctrlrange="0 100" gain="0.2"/> <!-- modificar gain de manera que gain * ctrl_max = f_max-->
-        <adhesion name="Ventosa_LOKI" body="adhesion_contact_LOKI" ctrlrange="0 1" gain="2000"/>
-        <adhesion name="Ventosa_ODIN" body="adhesion_contact_ODIN" ctrlrange="0 1" gain="2000"/>
-        <adhesion name="Ventosa_FRIGG" body="adhesion_contact_FRIGG" ctrlrange="0 1" gain="2000"/>
+        <adhesion name="Ventosa_THOR" body="adhesion_contact_THOR" ctrlrange="0 100" gain="10"/> <!-- modificar gain de manera que gain * ctrl_max = f_max 117.72 2000-->
+        <adhesion name="Ventosa_FRIGG" body="adhesion_contact_FRIGG" ctrlrange="0 100" gain="10"/>
+        <adhesion name="Ventosa_ODIN" body="adhesion_contact_ODIN" ctrlrange="0 100" gain="10"/>
+        <adhesion name="Ventosa_LOKI" body="adhesion_contact_LOKI" ctrlrange="0 100" gain="10"/>
+        
 
     </actuator> 
 
@@ -91,25 +97,26 @@
 
 
 
-        <torque name="Q1_LOKI_torque" site="sensor_LOKI_b1"/>
-        <torque name="Q2_LOKI_torque" site="sensor_LOKI_b2"/>
-        <torque name="Q3_LOKI_torque" site="sensor_LOKI_b3"/>
-        <torque name="Q4_LOKI_torque" site="sensor_LOKI_b4"/>
-        <torque name="Q5_LOKI_torque" site="sensor_LOKI_b5"/>
-        <torque name="Q6_LOKI_torque" site="sensor_LOKI_b6"/>
+        <torque name="Q1_FRIGG_torque" site="sensor_FRIGG_b1"/>
+        <torque name="Q2_FRIGG_torque" site="sensor_FRIGG_b2"/>
+        <torque name="Q3_FRIGG_torque" site="sensor_FRIGG_b3"/>
+        <torque name="Q4_FRIGG_torque" site="sensor_FRIGG_b4"/>
+        <torque name="Q5_FRIGG_torque" site="sensor_FRIGG_b5"/>
+        <torque name="Q6_FRIGG_torque" site="sensor_FRIGG_b6"/>
         
-        <force name="Q1_LOKI_force" site="sensor_LOKI_b1"/>
-        <force name="Q2_LOKI_force" site="sensor_LOKI_b2"/>
-        <force name="Q3_LOKI_force" site="sensor_LOKI_b3"/>
-        <force name="Q4_LOKI_force" site="sensor_LOKI_b4"/>
-        <force name="Q5_LOKI_force" site="sensor_LOKI_b5"/>
-        <force name="Q6_LOKI_force" site="sensor_LOKI_b6"/>
+        <force name="Q1_FRIGG_force" site="sensor_FRIGG_b1"/>
+        <force name="Q2_FRIGG_force" site="sensor_FRIGG_b2"/>
+        <force name="Q3_FRIGG_force" site="sensor_FRIGG_b3"/>
+        <force name="Q4_FRIGG_force" site="sensor_FRIGG_b4"/>
+        <force name="Q5_FRIGG_force" site="sensor_FRIGG_b5"/>
+        <force name="Q6_FRIGG_force" site="sensor_FRIGG_b6"/>
 
-        <rangefinder name="LOKI_prx_1" site="LOKI_prx_1"/>
-        <rangefinder name="LOKI_prx_2" site="LOKI_prx_2"/>
-        <rangefinder name="LOKI_prx_3" site="LOKI_prx_3"/>
+        <rangefinder name="FRIGG_prx_1" site="FRIGG_prx_1"/>
+        <rangefinder name="FRIGG_prx_2" site="FRIGG_prx_2"/>
+        <rangefinder name="FRIGG_prx_3" site="FRIGG_prx_3"/>
 
-        <touch name="Preassure_LOKI" site="LOKI_prss"/>
+        <touch name="Preassure_FRIGG" site="FRIGG_prss"/>
+
 
 
         <torque name="Q1_ODIN_torque" site="sensor_ODIN_b1"/>
@@ -133,25 +140,28 @@
         <touch name="Preassure_ODIN" site="ODIN_prss"/>
 
 
-        <torque name="Q1_FRIGG_torque" site="sensor_FRIGG_b1"/>
-        <torque name="Q2_FRIGG_torque" site="sensor_FRIGG_b2"/>
-        <torque name="Q3_FRIGG_torque" site="sensor_FRIGG_b3"/>
-        <torque name="Q4_FRIGG_torque" site="sensor_FRIGG_b4"/>
-        <torque name="Q5_FRIGG_torque" site="sensor_FRIGG_b5"/>
-        <torque name="Q6_FRIGG_torque" site="sensor_FRIGG_b6"/>
+
+        <torque name="Q1_LOKI_torque" site="sensor_LOKI_b1"/>
+        <torque name="Q2_LOKI_torque" site="sensor_LOKI_b2"/>
+        <torque name="Q3_LOKI_torque" site="sensor_LOKI_b3"/>
+        <torque name="Q4_LOKI_torque" site="sensor_LOKI_b4"/>
+        <torque name="Q5_LOKI_torque" site="sensor_LOKI_b5"/>
+        <torque name="Q6_LOKI_torque" site="sensor_LOKI_b6"/>
         
-        <force name="Q1_FRIGG_force" site="sensor_FRIGG_b1"/>
-        <force name="Q2_FRIGG_force" site="sensor_FRIGG_b2"/>
-        <force name="Q3_FRIGG_force" site="sensor_FRIGG_b3"/>
-        <force name="Q4_FRIGG_force" site="sensor_FRIGG_b4"/>
-        <force name="Q5_FRIGG_force" site="sensor_FRIGG_b5"/>
-        <force name="Q6_FRIGG_force" site="sensor_FRIGG_b6"/>
+        <force name="Q1_LOKI_force" site="sensor_LOKI_b1"/>
+        <force name="Q2_LOKI_force" site="sensor_LOKI_b2"/>
+        <force name="Q3_LOKI_force" site="sensor_LOKI_b3"/>
+        <force name="Q4_LOKI_force" site="sensor_LOKI_b4"/>
+        <force name="Q5_LOKI_force" site="sensor_LOKI_b5"/>
+        <force name="Q6_LOKI_force" site="sensor_LOKI_b6"/>
 
-        <rangefinder name="FRIGG_prx_1" site="FRIGG_prx_1"/>
-        <rangefinder name="FRIGG_prx_2" site="FRIGG_prx_2"/>
-        <rangefinder name="FRIGG_prx_3" site="FRIGG_prx_3"/>
+        <rangefinder name="LOKI_prx_1" site="LOKI_prx_1"/>
+        <rangefinder name="LOKI_prx_2" site="LOKI_prx_2"/>
+        <rangefinder name="LOKI_prx_3" site="LOKI_prx_3"/>
 
-        <touch name="Preassure_FRIGG" site="FRIGG_prss"/>
+        <touch name="Preassure_LOKI" site="LOKI_prss"/>
+
+
     </sensor>
 
 </mujoco>

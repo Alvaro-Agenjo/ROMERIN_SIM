@@ -86,14 +86,19 @@ void ModuleSimulator::sendRegularMessages()
         sendMessage(romerinMsg_robot_compact_data(robot_compact_data));
       }*/
       //else{  //verbose info (default mode)
-
-        for(int i=0;i<6;i++){
-          sendMessage(motor_info_message(i,joints.motors[i]));
-        }
         
-        //sendMessage(suction_cup_info_message(suction_cup.getRelPressure(), suction_cup.getForce(),
-        //suction_cup.getTemperature(),suction_cup.getDistances()));
-        /* #ifdef POWER_INFO
+      //uint8_t distancia[3] = {4, 5, 6}, * dist = distancia;
+      //SuctionCupInfo cup = {1.0, 2.0, 3, {4, 5, 6}};
+      for(int i=0;i<6;i++){
+        sendMessage(motor_info_message(i,joints.motors[i]));
+      }
+      
+      sendMessage(suction_cup_info_message(joints.suction_cup));
+      //sendMessage(suction_cup_info_message(cup));
+      //sendMessage(suction_cup_info_message(1,2,3, dist));
+      
+      
+      /* #ifdef POWER_INFO
             sendMessage(analog_info_message(power.getBatteryVolt(),power.getBatteryAmp(),
                               0,power.get12vAmp()));
         #endif
@@ -135,6 +140,7 @@ RomerinMsg ModuleSimulator::executeMessage(const RomerinMsg &m)
         break;
       case ROM_REBOOT_MOTOR:
         joints.reboot(m.info[0]);
+        joints.torque(m.info[0]);
         BT_DEBUG_PRINT("REBOOT %i", m.info[0]);
         break;
       case ROM_GET_FIXED_MOTOR_INFO:
@@ -302,12 +308,12 @@ void ModuleSimulator::setEstadoInicial(mjModel* m, mjData* d){
     // const char* Q5[] = {"Q_THOR_6", "Q_ODIN_6", "Q_LOKI_6", "Q_FRIGG_6"};
     // const char* Q6[] = {"Q_THOR_7", "Q_ODIN_7", "Q_LOKI_7", "Q_FRIGG_7"};
 
-    const char* Q1[] = {"THOR_Q1", "LOKI_Q1", "ODIN_Q1", "FRIGG_Q1"};
-    const char* Q2[] = {"THOR_Q2", "LOKI_Q2", "ODIN_Q2", "FRIGG_Q2"};
-    const char* Q3[] = {"THOR_Q3", "LOKI_Q3", "ODIN_Q3", "FRIGG_Q3"};
-    const char* Q4[] = {"THOR_Q4", "LOKI_Q4", "ODIN_Q4", "FRIGG_Q4"};
-    const char* Q5[] = {"THOR_Q5", "LOKI_Q5", "ODIN_Q5", "FRIGG_Q5"};
-    const char* Q6[] = {"THOR_Q6", "LOKI_Q6", "ODIN_Q6", "FRIGG_Q6"};
+    const char* Q1[] = {"THOR_Q1", "FRIGG_Q1", "ODIN_Q1", "LOKI_Q1"};
+    const char* Q2[] = {"THOR_Q2", "FRIGG_Q2", "ODIN_Q2", "LOKI_Q2"};
+    const char* Q3[] = {"THOR_Q3", "FRIGG_Q3", "ODIN_Q3", "LOKI_Q3"};
+    const char* Q4[] = {"THOR_Q4", "FRIGG_Q4", "ODIN_Q4", "LOKI_Q4"};
+    const char* Q5[] = {"THOR_Q5", "FRIGG_Q5", "ODIN_Q5", "LOKI_Q5"};
+    const char* Q6[] = {"THOR_Q6", "FRIGG_Q6", "ODIN_Q6", "LOKI_Q6"};
 
 
 

@@ -19,6 +19,10 @@ bool button_right =  false;
 double lastx = 0;
 double lasty = 0;
 
+// render synchronicer
+double refresh_rate = 1.0/20.0;
+
+
 // keyboard callback
 void keyboard(GLFWwindow* window, int key, int scancode, int act, int mods) {
   // backspace: reset simulation
@@ -96,7 +100,7 @@ int main(int argc, const char** argv) {
   // check command-line arguments
   if (argc!=2) {
     std::printf(" USAGE:  example modelfile\n");
-    argv[1] = "../include/Robot/Robot.xml";
+    argv[1] = "../include/Robot/modelo.xml";
   }
 
   // load and compile model
@@ -141,8 +145,15 @@ int main(int argc, const char** argv) {
   
   control->setParametros(m, d);
   
+
+
+
+  double last_time = glfwGetTime();
   // run main loop, target real-time simulation and 60 fps rendering
   while (!glfwWindowShouldClose(window)) {
+    // double loop_start = glfwGetTime(); //test frame rate
+
+
     // advance interactive simulation for 1/60 sec
     //  Assuming MuJoCo can simulate faster than real-time, which it usually can,
     //  this loop will finish on time for the next frame to be rendered at 60 fps.
@@ -160,7 +171,7 @@ int main(int argc, const char** argv) {
     }
 
     mjtNum simstart = d->time;
-    while (d->time - simstart < 1.0/60.0) {
+    while (d->time - simstart < refresh_rate) { //simula 0.016666s
       mj_step(m, d);
     }
     
@@ -177,6 +188,24 @@ int main(int argc, const char** argv) {
 
     // process pending GUI events, call GLFW callbacks
     glfwPollEvents();
+
+    // Sincronizar con tiempo real
+    double current_time = glfwGetTime();
+    double elapsed = current_time - last_time;
+
+    if (elapsed < refresh_rate) {
+        //std::cout << "---"; //test frame_rate
+        std::this_thread::sleep_for(std::chrono::duration<double>(refresh_rate  - elapsed));
+    }
+
+    // actualizar último tiempo
+    last_time = glfwGetTime();
+
+    // //test frame_rate
+    // double loop_end = glfwGetTime();
+    // double loop_duration = loop_end - loop_start;
+    //printf("Frame time: %.5f s (%.2f FPS)\n", loop_duration, 1.0 / loop_duration);
+  
   }
   control->setVentanaAbierta(false);
   //free visualization storage

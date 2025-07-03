@@ -22,29 +22,33 @@ a la superficie como un valor positivo, si no hay contacto el valor es nulo.
 14/04/2025
 Sensor torque: al colocarlo en un joint solo mide el par producido por el motor
 
+26/04/2025
+Cambios:
+    - modulesimulator: executeMessage() -> reboot -> torque = on;
+    - Robot: sincronizado a tiempo real.
+
+28/05/2025
+
+tras crear la nueva interfaz, cambios:
+    -romkin: IKwrist() -> al calcular num no usar valor absoluto dado que elimina una de las dos soluciones. Esto provocaba que el punto 115,0,0 se 
+    diera como valido generando los valores de m[]; sin embargo, los valores obtenidos posicionaban el modulo totalmente extendido (posicion que se 
+    deberia obtener solo en puntos como 518,0,0).
+
+    -motor (motorWidget): añadido un atributo de tipo _FixedMotorInfoData_ para realizar la comprobacion de limites articulares.
+
+    -module (RomerinModule): checkJointLimit() nueva función comprueba si alguno de los angulos obtenidos supera los limites de dicha articulación.
+
+17/06/2025
+
+Consegida la gestion de movimiento en cualquier direccion mediante matrices de transformacion homogenea
+*! a pesar de que la traslación en z es nula, al ejecutar moveLeg la pata asciende unos 80 mm. Causa desconocida
+
+    --> posible causa, el modelo de mujoco envia como posicion el centro de la muñeca y la interfaz lo interpreta como el TCP.
+
+18/06/2025
+    <-- Causa encontrada, cuando se ejecuta la cinematica directa el punto obtenido no es el TCP sino el centro de la muñeca
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-06/05/2025
-modelo dynamyxels:
-    - Si el _goal angle_ ha cambiado recalcular perfil de velocidad
-
-    profileVel = max vel; rev/min
-    profileAcc = acc (const); rev/min2
-
-    t<t1; vel(i) = (max_vel-vel_0)/t1 *t + vel_0; t1 = 64*max_vel/acc;
-    t1<t<t2; vel(i) = max_vel;
-    t>t2; vel(i) = (vel_0-max_vel)/t1 *(t-t2)
+test angular muñeca esférica, es posible que los motores no acepten valores angulares negativos lo que explicaria la incoherencia 
+con los giros.
+Asegurar que el envio de 6 mensajes (posicion de motores) pueden ser enviados sin esperas.
