@@ -255,14 +255,14 @@ bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int 
     unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
     if(diff.module() > 0.01){
         for(int i= 0; i< n_orders; i++){
-            if(!moveBotRelative(diff/n_orders, RPY, request_time + (i + 1) * counterTG2MW));  //und40 * 40ms/und40 + (i+1)*100ms) return false;
+            if(!moveBotRelative(diff/n_orders, RPY, request_time + (i + 1) * counterTG2MW, true));  //und40 * 40ms/und40 + (i+1)*100ms) return false;
         }
         center = new_center;
         return true;
     }
     return true;
 }
-bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int batch)
+bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int batch, bool fixed)
 {
     std::list<MotorsAngles> points;
     Matriz_Transformacion movimiento(new_center);
@@ -283,7 +283,7 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int
 
     for(auto module : ModulesHandler::module_list){
 
-        addMovement(module, points.front().angle, 5, batch );
+        addMovement(module, points.front().angle, fixed? 25 : standby , batch );
         points.pop_front();
     }
     return true;
@@ -326,15 +326,14 @@ void trayectoryGenerator::relax()
     int n_orders = ms /100.0;
     float def[3] = {0,180,0};
     Vector3D up{0,0,-0.2};
-    double pos[3];
 
     refreshTCPs();
 
 
     for(int i= 0; i< ms/100.0; i++){
-        //moveBotAbsolute(up, def, i);
         moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW );  //und40 * 40ms/und40 + (i+1)*100ms
     }
+    center = center + up;
 }
 
 void trayectoryGenerator::fixed_rotation(int n)

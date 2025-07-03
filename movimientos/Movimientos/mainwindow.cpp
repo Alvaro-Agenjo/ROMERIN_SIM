@@ -290,11 +290,15 @@ void MainWindow::on_btn_reset_clicked()
 void MainWindow::on_btn_stand_clicked()
 {
     commander.stand();
-    test_timer.start(2800);
 }
 void MainWindow::on_btn_relax_clicked()
 {
     commander.relax();
+}
+void MainWindow::on_btn_fixRot_clicked()
+{
+    commander.fixed_rotation(2);
+    test_timer.stop();
 }
 
 
@@ -351,16 +355,8 @@ void MainWindow::on_btn_test_2_clicked()
 
 void MainWindow::on_btn_test_3_clicked()
 {
-    float RPY[] = {0,180,0};
-    commander.moveBotRelative(Vector3D{0.05,0,0}, RPY, ui->timerInfo->text().toInt());
-    //commander.addMovement(ModulesHandler::module_list.front()->name, 0.3, 0.2, 0.2, RPY,true, false);
-
-    // float RPY[] = {0,180,0};
-    // commander.moveBotRelative(Vector3D {0.1,0,0}, RPY);
-
-    //test_timer.start(5000);
-
-
+    commander.stand();
+    test_timer.start(2800);
 }
 
 void MainWindow::on_btn_record_clicked()
@@ -396,11 +392,6 @@ void MainWindow::on_btn_record_clicked()
 
 float RPY[] = {0,0,0};
 int counter = 0;
-void MainWindow::on_btn_fixRot_clicked()
-{
-    commander.fixed_rotation(2);
-    test_timer.stop();
-}
 
 
 

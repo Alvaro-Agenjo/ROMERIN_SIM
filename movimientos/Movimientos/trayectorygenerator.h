@@ -6,7 +6,7 @@
 #include "modulecontroller.h"
 #include "MTHomogenea.h"
 
-#define standby 15
+#define standby 8
 constexpr float counterTG2MW = 100/40;
 //enum class state_t { STAND, RELAX, FIXED_ROTATION, RESET};
 
@@ -50,7 +50,7 @@ public:
     void Calc3x3ROT(float a, float b, float c, double ortientacion[][3]);
 
     bool moveBotAbsolute(Vector3D new_center, float RPY[3], int batch);
-    bool moveBotRelative(Vector3D new_center, float RPY[3], int batch);
+    bool moveBotRelative(Vector3D new_center, float RPY[3], int batch, bool fixed = false);
 
 
     void reset();
