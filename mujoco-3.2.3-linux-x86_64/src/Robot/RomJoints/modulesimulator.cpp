@@ -308,12 +308,12 @@ void ModuleSimulator::setEstadoInicial(mjModel* m, mjData* d){
     // const char* Q5[] = {"Q_THOR_6", "Q_ODIN_6", "Q_LOKI_6", "Q_FRIGG_6"};
     // const char* Q6[] = {"Q_THOR_7", "Q_ODIN_7", "Q_LOKI_7", "Q_FRIGG_7"};
 
-    const char* Q1[] = {"THOR_Q1", "LOKI_Q1", "ODIN_Q1", "FRIGG_Q1"};
-    const char* Q2[] = {"THOR_Q2", "LOKI_Q2", "ODIN_Q2", "FRIGG_Q2"};
-    const char* Q3[] = {"THOR_Q3", "LOKI_Q3", "ODIN_Q3", "FRIGG_Q3"};
-    const char* Q4[] = {"THOR_Q4", "LOKI_Q4", "ODIN_Q4", "FRIGG_Q4"};
-    const char* Q5[] = {"THOR_Q5", "LOKI_Q5", "ODIN_Q5", "FRIGG_Q5"};
-    const char* Q6[] = {"THOR_Q6", "LOKI_Q6", "ODIN_Q6", "FRIGG_Q6"};
+    const char* Q1[] = {"THOR_Q1", "FRIGG_Q1", "ODIN_Q1", "LOKI_Q1"};
+    const char* Q2[] = {"THOR_Q2", "FRIGG_Q2", "ODIN_Q2", "LOKI_Q2"};
+    const char* Q3[] = {"THOR_Q3", "FRIGG_Q3", "ODIN_Q3", "LOKI_Q3"};
+    const char* Q4[] = {"THOR_Q4", "FRIGG_Q4", "ODIN_Q4", "LOKI_Q4"};
+    const char* Q5[] = {"THOR_Q5", "FRIGG_Q5", "ODIN_Q5", "LOKI_Q5"};
+    const char* Q6[] = {"THOR_Q6", "FRIGG_Q6", "ODIN_Q6", "LOKI_Q6"};
 
 
 

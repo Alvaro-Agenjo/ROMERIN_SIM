@@ -40,9 +40,9 @@ Control::Control(){
 
 
     modules.append(ModuleSimulator{0,"THOR",1});
-    modules.append(ModuleSimulator{6, "LOKI",2});
+    modules.append(ModuleSimulator{6, "FRIGG",2});
     modules.append(ModuleSimulator{12, "ODIN",3});
-    modules.append(ModuleSimulator{18, "FRIGG",4});
+    modules.append(ModuleSimulator{18, "LOKI",4});
 
     openJson();
     

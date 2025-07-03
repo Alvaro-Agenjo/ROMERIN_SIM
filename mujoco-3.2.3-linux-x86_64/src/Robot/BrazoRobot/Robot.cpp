@@ -151,7 +151,7 @@ int main(int argc, const char** argv) {
   double last_time = glfwGetTime();
   // run main loop, target real-time simulation and 60 fps rendering
   while (!glfwWindowShouldClose(window)) {
-    double loop_start = glfwGetTime(); //test frame rate
+    // double loop_start = glfwGetTime(); //test frame rate
 
 
     // advance interactive simulation for 1/60 sec
@@ -194,17 +194,17 @@ int main(int argc, const char** argv) {
     double elapsed = current_time - last_time;
 
     if (elapsed < refresh_rate) {
-        std::cout << "---"; //test frame_rate
+        //std::cout << "---"; //test frame_rate
         std::this_thread::sleep_for(std::chrono::duration<double>(refresh_rate  - elapsed));
     }
 
     // actualizar último tiempo
     last_time = glfwGetTime();
 
-    //test frame_rate
-    double loop_end = glfwGetTime();
-    double loop_duration = loop_end - loop_start;
-    printf("Frame time: %.5f s (%.2f FPS)\n", loop_duration, 1.0 / loop_duration);
+    // //test frame_rate
+    // double loop_end = glfwGetTime();
+    // double loop_duration = loop_end - loop_start;
+    //printf("Frame time: %.5f s (%.2f FPS)\n", loop_duration, 1.0 / loop_duration);
   
   }
   control->setVentanaAbierta(false);

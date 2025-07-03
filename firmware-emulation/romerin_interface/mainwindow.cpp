@@ -61,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->comboBoxIPs->addItem("127.0.0.1");
     ui->l_log_dir->setText(QCoreApplication::applicationDirPath());
 
+   
     timer.start(MAIN_TIMER_MS);//antes 50ms
 }
 void MainWindow::info(const QString &mens)
@@ -85,7 +86,6 @@ void MainWindow::updateTable()
 }
 MainWindow::~MainWindow()
 {
-
     delete ui;
     ModulesHandler::clear();
 }
