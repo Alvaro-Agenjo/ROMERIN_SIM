@@ -52,17 +52,41 @@ struct Matriz_Transformacion{
         return result;
     }
     
-    Matriz_Transformacion Inversa() const{
-        Matriz_Transformacion inv;  // M-1 =M^t
+    Matriz_Transformacion Inversa() const{       
+        Matriz_Transformacion inv;  
         for(int i = 0; i < 3; i++) 
-            for(int j = 0; j < 3; j++) {
+            for(int j = 0; j < 3; j++) 
                 inv.m[i][j] = m[j][i]; // Transpose for rotation
-            }
+    
         for(int i = 0; i < 3; i++) {
             inv.m[i][3] = -m[0][i] * m[0][3] - m[1][i] * m[1][3] - m[2][i] * m[2][3];
         }
         return inv;
     }
+    Matriz_Transformacion Inversa2() const {
+        Matriz_Transformacion inv;
+
+        // Transponer rotación
+        for(int i = 0; i < 3; i++)       // filas
+            for(int j = 0; j < 3; j++)   // columnas
+                inv.m[i][j] = m[j][i];
+
+        // Calcular traslación inversa:
+        // inv.m[i][3] = - sum_k (inv.m[i][k] * m[k][3])
+        for(int i = 0; i < 3; i++) {
+            inv.m[i][3] = 0;
+            for(int k = 0; k < 3; k++) {
+                inv.m[i][3] -= inv.m[i][k] * m[k][3];
+            }
+        }
+
+        // Última fila homogénea
+        for(int j = 0; j < 4; j++)
+            inv.m[3][j] = (j == 3) ? 1 : 0;
+
+        return inv;
+    }
+
 };
 
 std::ostream& operator<<(std::ostream& os, const Matriz_Transformacion& mt) {
@@ -98,7 +122,7 @@ void rotZ(float angulo, float m[3][3]){
 int main(){
 
     float m[3][3];
-    float p[3] = {1, 1, 0};
+    float p[3] = {80, 82.5, 0};
     rotZ(45, m); // Rotate 90 degrees around Z-axis
     Matriz_Transformacion matriz_Centro_Pata(m, p);
     Vector3D centro, Origen;
@@ -111,21 +135,52 @@ int main(){
     std::cout << "Coordenada global TCP: " << Transformacion(TCP, matriz_Centro_Pata) << std::endl;
     //std::cout << "Matriz de Transformacion:\n" << matriz_Centro_Pata;
     
+    // /* op 1 */
+    // float p2[] ={400,0,-100};
+    // Vector3D pf = Transformacion(Origen, matriz_Centro_Pata * *new Matriz_Transformacion(p2));
     
+    
+    //// Movimiento del centro
+    // float movimiento[3] {100,0 ,0};
+    // Matriz_Transformacion mov(movimiento);
+    // centro.Traslacion(p);
+    // pf.x -= movimiento[0];
+    // std::cout << "Punto final: " << Transformacion(pf, matriz_Centro_Pata.Inversa()) << std::endl;
+
+    /* op 2 */
+
+    //obtener pos global
+    Vector3D pf = Transformacion(TCP, matriz_Centro_Pata);
     //Movimiento del centro
     float movimiento[3] {100,0 ,0};
     Matriz_Transformacion mov(movimiento);
-    //centro.Traslacion(p);
+    Matriz_Transformacion matriz_final_1 = mov * matriz_Centro_Pata;
+    Matriz_Transformacion matriz_final_2 = matriz_Centro_Pata * mov;
+    Matriz_Transformacion matriz_final_3 = mov.Inversa() * matriz_Centro_Pata.Inversa();
 
-    //Transformacion de la pata
-    centro = Transformacion(Origen, mov);
-    pata = Transformacion(Origen, mov * matriz_Centro_Pata);
-    TCP = Transformacion(TCP, (mov * matriz_Centro_Pata).Inversa());
+    std::cout << "Posicion global TCP: " << pf << std::endl;
+    std::cout << "Punto final 1: " << Transformacion(pf, matriz_final_1.Inversa()) << std::endl;
+    std::cout << "Matriz 1: \n" << matriz_final_1 << std::endl;
+    std::cout << "Matriz 1 inversa: \n" << matriz_final_1.Inversa2() << std::endl;
 
 
-    std::cout << "Posicion del centro : " << centro << std::endl;
-    std::cout << "Coordenada global pata: " << pata << std::endl;
-    std::cout << "Coordenada TCP respecto a pata: " << TCP << std::endl;
-    std::cout << "Coordenada global TCP: " << Transformacion(TCP, (mov * matriz_Centro_Pata)) << std::endl;
+    std::cout << "Punto final 2: " << Transformacion(pf, matriz_final_2.Inversa()) << std::endl;
+    std::cout << "Matriz 2: \n" << matriz_final_2 << std::endl;
+    std::cout << "Matriz 2 inversa: \n" << matriz_final_2.Inversa2() << std::endl;
+
+    std::cout << "Punto final 3: " << Transformacion(pf, mov.Inversa()) << std::endl;
+    std::cout << "Matriz 3: \n" << matriz_final_3 << std::endl;
+    std::cout << "Matriz 3 inversa: \n" << matriz_final_3.Inversa2() << std::endl;
+    
+    // //Transformacion de la pata
+    // centro = Transformacion(Origen, mov);
+    // pata = Transformacion(Origen, mov * matriz_Centro_Pata);
+    // TCP = Transformacion(TCP, (mov * matriz_Centro_Pata).Inversa());
+
+
+    // std::cout << "Posicion del centro : " << centro << std::endl;
+    // std::cout << "Coordenada global pata: " << pata << std::endl;
+    // std::cout << "Coordenada TCP respecto a pata: " << TCP << std::endl;
+    // std::cout << "Coordenada global TCP: " << Transformacion(TCP, (mov * matriz_Centro_Pata)) << std::endl;
     return 0;
 }
