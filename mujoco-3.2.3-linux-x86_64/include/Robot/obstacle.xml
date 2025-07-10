@@ -7,6 +7,33 @@
 
     <worldbody>
     <geom name="bodyfloor" type="plane" condim="3" contype="3" conaffinity="3" size="0 0 0.0000005" material="grid" pos="0 0 0"/>
+        <body name="Senda1" pos="3 0 0">
+            <geom name="floor" type="box" contype="3" conaffinity="3" size="1 0.5 0.02" pos="0 0 0.02"/>
+            <geom name="inclinado1" type="box" contype="3" conaffinity="3" size="0.5 0.5 0.02" euler="0 -45 0" pos="1.37 0 0.38"/>
+            <geom name="wall" type="box" contype="3" conaffinity="3" size="0.5 0.5 0.02" euler="0 90 0" pos="1.73 0 1.25"/>
+            <geom name="inclinado2" type="box" contype="3" conaffinity="3" size="0.5 0.5 0.02" euler="0 45 0" pos="1.37 0 2.12"/>
+            <geom name="techo" type="box" contype="3" conaffinity="3" size="1 0.5 0.02" pos="0 0 2.48"/>
+        </body>
+        <body name="Obstacle" pos="0 3 0">
+            <geom name="ob1" type="box" contype="3" conaffinity="3" size="0.3 0.3 0.02" pos="0.12 0 0.02"/>
+            <geom name="ob2" type="box" contype="3" conaffinity="3" size="0.4 0.3 0.05" pos="-0.12 0.5 0.05"/>
+            <geom name="ob3" type="box" contype="3" conaffinity="3" size="0.15 0.2 0.06" pos="0.26 1 0.06"/>
+            <geom name="ob4" type="box" contype="3" conaffinity="3" size="0.2 0.2 0.07" pos="-0.17 1.5 0.07"/>
+            <geom name="ob5" type="box" contype="3" conaffinity="3" size="0.3 0.3 0.04" pos="0.23 2.43 0.04"/>
+            <geom name="ob6" type="box" contype="3" conaffinity="3" size="0.3 0.3 0.05" pos="-0.42 2.52 0.05"/>
+            <geom name="ob7" type="box" contype="3" conaffinity="3" size="0.3 0.3 0.08" pos="0.09 3.57 0.08"/>
+            <geom name="ob8" type="box" contype="3" conaffinity="3" size="0.3 0.3 0.03" pos="-0.18 4.86 0.03"/>
+            <geom name="ob9" type="box" contype="3" conaffinity="3" size="0.3 0.3 0.06" pos="0.2 5.45 0.06"/>
+        </body>
+        
+        
+        
+        
+        
+        
+        
+        
+        
         <body name="Cuerpo" pos="0 0 0.5">
             <include file="../Cuerpo/cuerpo.xml"/>
             <freejoint name="libre"/>
