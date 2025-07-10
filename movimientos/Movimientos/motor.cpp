@@ -36,3 +36,11 @@ void Motor::updateInfo(MotorInfoData &minfo)
     //ui->temperature->display(minfo.temperature);
     //ui->voltage->display(QString::number(minfo.voltage, 'f', 1));
 }
+
+
+void Motor::on_checkBox_clicked(bool checked)
+{
+    RomerinMsg m = romerinMsg_Torque(motor_id, checked);
+    _module->sendMessage(m);
+}
+

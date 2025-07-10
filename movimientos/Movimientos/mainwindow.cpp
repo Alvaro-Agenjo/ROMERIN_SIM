@@ -285,7 +285,9 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
 
 void MainWindow::on_btn_reset_clicked()
 {
-    commander.reset();
+    double angle[6] = {180,180,90,180,180,180};
+    commander.setMotorAngles(ModulesHandler::module_list.front(), angle);
+//    commander.reset();
 }
 void MainWindow::on_btn_stand_clicked()
 {
@@ -355,8 +357,12 @@ void MainWindow::on_btn_test_2_clicked()
 
 void MainWindow::on_btn_test_3_clicked()
 {
-    commander.stand();
-    test_timer.start(2800);
+        double m[6] = {210,255,195,180,180,180};
+        for(auto modulo : ModulesHandler::module_list){
+            commander.setMotorAngles(modulo, m);
+        }
+//    commander.stand();
+//    test_timer.start(2800);
 }
 
 void MainWindow::on_btn_record_clicked()

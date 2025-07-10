@@ -15,13 +15,24 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,1">
-     <item alignment="Qt::AlignHCenter">
-      <widget class="QLabel" name="txt_title">
-       <property name="text">
-        <string>Motor 1</string>
-       </property>
-      </widget>
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item alignment="Qt::AlignRight">
+        <widget class="QLabel" name="txt_title">
+         <property name="text">
+          <string>Motor 1</string>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignHCenter">
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string>ON</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <layout class="QFormLayout" name="formLayout">

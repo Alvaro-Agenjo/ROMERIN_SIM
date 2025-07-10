@@ -25,6 +25,10 @@ public:
 
     bool isMoving() const {return moving;}
 
+private slots:
+
+    void on_checkBox_clicked(bool checked);
+
 private:
     Ui::Motor *ui;
     MotorInfoData info_motor;

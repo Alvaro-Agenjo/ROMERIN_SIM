@@ -79,12 +79,14 @@ void trayectoryGenerator::setTorque(ModuleController *modulo, int motor_id, bool
 {
     RomerinMsg m = romerinMsg_Torque(motor_id, torque);
     modulo->sendMessage(m);
+//    modulo->mod->setTorqueInfo()
 }
 void trayectoryGenerator::setTorque(ModuleController *modulo, bool torques[])
 {
     for(int i = 0; i< 6; i++){
         RomerinMsg m = romerinMsg_Torque(i, torques[i]);
         modulo->sendMessage(m);
+        qDebug()<<"Torque "<<i<<" :"<<torques[i];
     }
 }
 void trayectoryGenerator::setMotorVel(ModuleController *modulo, float max_vel, int motor_id)
@@ -163,8 +165,8 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
     * Provisional hasta resolver problema con angulos muñeca
     */
     //Check if joint physical limits are not surpassed
-    //if(module->mod->checkJointsLimits(m, false))    return false;
-    if(module->mod->checkJointsLimits(m, true))    return false;
+    if(module->mod->checkJointsLimits(m, false))    return false;
+    //if(module->mod->checkJointsLimits(m, true))    return false;
 
     for(int i = 0; i< 6; i++){
         angle[i] = m[i];
@@ -183,6 +185,8 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, boo
     if(fixed) msg = romerinMsg_SuctionCupPWM(50);
     else msg = romerinMsg_SuctionCupPWM(standby);
     module->sendMessage(msg);
+    //    bool torques[6] = {1,1,1,0,0,0};
+    //    setTorque(module, torques);
 
 
     //Sends movement commands
@@ -193,6 +197,7 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, boo
 }
 bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow, bool fixed)
 {
+
     ModuleController *module = ModulesHandler::getWithName(leg);
     double m[6]={};
     if(!validateMovement(m, module, x, y, z, RPY, elbow)) return false;
@@ -204,6 +209,8 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, flo
     else msg = romerinMsg_SuctionCupPWM(5);
     module->sendMessage(msg);
 
+//    bool torques[6] = {1,1,1,0,0,0};
+//    setTorque(module, torques);
 
     //Sends movement commands
     setMotorAngles(module, m);
