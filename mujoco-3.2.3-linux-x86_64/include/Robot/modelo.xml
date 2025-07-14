@@ -65,10 +65,10 @@
         <motor name="Q6_LOKI_motor" joint="LOKI_Q6" ctrllimited="true" ctrlrange="-7.3 7.3"/>
 
 
-        <adhesion name="Ventosa_THOR" body="adhesion_contact_THOR" ctrlrange="0 100" gain="10"/> <!-- modificar gain de manera que gain * ctrl_max = f_max 117.72 2000-->
-        <adhesion name="Ventosa_FRIGG" body="adhesion_contact_FRIGG" ctrlrange="0 100" gain="10"/>
-        <adhesion name="Ventosa_ODIN" body="adhesion_contact_ODIN" ctrlrange="0 100" gain="10"/>
-        <adhesion name="Ventosa_LOKI" body="adhesion_contact_LOKI" ctrlrange="0 100" gain="10"/>
+        <adhesion name="Ventosa_THOR" body="adhesion_contact_THOR" ctrlrange="0 100" gain="5"/> <!-- modificar gain de manera que gain * ctrl_max = f_max 117.72 2000-->
+        <adhesion name="Ventosa_FRIGG" body="adhesion_contact_FRIGG" ctrlrange="0 100" gain="5"/>
+        <adhesion name="Ventosa_ODIN" body="adhesion_contact_ODIN" ctrlrange="0 100" gain="5"/>
+        <adhesion name="Ventosa_LOKI" body="adhesion_contact_LOKI" ctrlrange="0 100" gain="5"/>
         
 
     </actuator> 
