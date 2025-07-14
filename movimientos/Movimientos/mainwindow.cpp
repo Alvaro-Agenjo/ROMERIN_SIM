@@ -24,34 +24,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::Main
     sbar=ui->statusbar;
     _this=this;
 
-
-
-
-    // auto *series = new QLineSeries();
-    // series->append(0,3);
-    // series->append(3,6);
-    // series->append(4,9);
-    // series->append(6,5);
-    // series->append(6,3);
-    // series->append(43,1);
-    // series->append(1,7);
-
-    // auto *chart = new QChart();
-    // chart->legend()->hide();
-    // chart->addSeries(series);
-    // chart->createDefaultAxes();
-    // //chart->setVisible(true);
-
-    // //ui->graphicsView = new QChartView(chart, ui->graphicsView);
-    // // ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-    // //ui->graphicsView->setVisible(true);
-
-    //  QChartView *chartview = new QChartView(chart);
-    //  chartview->setRenderHint(QPainter::Antialiasing);
-    //  chartview->setVisible(true);
-
-
-
     //Actualizacion de la tabla donde se informa de los módulos conectados
     QTableWidget *tb=ui->table_modules;
     QStringList m_TableHeader;
@@ -280,14 +252,11 @@ void MainWindow::on_btn_enableMotors_clicked(bool checked)
     for(auto mod : ModulesHandler::module_list){
         mod->activateMotors(checked);
     }
-    //commander.setlegs(ModulesHandler::module_list.front()->simulated);
 }
 
 void MainWindow::on_btn_reset_clicked()
 {
-    double angle[6] = {180,180,90,180,180,180};
-    commander.setMotorAngles(ModulesHandler::module_list.front(), angle);
-//    commander.reset();
+    commander.reset();
 }
 void MainWindow::on_btn_stand_clicked()
 {

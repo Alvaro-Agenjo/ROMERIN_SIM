@@ -58,6 +58,8 @@ public:
     bool checkJointsLimits(double m[], bool simple = false);
     bool objetiveReached();
     bool newTCP_mov(Vector3D actualTCP, Vector3D * futureTCP, Matriz_Transformacion movimiento);
+    void updateTorque(int motor_id, bool torque);
+    bool isAttached();
 
 private:
     Ui::Module *ui;

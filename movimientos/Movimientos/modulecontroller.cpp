@@ -220,5 +220,6 @@ void ModuleController::activateMotors(bool on)
 {
     for(int i = 0; i< 6; i++){
         sendMessage(romerinMsg_Torque(i, on));
+        mod->updateTorque(i, on);
     }
 }

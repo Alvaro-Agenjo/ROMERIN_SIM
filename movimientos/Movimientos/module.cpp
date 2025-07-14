@@ -41,6 +41,7 @@ void Module::loop()
 
 void Module::updateInfo(SuctionCupInfoData &data)
 {
+    suction_cup = data;
     //Actualizacion valores adherencia
     ui->lcd_pressure->display(QString::number(data.pressure, 'f', 0));
     ui->lcd_force->display(QString::number(data.force, 'f', 1));
@@ -137,6 +138,17 @@ bool Module::newTCP_mov(Vector3D actualTCP, Vector3D *futureTCP, Matriz_Transfor
     actualTCP = Transformacion(actualTCP, T);
     *futureTCP = Transformacion(actualTCP, (movimiento*T).Inversa());
     return true;
+}
+
+void Module::updateTorque(int motor_id, bool torque)
+{
+    motors[motor_id]->setTorque(torque);
+}
+
+bool Module::isAttached()
+{
+    uint8_t threshold = 18;
+    return (suction_cup.distance[0]<threshold && suction_cup.distance[1] < threshold && suction_cup.distance[2] < threshold);
 }
 
 

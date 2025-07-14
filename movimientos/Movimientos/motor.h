@@ -24,10 +24,11 @@ public:
     FixedMotorInfoData get_motor_limits(){return limits_motor;}
 
     bool isMoving() const {return moving;}
+    void setTorque(bool check);
 
 private slots:
 
-    void on_checkBox_clicked(bool checked);
+    void on_chk_torque_clicked(bool checked);
 
 private:
     Ui::Motor *ui;

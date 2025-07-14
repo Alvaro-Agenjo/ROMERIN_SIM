@@ -37,8 +37,12 @@ void Motor::updateInfo(MotorInfoData &minfo)
     //ui->voltage->display(QString::number(minfo.voltage, 'f', 1));
 }
 
+void Motor::setTorque(bool check)
+{
+    ui->chk_torque->setChecked(check);
+}
 
-void Motor::on_checkBox_clicked(bool checked)
+void Motor::on_chk_torque_clicked(bool checked)
 {
     RomerinMsg m = romerinMsg_Torque(motor_id, checked);
     _module->sendMessage(m);

@@ -75,18 +75,18 @@ void trayectoryGenerator::refreshTCPs()
     //center = 0,0,0;
 }
 
-void trayectoryGenerator::setTorque(ModuleController *modulo, int motor_id, bool torque)
+void trayectoryGenerator::setTorque(ModuleController *modulo, int motor_id, const bool torque)
 {
     RomerinMsg m = romerinMsg_Torque(motor_id, torque);
     modulo->sendMessage(m);
-//    modulo->mod->setTorqueInfo()
+    modulo->mod->updateTorque(motor_id,torque);
 }
-void trayectoryGenerator::setTorque(ModuleController *modulo, bool torques[])
+void trayectoryGenerator::setTorque(ModuleController *modulo, const bool torques[])
 {
     for(int i = 0; i< 6; i++){
         RomerinMsg m = romerinMsg_Torque(i, torques[i]);
         modulo->sendMessage(m);
-        qDebug()<<"Torque "<<i<<" :"<<torques[i];
+        modulo->mod->updateTorque(i,torques[i]);
     }
 }
 void trayectoryGenerator::setMotorVel(ModuleController *modulo, float max_vel, int motor_id)
@@ -123,6 +123,8 @@ void trayectoryGenerator::setAdhesion(ModuleController *module, int percentaje)
     RomerinMsg m = romerinMsg_SuctionCupPWM(percentaje);
     module->sendMessage(m);
 }
+
+
 
 void trayectoryGenerator::addMovement(ModuleController *module, double angulo[], int suctForce, int batch)
 {
@@ -165,8 +167,8 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
     * Provisional hasta resolver problema con angulos muñeca
     */
     //Check if joint physical limits are not surpassed
-    if(module->mod->checkJointsLimits(m, false))    return false;
-    //if(module->mod->checkJointsLimits(m, true))    return false;
+    //if(module->mod->checkJointsLimits(m, false))    return false;
+    if(module->mod->checkJointsLimits(m, true))    return false;
 
     for(int i = 0; i< 6; i++){
         angle[i] = m[i];
@@ -174,6 +176,7 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
     return true;
 }
 
+/* Funcion de test probablemente será eliminada ya que no se usa en movimientos precargados */
 bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, bool elbow, bool fixed)
 {
     ModuleController *module = ModulesHandler::getWithName(leg);
@@ -182,12 +185,15 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, boo
     validateMovement(m, module, x, y, z, elbow);
     //Sends suction power command if necessary
     RomerinMsg msg;
-    if(fixed) msg = romerinMsg_SuctionCupPWM(50);
-    else msg = romerinMsg_SuctionCupPWM(standby);
+    if(fixed) {
+        msg = romerinMsg_SuctionCupPWM(50);
+        setTorque(module, simple);
+    }
+    else {
+        msg = romerinMsg_SuctionCupPWM(standby);
+        setTorque(module, full );
+    }
     module->sendMessage(msg);
-    //    bool torques[6] = {1,1,1,0,0,0};
-    //    setTorque(module, torques);
-
 
     //Sends movement commands
     setMotorAngles(module, m);
@@ -205,13 +211,14 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, flo
 
     //Sends suction power command if necessary
     RomerinMsg msg;
-    if(fixed) msg = romerinMsg_SuctionCupPWM(50);
-    else msg = romerinMsg_SuctionCupPWM(5);
-    module->sendMessage(msg);
-
-//    bool torques[6] = {1,1,1,0,0,0};
-//    setTorque(module, torques);
-
+    if(fixed) {
+        msg = romerinMsg_SuctionCupPWM(50);
+        setTorque(module, simple);
+    }
+    else {
+        msg = romerinMsg_SuctionCupPWM(standby);
+        setTorque(module, full );
+    }
     //Sends movement commands
     setMotorAngles(module, m);
     // qDebug()<<"Q1: "<<q[0]<<" Q2: "<<q[1]<<" Q3: "<<q[2];
@@ -274,22 +281,31 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int
     std::list<MotorsAngles> points;
     Matriz_Transformacion movimiento(new_center);
     bool oka = true;
-
+    Vector3D newTCPs[4];
     int n = 0;
     for(auto modulo :ModulesHandler::module_list){
         Vector3D TCP;
         modulo->mod->newTCP_mov(TCPs[n], &TCP, movimiento);
-        TCPs[n] = TCP;
+        newTCPs[n] = TCP;
+        //TCPs[n] = TCP;
         n++;
 
         double angle[6];
         oka &= validateMovement(angle, modulo,TCP.x, TCP.y, TCP.z,RPY ,true);
-        if(!oka)    return false;
-        points.push_back(MotorsAngles(angle));
+
+        //En caso de que algún módulo no pueda completar el movimiento
+        if(!oka){
+            //Eliminar las ordenes provisionales
+            for(int i = 1; i< n;i++){
+                points.pop_back();
+            }
+            return false;
+        }
+        else
+            points.push_back(MotorsAngles(angle));
     }
 
     for(auto module : ModulesHandler::module_list){
-
         addMovement(module, points.front().angle, fixed? 25 : standby , batch );
         points.pop_front();
     }
@@ -301,8 +317,9 @@ void trayectoryGenerator::reset()
 
     qDebug()<<"Reset";
     center = {0,0,0};
-    double m[6] = {185,246,197,180,102,-12};
+    double m[6] = {180,251,194,180,237,122 };
     for(const auto module : ModulesHandler::module_list){
+        setTorque(module, full);
         setMotorAngles(module, m);
         setAdhesion(module, standby);
     }
@@ -375,12 +392,19 @@ bool trayectoryGenerator::nextOrder()
     Movimiento movement = orders_list.front();
     int num = movement.time_code;
 
+    if(movement.suctionPercentaje != standby && movement.module->mod->isAttached()){
+        setTorque(movement.module, simple);
+    }
     setAdhesion(movement.module, movement.suctionPercentaje);
     setMotorAngles(movement.module, movement.angulos);
 
     orders_list.pop_front();
     while(orders_list.front().time_code == num){
         movement = orders_list.front();
+
+        if(movement.suctionPercentaje != standby && movement.module->mod->isAttached()){
+            setTorque(movement.module, simple);
+        }
         setAdhesion(movement.module, movement.suctionPercentaje);
         setMotorAngles(movement.module, movement.angulos);
 

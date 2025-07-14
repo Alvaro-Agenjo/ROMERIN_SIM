@@ -8,6 +8,8 @@
 
 #define standby 8
 constexpr float counterTG2MW = 100/40;
+constexpr bool simple[6] = {1,1,1,0,0,0};
+constexpr bool full[6] = {1,1,1,1,1,1};
 //enum class state_t { STAND, RELAX, FIXED_ROTATION, RESET};
 
 struct Movimiento{
@@ -31,8 +33,8 @@ public:
     void refreshTCPs();
 
     void setTime(unsigned long counter){time = counter;}
-    void setTorque(ModuleController* modulo, int motor_id, bool torque = true);
-    void setTorque(ModuleController* modulo, bool torques []);
+    void setTorque(ModuleController* modulo, int motor_id, const bool torque = true);
+    void setTorque(ModuleController* modulo, const bool torques []);
     void setMotorVel(ModuleController * modulo, float max_vel, int motor_id);
     void setMotorVel(ModuleController * modulo, float max_vels[]);
     void setMotorAngles(ModuleController *module, double angle[]);
@@ -62,10 +64,6 @@ public:
 
 private:
     unsigned long time= 0;
-    //QTimer timer;
-    //QElapsedTimer millis;
-
-    QString legs[4];
 
     std::list<Movimiento> orders_list;
     Vector3D center, TCPs[4];
