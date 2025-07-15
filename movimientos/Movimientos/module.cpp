@@ -118,6 +118,7 @@ bool Module::checkJointsLimits(double m[], bool simple)
     for( int i = 0; i < (6 - 3 * simple); i++){
         if(motors[i]->get_motor_limits().min_angle > m[i] || motors[i]->get_motor_limits().max_angle < m[i]){
             qDebug()<<"Joint "<< i << "limit surpassed";
+            qDebug()<<"Value "<<m[i]<<" out of range";
             return true;
         }
     }

@@ -311,17 +311,19 @@ void MainWindow::on_btn_test1_clicked()
 //    double m[6] = {210,255,195,180,180,180};
 //    for(auto modulo : ModulesHandler::module_list){
 //    commander.setMotorAngles(modulo, m);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , 180, 3);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_alfa->text().toFloat(), 4);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_beta->text().toFloat() , 5);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_alfa->text().toFloat(), 3);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_beta->text().toFloat(), 4);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_gamma->text().toFloat() , 5);
+    qDebug()<<"Done";
 }
 void MainWindow::on_btn_test_2_clicked()
 {
-   float RPY[] = {0,180,0};
-   commander.moveLeg(ModulesHandler::getWithName("THOR"), 0.402, 0.035, 0.037 ,RPY, true, false);
-   commander.moveLeg(ModulesHandler::getWithName("FRIGG"), 0.402, 0.035, 0.037 ,RPY, true, false);
-   commander.moveLeg(ModulesHandler::getWithName("ODIN"), 0.402, 0.035, 0.037 ,RPY, true, false);
-   commander.moveLeg(ModulesHandler::getWithName("LOKI"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   // float RPY[] = {0,180,0};
+   // commander.moveLeg(ModulesHandler::getWithName("THOR"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   // commander.moveLeg(ModulesHandler::getWithName("FRIGG"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   // commander.moveLeg(ModulesHandler::getWithName("ODIN"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   // commander.moveLeg(ModulesHandler::getWithName("LOKI"), 0.402, 0.035, 0.037 ,RPY, true, false);
+
 }
 
 void MainWindow::on_btn_test_3_clicked()
@@ -364,9 +366,3 @@ void MainWindow::on_btn_record_clicked()
 
     }
 }
-
-float RPY[] = {0,0,0};
-int counter = 0;
-
-
-
