@@ -167,8 +167,8 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
     * Provisional hasta resolver problema con angulos muñeca
     */
     //Check if joint physical limits are not surpassed
-    //if(module->mod->checkJointsLimits(m, false))    return false;
-    if(module->mod->checkJointsLimits(m, true))    return false;
+    if(module->mod->checkJointsLimits(m, false))    return false;
+    //if(module->mod->checkJointsLimits(m, true))    return false;
 
     for(int i = 0; i< 6; i++){
         angle[i] = m[i];
@@ -238,6 +238,7 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
 
 void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientacion[][3])
 {
+    c+=90;
     // Convertir grados a radianes
     a /= RomKin::rad2deg;
     b /= RomKin::rad2deg;
@@ -305,9 +306,12 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int
             points.push_back(MotorsAngles(angle));
     }
 
+    n = 0;
     for(auto module : ModulesHandler::module_list){
         addMovement(module, points.front().angle, fixed? 25 : standby , batch );
         points.pop_front();
+        TCPs[n] = newTCPs[n];
+        n++;
     }
     return true;
 }
@@ -317,7 +321,7 @@ void trayectoryGenerator::reset()
 
     qDebug()<<"Reset";
     center = {0,0,0};
-    double m[6] = {180,251,194,180,237,122 };
+    double m[6] = {180,271,223,180,228,131};
     for(const auto module : ModulesHandler::module_list){
         setTorque(module, full);
         setMotorAngles(module, m);

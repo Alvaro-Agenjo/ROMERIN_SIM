@@ -8,6 +8,9 @@
 
 #define standby 8
 constexpr float counterTG2MW = 100/40;
+
+//constexpr float down[3] = {0,180,90};
+
 constexpr bool simple[6] = {1,1,1,0,0,0};
 constexpr bool full[6] = {1,1,1,1,1,1};
 //enum class state_t { STAND, RELAX, FIXED_ROTATION, RESET};
