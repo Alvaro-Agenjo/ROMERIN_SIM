@@ -311,10 +311,13 @@ void MainWindow::on_btn_test1_clicked()
 //    double m[6] = {210,255,195,180,180,180};
 //    for(auto modulo : ModulesHandler::module_list){
 //    commander.setMotorAngles(modulo, m);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_alfa->text().toFloat(), 3);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_beta->text().toFloat(), 4);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_gamma->text().toFloat() , 5);
-    qDebug()<<"Done";
+    bool all[6]= {1,1,1,1,1,1};
+    float a = ui->txt_THOR_alfa->text().toFloat(),b = ui->txt_THOR_beta->text().toFloat() ,c = ui->txt_THOR_gamma->text().toFloat();
+    commander.setTorque(ModulesHandler::module_list.front(), all);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , a, 3);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , b, 4);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , c, 5);
+    qDebug()<<"Done, m4 = "<< a << " m5 = " << b << " m6 = "<< c;
 }
 void MainWindow::on_btn_test_2_clicked()
 {

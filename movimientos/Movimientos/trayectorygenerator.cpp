@@ -181,18 +181,12 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, boo
 {
     ModuleController *module = ModulesHandler::getWithName(leg);
     double m[6], q[6];
-
+    //setTorque(module, simple);
     validateMovement(m, module, x, y, z, elbow);
     //Sends suction power command if necessary
     RomerinMsg msg;
-    if(fixed) {
-        msg = romerinMsg_SuctionCupPWM(50);
-        setTorque(module, simple);
-    }
-    else {
-        msg = romerinMsg_SuctionCupPWM(standby);
-        setTorque(module, full );
-    }
+    if(fixed)   msg = romerinMsg_SuctionCupPWM(35);
+    else msg = romerinMsg_SuctionCupPWM(standby);
     module->sendMessage(msg);
 
     //Sends movement commands
@@ -212,7 +206,7 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, flo
     //Sends suction power command if necessary
     RomerinMsg msg;
     if(fixed) {
-        msg = romerinMsg_SuctionCupPWM(50);
+        msg = romerinMsg_SuctionCupPWM(35);
         setTorque(module, simple);
     }
     else {
@@ -321,7 +315,7 @@ void trayectoryGenerator::reset()
 
     qDebug()<<"Reset";
     center = {0,0,0};
-    double m[6] = {180,271,223,180,228,131};
+    double m[6] = {180,257,191,180,245,114};
     for(const auto module : ModulesHandler::module_list){
         setTorque(module, full);
         setMotorAngles(module, m);
