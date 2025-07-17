@@ -59,16 +59,22 @@ bool _RomKin<REAL>::IKfast(REAL* q, const REAL m[][3], const REAL p[], bool elbo
 
     //si q5!=0 ojo.
     if (abs(R[2][2]) < 0.99) {
-        //dando prioridad a q4 (-pi/2, pi/2), por lo que c4>0
+        // //dando prioridad a q4 (-pi/2, pi/2), por lo que c4>0
         if (R[0][2] > 0) {//q5 >0
+            // q[3] = atan2(R[1][2], R[0][2]);
+            // q[4] = acos(-R[2][2]);
+            // q[5] = atan2(R[2][0], R[2][1]);
             q[3] = atan2(R[1][2], R[0][2]);
             q[4] = acos(-R[2][2]);
-            q[5] = atan2(R[2][0], R[2][1]);
+            q[5] = atan2(R[2][1], -R[2][0]);
         }
         else {
+            // q[3] = atan2(-R[1][2], -R[0][2]);
+            // q[4] = -acos(-R[2][2]); //esto impide abs(q5) > pi/2
+            // q[5] = atan2(-R[2][0], -R[2][1]);
             q[3] = atan2(-R[1][2], -R[0][2]);
-            q[4] = -acos(-R[2][2]); //esto impide abs(q5) > pi/2
-            q[5] = atan2(-R[2][0], -R[2][1]);
+            q[4] = -acos(-R[2][2]);
+            q[5] = atan2(-R[2][1], R[2][0]);
         }
     }
     else //pata extendida, q4 y q6 acoplados, no se resuelve de momento
@@ -132,8 +138,8 @@ void _RomKin<REAL>::q2m(REAL m[], REAL q[], bool gdl3)
     m[2] = 90.0 + rad2deg * q[2];
     if (gdl3)return;
     m[3] = 180 + rad2deg * q[3] / factor_4;
-    m[4] = rad2deg * (q[5] / factor_6 - q[4] ) + 180;
-    m[5] = rad2deg * (q[4]  + q[5] / factor_6) + 180;
+    m[4] = rad2deg * (q[4] -q[5] / factor_6) + 180;
+    m[5] = -rad2deg * (q[4]  + q[5] / factor_6) + 180;
 }
 // from m values to q angles
 template<class REAL>
@@ -144,8 +150,8 @@ void _RomKin<REAL>::m2q(REAL q[], REAL m[], bool gdl3) {
     q[2] = (m[2] - 90) * deg2rad;
     if (gdl3)return;
     q[3] = (m[3] - 180.0) * deg2rad * factor_4;
-    q[4] = (m[5] - m[4]) * deg2rad /2;
-    q[5] = ((m[5] + m[4]) / 2 - 180) * deg2rad * factor_6;
+    q[4] = (m[4] - m[5]) * deg2rad /2;  //ok
+    q[5] = (-(m[5] + m[4]) / 2 +180) * deg2rad * factor_6;
 }
 
 // from m torque  to q torques
