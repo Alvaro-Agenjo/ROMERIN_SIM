@@ -9,7 +9,7 @@
 
 
 #ifdef ARDUINO
-  template<class REAL> 
+  template<class REAL>
   typename _RomKin<REAL>::DH _RomKin<REAL>::DH_data[6]{};
 #endif // !ARDUINO
 
@@ -42,20 +42,34 @@ template<class REAL>
 bool _RomKin<REAL>::IKfast(REAL* q, const REAL m[][3], const REAL p[], bool elbow, bool wrist)
 {
     REAL pm[3] = { p[0] - L6 * m[0][2],p[1] - L6 * m[1][2],p[2]-L6*m[2][2]};
-    
+
     if (!IKwrist(q, pm[0], pm[1], pm[2], elbow))return false;
     REAL q1 = q[0], q2 = q[1] - alpha, q3 = q[2] - alpha;
     REAL s1 = sin(q1), c1 = cos(q1);
     REAL c2_3 = cos(q2 - q3), s3_2 = sin(q3 - q2);
     REAL A[3][3]={ {c1 * s3_2, -s1, -c1* c2_3}, //A03
-                      {s1 * s3_2,  c1, -s1* c2_3},
-                      {c2_3       ,   0, s3_2}};
+                   {s1 * s3_2,  c1, -s1* c2_3},
+                   {c2_3     ,   0,     s3_2}};
     REAL R[3][3];//R = A.trasp * m
     for (int i = 0; i < 3; i++) {
         R[i][0] = A[0][i] * m[0][0] + A[1][i] * m[1][0] + A[2][i] * m[2][0];
         R[i][1] = A[0][i] * m[0][1] + A[1][i] * m[1][1] + A[2][i] * m[2][1];
         R[i][2] = A[0][i] * m[0][2] + A[1][i] * m[1][2] + A[2][i] * m[2][2];
     }
+
+    // // sen(q5) != 0, por lo que q5 != 0,180
+    // if(abs(R[2][2]) < 0.99) {
+    //     q[4] = -acos(R[2][2]); //q5
+    //     q[3] = asin(R[1][2] / sin(q[4])); //q4
+    //     q[5] = acos(R[2][0] / sin(q[4])); //q6
+    // }
+    // else{
+    //     //for removing the unused warning
+    //     if(!wrist)wrist=false;
+    //     return false; //pata extendida, no se resuelve de momento
+    // }
+
+
 
     //si q5!=0 ojo.
     if (abs(R[2][2]) < 0.99) {
@@ -103,7 +117,7 @@ void _RomKin<REAL>::FKfast(const REAL* q, REAL m[][3], REAL p[])
         m[2][1] = c2 * c3 * s4 * s6 + c2 * c6 * s3 * s5 - c3 * c6 * s2 * s5 + s2 * s3 * s4 * s6 + c2 * c3 * c4 * c5 * c6 + c4 * c5 * c6 * s2 * s3,
         m[2][2] = c3 * c5 * s2 - c2 * c5 * s3 + c2 * c3 * c4 * s5 + c4 * s2 * s3 * s5,
         p[2] = L5 * c2 * c3 + Lc * cos(alpha) * s2 - Lc * c2 * sin(alpha) - L4 * c2 * s3 + L4 * c3 * s2 + L5 * s2 * s3 - L6 * c2 * c5 * s3 + L6 * c3 * c5 * s2 + L6 * c2 * c3 * c4 * s5 + L6 * c4 * s2 * s3 * s5;
-       
+
 }
 template <class REAL>
 bool _RomKin<REAL>::IKwrist(REAL* q, REAL x, REAL y, REAL z, bool elbow)
@@ -200,7 +214,7 @@ template<class REAL>
 Vector3d _RomKin<REAL>::FKwrist(REAL q1, REAL q2, REAL q3)
 {
     q2 -= alpha;
-    q3 -= (alpha + beta); 
+    q3 -= (alpha + beta);
     REAL L = L1 + Lc * cos(q2) + Ld * cos(q2 - q3);
     Vector3d pos;
     pos(0) = cos(q1) * L;

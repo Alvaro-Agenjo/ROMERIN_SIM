@@ -232,7 +232,7 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
 
 void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientacion[][3])
 {
-    c+=90;
+    // c+=90;
     // Convertir grados a radianes
     a /= RomKin::rad2deg;
     b /= RomKin::rad2deg;
@@ -251,7 +251,7 @@ void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientaci
     orientacion[1][1] = -sx * sy * sz + cx * cz;
     orientacion[1][2] = -sx * cy;
 
-    orientacion[2][0] = -cx * sy * cz * + sx * sz;
+    orientacion[2][0] = -cx * sy * cz + sx * sz;
     orientacion[2][1] = cx * sy * sz + sx * cz;
     orientacion[2][2] = cx * cy;
 }
