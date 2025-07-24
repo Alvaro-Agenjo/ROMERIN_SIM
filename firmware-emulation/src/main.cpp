@@ -4,6 +4,7 @@
 #include "RomerinDefinitions.h"
 #include "RomerinMsg.h"
 #include "RomDebug.h"
+#include "RomUtils.h"
 //Romerin components
 #include "RomPower.h" 
 #include "RomBuzzer.h"
@@ -12,6 +13,8 @@
 #include "RomWiFi.h"
 #include "RomSuctionCup.h"
 #include "../shared/romkin.cpp"
+
+
 RomJoints joints;
 RomBuzzer buzzer;
 RomState state;
@@ -90,6 +93,7 @@ void setup() {
 
 
 void loop() {
+  static TIMER wifi_update(WIFI_MS_UPDATE), bt_update(BT_MS_UPDATE);
   #ifndef ONLY_CPU
     #ifdef POWER_INFO 
     power.loop();
@@ -104,11 +108,11 @@ void loop() {
   RomWiFi::loop();
 
   if(state.compact_mode)fill_robot_compact_data();
-  if(RomWiFi::isConected2Master())sendRegularMessages<RomWiFi>();
+  if(RomWiFi::isConected2Master() && wifi_update())sendRegularMessages<RomWiFi>();
  
     
   if(RomBT::hasClient()){ //someone is connected to BT
-    sendRegularMessages<RomBT>();
+    if(bt_update())sendRegularMessages<RomBT>();
     while(RomBT::readMessage())RomBT::sendMessage(executeMessage(RomBT::getMessage()));
   }
 
@@ -270,6 +274,17 @@ RomerinMsg executeMessage(const RomerinMsg &m)
       state.compact_mode=false;
       BT_DEBUG("COMPACT MODE OFF");
     break;
+    case ROM_SET_MOTOR_ZERO:{
+      uchar_t m_id;
+      uint16_t val;
+      if(check_and_get_ServoOffset(m,m_id,val)){
+        BT_DEBUG_PRINT("offset for m:%d set at %d",m_id,val);
+        joints.set_current_pos_as(m_id,val);
+      }else {
+        BT_DEBUG("Offset Message error");
+      }
+    }
+    break;
     default:
       BT_DEBUG("UNKNOWN MESSAGE");
   }
@@ -278,6 +293,7 @@ RomerinMsg executeMessage(const RomerinMsg &m)
 
 void updateState()
 {
+  static filter<uchar_t,10,uint16_t> ciclef{};
   static ulong ltime=0;
   if(!ltime)ltime=millis();
   ulong cicle=millis()-ltime;
@@ -292,7 +308,7 @@ void updateState()
   #else
   state.power_enabled=true;
   #endif
-  state.cicle_time=(uint8_t)cicle;
+  state.cicle_time=(uint8_t)ciclef.add((uchar_t)cicle);
   #ifndef ONLY_CPU
   suction_cup.enableI2Creading(state.power_enabled);
   #endif

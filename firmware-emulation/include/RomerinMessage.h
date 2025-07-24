@@ -32,6 +32,7 @@
 #define ROM_COMPACT_MODE_OFF 0x27 
 #define ROM_GET_CONFIG_V2 0x30  //messsage to get the extended config params 
 #define ROM_CONFIG_V2 0x31  //messsage to set the extended config params
+#define ROM_SET_MOTOR_ZERO  0x32//message to configure the offset of a motor
 #define ROM_COMPACT_ROBOT_DATA 0x40 //message for compact info 
 #define ROM_SIMULATION 0xF0 //special message to encapsulate messages
 
@@ -322,7 +323,23 @@ inline RomerinMsg romerinMsg_ServoControlMode(unsigned char motor_id, int value)
     romerin_writeUInt16(m.info+1,value);m.size+=2;
     return m;
 }
-
+//the offset of the motor is adjusted so the current position becames the value
+inline RomerinMsg romerinMsg_ServoOffset(unsigned char motor_id, uint16_t new_value){
+    RomerinMsg m(ROM_SET_MOTOR_ZERO, motor_id);
+    romerin_writeUInt16(m.info+1,new_value);m.size+=2;
+    //a simple crc_8 to improve security
+    m.info[3]=~((uint8_t)((new_value+motor_id)&0xFF));m.size++;
+    return m;
+}
+//checks the integrity of ServoOffsetMessage
+inline bool check_and_get_ServoOffset(const RomerinMsg &im, uchar_t &m_id, uint16_t &val){
+    if(im.id!=ROM_SET_MOTOR_ZERO)return false;
+    const uchar_t *punt=im.info;
+    m_id=*(punt++);
+    val=romerin_getUInt16(punt);punt+=2;
+    uchar_t crc=*(punt++), crc_in=~((uchar_t)((val+m_id)&0xFF));
+    return crc==crc_in;
+}
 //encapsulates messages
 inline RomerinMsg romerinMsg_simulate(unsigned char id, const RomerinMsg &im){
     RomerinMsg m(ROM_SIMULATION, id);

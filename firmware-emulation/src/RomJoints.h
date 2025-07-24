@@ -30,6 +30,7 @@ public:
     void setVelocity(int8_t id, float vel);
     void setAcceleration(int8_t id, float acc);
     void fill_compact_data(RobotCompactData &data);
+    void set_current_pos_as(int8_t m_id,uint16_t val);
     int mapIds(int id);
 
     MotorInfo motors[6];

@@ -35,6 +35,8 @@ private slots:
 
     void Torque_clicked();
 
+    void on_button_set0_clicked();
+
 private:
     Ui::MotorWidget *ui;
     MotorInfoData info_motor;
