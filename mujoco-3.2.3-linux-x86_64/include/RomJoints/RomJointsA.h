@@ -76,7 +76,7 @@ struct MotorSimulation{
     float ev_old{};//Error de velocidad anterior
     float e_integral{};//Error integral anterior
     float m2q(float goalAng); // Convierte el ángulo de simulación a interfaz
-    float q2m(float angle);////////////////////////////////
+    //float q2m(float angle);////////////////////////////////
     void loop(int number); //simulation of the dynemixel control loop
     void setModel(mjModel* m, mjData* d, QString n);
     void setSetup(bool val){this->setup = val;}

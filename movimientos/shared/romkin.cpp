@@ -29,7 +29,7 @@ void _RomKin<REAL>::set_lenghts(REAL l1, REAL l2, REAL l3, REAL l4, REAL l5, REA
     DH_data[2] = DH{ -M_PI / 2 - alpha,	0, L5, M_PI / 2 };
     DH_data[3] = DH{ 0,	-L4, 0, M_PI / 2 };
     DH_data[4] = DH{ 0,	0, 0, M_PI / 2 };
-    DH_data[5] = DH{ -M_PI / 2,	L6,	0, 0};
+    DH_data[5] = DH{ 0,	L6,	0, 0};
 }
 template<class REAL>
 void _RomKin<REAL>::set_lenghts(uint16_t l[6]){
@@ -41,15 +41,15 @@ void _RomKin<REAL>::set_lenghts(uint16_t l[6]){
 template<class REAL>
 bool _RomKin<REAL>::IKfast(REAL* q, const REAL m[][3], const REAL p[], bool elbow, bool wrist)
 {
-    REAL pm[3] = { p[0] - L6 * m[0][2],p[1] - L6 * m[1][2],p[2]-L6*m[2][2]};
-
+    REAL pm[3] = { p[0] - L6 * m[0][2], p[1] - L6 * m[1][2], p[2] - L6 * m[2][2]};
+    
     if (!IKwrist(q, pm[0], pm[1], pm[2], elbow))return false;
     REAL q1 = q[0], q2 = q[1] - alpha, q3 = q[2] - alpha;
     REAL s1 = sin(q1), c1 = cos(q1);
     REAL c2_3 = cos(q2 - q3), s3_2 = sin(q3 - q2);
-    REAL A[3][3]={ {c1 * s3_2, -s1, -c1* c2_3}, //A03
-                   {s1 * s3_2,  c1, -s1* c2_3},
-                   {c2_3     ,   0,     s3_2}};
+    REAL A[3][3]={ {c1 * s3_2, -s1 , -c1 * c2_3}, //A03
+                     {s1 * s3_2,  c1 , -s1 * c2_3},
+                     {c2_3     ,   0 ,      s3_2}};
     REAL R[3][3];//R = A.trasp * m
     for (int i = 0; i < 3; i++) {
         R[i][0] = A[0][i] * m[0][0] + A[1][i] * m[1][0] + A[2][i] * m[2][0];
@@ -57,32 +57,32 @@ bool _RomKin<REAL>::IKfast(REAL* q, const REAL m[][3], const REAL p[], bool elbo
         R[i][2] = A[0][i] * m[0][2] + A[1][i] * m[1][2] + A[2][i] * m[2][2];
     }
 
-    // // sen(q5) != 0, por lo que q5 != 0,180
-    // if(abs(R[2][2]) < 0.99) {
-    //     q[4] = -acos(R[2][2]); //q5
-    //     q[3] = asin(R[1][2] / sin(q[4])); //q4
-    //     q[5] = acos(R[2][0] / sin(q[4])); //q6
+    // //si q5!=0 ojo.
+    // if (abs(R[2][2]) < 0.99) {
+    //     //dando prioridad a q4 (-pi/2, pi/2), por lo que c4>0
+    //     if (R[0][2] > 0) {//q5 >0
+    //         q[3] = atan2(R[1][2], R[0][2]);
+    //         q[4] = acos(-R[2][2]);
+    //         q[5] = atan2(R[2][0], R[2][1]);
+    //     }
+    //     else {
+    //         q[3] = atan2(-R[1][2], -R[0][2]);
+    //         q[4] = -acos(-R[2][2]); //esto impide abs(q5) > pi/2
+    //         q[5] = atan2(-R[2][0], -R[2][1]);
+    //     }
     // }
-    // else{
-    //     //for removing the unused warning
-    //     if(!wrist)wrist=false;
-    //     return false; //pata extendida, no se resuelve de momento
-    // }
-
-
-
     //si q5!=0 ojo.
     if (abs(R[2][2]) < 0.99) {
         //dando prioridad a q4 (-pi/2, pi/2), por lo que c4>0
         if (R[0][2] > 0) {//q5 >0
             q[3] = atan2(R[1][2], R[0][2]);
             q[4] = acos(-R[2][2]);
-            q[5] = atan2(R[2][0], R[2][1]);
+            q[5] = atan2(-R[2][1], R[2][0]);
         }
         else {
             q[3] = atan2(-R[1][2], -R[0][2]);
             q[4] = -acos(-R[2][2]); //esto impide abs(q5) > pi/2
-            q[5] = atan2(-R[2][0], -R[2][1]);
+            q[5] = atan2(R[2][1], -R[2][0]);
         }
     }
     else //pata extendida, q4 y q6 acoplados, no se resuelve de momento
@@ -98,40 +98,75 @@ bool _RomKin<REAL>::IKfast(REAL* q, const REAL m[][3], const REAL p[], bool elbo
 template<class REAL>
 void _RomKin<REAL>::FKfast(const REAL* q, REAL m[][3], REAL p[])
 {
-    REAL c1 = cos(q[0]), s1 = sin(q[0]), c2 = cos(q[1]), s2 = sin(q[1]);
-    REAL c3 = cos(q[2]), s3 = sin(q[2]), c4 = cos(q[3]), s4 = sin(q[3]);
-    REAL c5 = cos(q[4]), s5 = sin(q[4]), c6 = cos(q[5]), s6 = sin(q[5]);
 
-    m[0][0] = c1 * c3 * s2* (c6 * s4 - c4 * c5 * s6) + c1 * c2 * s6 * (c4 * c5 * s3  -  c3 * s5 ) - c5 * s1 * s4 * s6 - c1 * c2 * c6 * s3 * s4 - c4 * c6 * s1  - c1 * s2 * s3 * s5 * s6  ;
-    m[0][1] = c4 * s1 * s6 - c5 * c6 * s1 * s4 - c1 * c2 * c3 * c6 * s5 + c1 * c2 * s3 * s4 * s6 - c1 * c3 * s2 * s4 * s6 - c1 * c6 * s2 * s3 * s5 + c1 * c2 * c4 * c5 * c6 * s3 - c1 * c3 * c4 * c5 * c6 * s2;
-    m[0][2] = c1* c2* c3* c5 - s1 * s4 * s5 + c1 * c5 * s2 * s3 + c1 * c2 * c4 * s3 * s5 - c1 * c3 * c4 * s2 * s5;
-    p[0] = L1 * c1 + Lc * cos(alpha) * c1 * c2 + L4 * c1 * c2 * c3 + L5 * c1 * c2 * s3 - L5 * c1 * c3 * s2 + Lc * c1 * sin(alpha) * s2 + L4 * c1 * s2 * s3 - L6 * s1 * s4 * s5 + L6 * c1 * c5 * s2 * s3 + L6 * c1 * c2 * c3 * c5 + L6 * c1 * c2 * c4 * s3 * s5 - L6 * c1 * c3 * c4 * s2 * s5;
+    // REAL c1 = cos(q[0]), s1 = sin(q[0]), c2 = cos(q[1]), s2 = sin(q[1]);
+    // REAL c3 = cos(q[2]), s3 = sin(q[2]), c4 = cos(q[3]), s4 = sin(q[3]);
+    // REAL c5 = cos(q[4]), s5 = sin(q[4]), c6 = cos(q[5]), s6 = sin(q[5]);
+    
+    REAL q2 = q[1] - alpha,    q3 = q[2] - alpha;
+    REAL c1 = cos(q[0]), s1 = sin(q[0]), c2 = cos(q2), s2 = sin(q2);
+    REAL s3_2 = sin(q3-q2), c2_3 = cos(q2 - q3);
+    REAL c4 = cos(q[3]), s4 = sin(q[3]), c5 = cos(q[4]), s5 = sin(q[4]), c6 = cos(q[5]), s6 = sin(q[5]);
+
+    // m[0][0] = c1 * c3 * s2* (c6 * s4 - c4 * c5 * s6) + c1 * c2 * s6 * (c4 * c5 * s3  -  c3 * s5 ) - c5 * s1 * s4 * s6 - c1 * c2 * c6 * s3 * s4 - c4 * c6 * s1  - c1 * s2 * s3 * s5 * s6  ;
+    // m[0][1] = c4 * s1 * s6 - c5 * c6 * s1 * s4 - c1 * c2 * c3 * c6 * s5 + c1 * c2 * s3 * s4 * s6 - c1 * c3 * s2 * s4 * s6 - c1 * c6 * s2 * s3 * s5 + c1 * c2 * c4 * c5 * c6 * s3 - c1 * c3 * c4 * c5 * c6 * s2;
+    // m[0][2] = c1* c2* c3* c5 - s1 * s4 * s5 + c1 * c5 * s2 * s3 + c1 * c2 * c4 * s3 * s5 - c1 * c3 * c4 * s2 * s5;
+    // p[0] = L1 * c1 + Lc * cos(alpha) * c1 * c2 + L4 * c1 * c2 * c3 + L5 * c1 * c2 * s3 - L5 * c1 * c3 * s2 + Lc * c1 * sin(alpha) * s2 + L4 * c1 * s2 * s3 - L6 * s1 * s4 * s5 + L6 * c1 * c5 * s2 * s3 + L6 * c1 * c2 * c3 * c5 + L6 * c1 * c2 * c4 * s3 * s5 - L6 * c1 * c3 * c4 * s2 * s5;
 
 
-    m[1][0] = c1 * c4 * c6 + c1 * c5 * s4 * s6 - c2 * c6 * s1 * s3 * s4 + c3 * c6 * s1 * s2 * s4 - c2 * c3 * s1 * s5 * s6 - s1 * s2 * s3 * s5 * s6 + c2 * c4 * c5 * s1 * s3 * s6 - c3 * c4 * c5 * s1 * s2 * s6;
-    m[1][1] = c1 * c5 * c6 * s4 - c1 * c4 * s6 - c2 * c3 * c6 * s1 * s5 + c2 * s1 * s3 * s4 * s6 - c3 * s1 * s2 * s4 * s6 - c6 * s1 * s2 * s3 * s5 + c2 * c4 * c5 * c6 * s1 * s3 - c3 * c4 * c5 * c6 * s1 * s2;
-    m[1][2] = c1 * s4 * s5 + c2 * c3 * c5 * s1 + c5 * s1 * s2 * s3 + c2 * c4 * s1 * s3 * s5 - c3 * c4 * s1 * s2 * s5;
-    p[1] = L1* s1 + Lc * cos(alpha) * c2 * s1 + L4 * c2 * c3 * s1 + L5 * c2 * s1 * s3 - L5 * c3 * s1 * s2 + L6 * c1 * s4 * s5 + Lc * sin(alpha) * s1 * s2 + L4 * s1 * s2 * s3 + L6 * c2 * c3 * c5 * s1 + L6 * c5 * s1 * s2 * s3 + L6 * c2 * c4 * s1 * s3 * s5 - L6 * c3 * c4 * s1 * s2 * s5;
+    // m[1][0] = c1 * c4 * c6 + c1 * c5 * s4 * s6 - c2 * c6 * s1 * s3 * s4 + c3 * c6 * s1 * s2 * s4 - c2 * c3 * s1 * s5 * s6 - s1 * s2 * s3 * s5 * s6 + c2 * c4 * c5 * s1 * s3 * s6 - c3 * c4 * c5 * s1 * s2 * s6;
+    // m[1][1] = c1 * c5 * c6 * s4 - c1 * c4 * s6 - c2 * c3 * c6 * s1 * s5 + c2 * s1 * s3 * s4 * s6 - c3 * s1 * s2 * s4 * s6 - c6 * s1 * s2 * s3 * s5 + c2 * c4 * c5 * c6 * s1 * s3 - c3 * c4 * c5 * c6 * s1 * s2;
+    // m[1][2] = c1 * s4 * s5 + c2 * c3 * c5 * s1 + c5 * s1 * s2 * s3 + c2 * c4 * s1 * s3 * s5 - c3 * c4 * s1 * s2 * s5;
+    // p[1] = L1* s1 + Lc * cos(alpha) * c2 * s1 + L4 * c2 * c3 * s1 + L5 * c2 * s1 * s3 - L5 * c3 * s1 * s2 + L6 * c1 * s4 * s5 + Lc * sin(alpha) * s1 * s2 + L4 * s1 * s2 * s3 + L6 * c2 * c3 * c5 * s1 + L6 * c5 * s1 * s2 * s3 + L6 * c2 * c4 * s1 * s3 * s5 - L6 * c3 * c4 * s1 * s2 * s5;
 
-    m[2][0] = c2 * s3 * s5 * s6 - c6 * s2 * s3 * s4 - c2 * c3 * c6 * s4 - c3 * s2 * s5 * s6 + c2 * c3 * c4 * c5 * s6 + c4 * c5 * s2 * s3 * s6,
-        m[2][1] = c2 * c3 * s4 * s6 + c2 * c6 * s3 * s5 - c3 * c6 * s2 * s5 + s2 * s3 * s4 * s6 + c2 * c3 * c4 * c5 * c6 + c4 * c5 * c6 * s2 * s3,
-        m[2][2] = c3 * c5 * s2 - c2 * c5 * s3 + c2 * c3 * c4 * s5 + c4 * s2 * s3 * s5,
-        p[2] = L5 * c2 * c3 + Lc * cos(alpha) * s2 - Lc * c2 * sin(alpha) - L4 * c2 * s3 + L4 * c3 * s2 + L5 * s2 * s3 - L6 * c2 * c5 * s3 + L6 * c3 * c5 * s2 + L6 * c2 * c3 * c4 * s5 + L6 * c4 * s2 * s3 * s5;
+    // m[2][0] = c2 * s3 * s5 * s6 - c6 * s2 * s3 * s4 - c2 * c3 * c6 * s4 - c3 * s2 * s5 * s6 + c2 * c3 * c4 * c5 * s6 + c4 * c5 * s2 * s3 * s6,
+    //     m[2][1] = c2 * c3 * s4 * s6 + c2 * c6 * s3 * s5 - c3 * c6 * s2 * s5 + s2 * s3 * s4 * s6 + c2 * c3 * c4 * c5 * c6 + c4 * c5 * c6 * s2 * s3,
+    //     m[2][2] = c3 * c5 * s2 - c2 * c5 * s3 + c2 * c3 * c4 * s5 + c4 * s2 * s3 * s5,
+    //     p[2] = L5 * c2 * c3 + Lc * cos(alpha) * s2 - Lc * c2 * sin(alpha) - L4 * c2 * s3 + L4 * c3 * s2 + L5 * s2 * s3 - L6 * c2 * c5 * s3 + L6 * c3 * c5 * s2 + L6 * c2 * c3 * c4 * s5 + L6 * c4 * s2 * s3 * s5;
+    
+    m[0][0] = c1 * s3_2 * (c4 * c5 * c6 + s4 * s6)  - s1 * (s4 * c5 * c6 - c4 * s6)  - c1 * c2_3 * (s5 * c6);
+    m[0][1] = c1 * s3_2 * (-c4 * c5 * s6 + s4 * c6) - s1 * (-s4 * s6 * c5 - c4 * c6) - c1 * c2_3 * (-s5 * s6);
+    m[0][2] = c1 * s3_2 * (c4 * s5)                 - s1 * (s4 * s5)                 - c1 * c2_3 * (-c5);
+    p[0]    = c1 * s3_2 * (L6 * c4 * s5)            - s1 * (L6 * s4 * s5)            - c1 * c2_3 * (-L6 * c5 - L4)   + c1 * (L5 * s3_2 + Lc * c2 + L1);
+    
 
+    m[1][0] = s1 * s3_2 * (c4 * c5 * c6 + s4 * s6)  + c1 * (s4 * c5 * c6 - c4 * s6)  - s1 * c2_3 * (s5 * c6);     
+    m[1][1] = s1 * s3_2 * (-c4 * c5 * s6 + s4 * c6) + c1 * (-s4 * s6 * c5 - c4 * c6) - s1 * c2_3 * (-s5 * s6);
+    m[1][2] = s1 * s3_2 * (c4 * s5)                 + c1 * (s4 * s5)                 - s1 * c2_3 * (-c5);
+    p[1]    = s1 * s3_2 * (L6 * c4 * s5)            + c1 * (L6 * s4 * s5)            - s1 * c2_3 * (-L6 * c5 - L4)   + s1 * (L5 * s3_2 + Lc * c2 + L1);    
+
+    m[2][0] = c2_3 * (c4 * c5 * c6 + s4 * s6)                                        + s3_2 * (s5 * c6);
+    m[2][1] = c2_3 * (-c4 * c5 * s6 + s4 * c6)                                       + s3_2 * (-s5 * s6);
+    m[2][2] = c2_3 * (c4 * s5)                                                       + s3_2 * (-c5);
+    p[2]    = c2_3 * (L6 * c4 * s5)                                                  + s3_2 * (-L6 * c5 - L4)        + L5 * c2_3 + Lc * s2;
 }
 template <class REAL>
 bool _RomKin<REAL>::IKwrist(REAL* q, REAL x, REAL y, REAL z, bool elbow)
 {
+    // q[0] = atan2(y, x);
+    // x -= L1 * cos(q[0]);
+    // y -= L1 * sin(q[0]);
+
+    // REAL num = abs(x * x + y * y + z * z - Lc * Lc - Ld * Ld); //positive q3 (elbow up)
+    // const REAL den = 2 * Lc * Ld;
+    // if (num > den) return false;//out of range
+    // q[2] = (elbow ? 1 : -1) * acos(num / den);
+    // q[1] = atan2(z, sqrt(x * x + y * y)) + (elbow ? 1 : -1) * atan2(Ld * sin(q[2]), Lc + Ld * cos(q[2]));
+
+    // q[1] += alpha;
+    // q[2] += (alpha + beta);
+
     q[0] = atan2(y, x);
     x -= L1 * cos(q[0]);
     y -= L1 * sin(q[0]);
 
-    REAL num = x * x + y * y + z * z - Lc * Lc - Ld * Ld; //positive q3 (elbow up)
+    REAL num =x * x + y * y + z * z - Lc * Lc - Ld * Ld; 
     const REAL den = 2 * Lc * Ld;
-    if (abs(num) > den) return false;//out of range
+
+    if(abs(num) > den) return false; //out of range
     q[2] = (elbow ? 1 : -1) * acos(num / den);
     q[1] = atan2(z, sqrt(x * x + y * y)) + (elbow ? 1 : -1) * atan2(Ld * sin(q[2]), Lc + Ld * cos(q[2]));
-
+    
     q[1] += alpha;
     q[2] += (alpha + beta);
     return true;
@@ -146,15 +181,8 @@ void _RomKin<REAL>::q2m(REAL m[], REAL q[], bool gdl3)
     m[2] = 90.0 + rad2deg * q[2];
     if (gdl3)return;
     m[3] = 180 + rad2deg * q[3] / factor_4;
-    m[4] = rad2deg * (q[5] / factor_6 - q[4] ) + 180;
-    m[5] = rad2deg * (q[4]  + q[5] / factor_6) + 180;
-
-    // m[4]+= 360;
-    // m[5]+= 360;
-    // while(m[4]<0 || m[5]<0){
-    //     m[4]+= 360;
-    //     m[5]+= 360;
-    // }
+    m[4] = 180 + rad2deg * (q[4] - q[5] / factor_6 );
+    m[5] = 180 - rad2deg * (q[4] + q[5] / factor_6);
 }
 // from m values to q angles
 template<class REAL>
@@ -165,8 +193,8 @@ void _RomKin<REAL>::m2q(REAL q[], REAL m[], bool gdl3) {
     q[2] = (m[2] - 90) * deg2rad;
     if (gdl3)return;
     q[3] = (m[3] - 180.0) * deg2rad * factor_4;
-    q[4] = (m[5] - m[4]) * deg2rad /2;
-    q[5] = ((m[5] + m[4]) / 2 - 180) * deg2rad * factor_6;
+    q[4] = (m[4] - m[5]) * deg2rad / 2;
+    q[5] = (180 - (m[4] + m[5]) / 2) * deg2rad * factor_6;
 }
 
 // from m torque  to q torques
@@ -177,8 +205,8 @@ void _RomKin<REAL>::mt2qt(REAL qt[], REAL mt[], bool gdl3){
     qt[2] = mt[2]*0.002 ; //XH540-270 10Nm= 5A
     if (gdl3)return;
     qt[3] = mt[3] * factor_4 * 0.00135; //XM430-240  1.9Nm 1.4A
-    qt[4] = (mt[5] - mt[4]) * 0.00135;
-    qt[5] = (mt[5] + mt[4])  * factor_6 * 0.00135;
+    qt[4] = (mt[4] - mt[5]) * 0.00135;
+    qt[5] = -(mt[4] + mt[5])  * factor_6 * 0.00135;
 }
 
 
