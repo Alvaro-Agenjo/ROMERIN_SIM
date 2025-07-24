@@ -160,6 +160,10 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
         qDebug()<<"Fuera de rango";
         return false;
     }
+
+    for(int i= 0; i<6; i++){
+        qDebug()<<"Q"<<i+1<<" = "<<q[i]* RomKin::rad2deg;
+    }
     module->mod->romkin.q2m(m,q);
 
 
@@ -167,8 +171,8 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
     * Provisional hasta resolver problema con angulos muñeca
     */
     //Check if joint physical limits are not surpassed
-    if(module->mod->checkJointsLimits(m, false))    return false;
-    //if(module->mod->checkJointsLimits(m, true))    return false;
+    //if(module->mod->checkJointsLimits(m, false))    return false;
+    if(module->mod->checkJointsLimits(m, true))    return false;
 
     for(int i = 0; i< 6; i++){
         angle[i] = m[i];

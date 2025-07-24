@@ -73,17 +73,25 @@ bool _RomKin<REAL>::IKfast(REAL* q, const REAL m[][3], const REAL p[], bool elbo
     // }
     //si q5!=0 ojo.
     if (abs(R[2][2]) < 0.99) {
-        //dando prioridad a q4 (-pi/2, pi/2), por lo que c4>0
+        // //dando prioridad a q4 (-pi/2, pi/2), por lo que c4>0
         if (R[0][2] > 0) {//q5 >0
+            // q[3] = atan2(R[1][2], R[0][2]);
+            // q[4] = acos(-R[2][2]);
+            // q[5] = atan2(R[2][0], R[2][1]);
             q[3] = atan2(R[1][2], R[0][2]);
             q[4] = acos(-R[2][2]);
             q[5] = atan2(-R[2][1], R[2][0]);
         }
         else {
+            // q[3] = atan2(-R[1][2], -R[0][2]);
+            // q[4] = -acos(-R[2][2]); //esto impide abs(q5) > pi/2
+            // q[5] = atan2(-R[2][0], -R[2][1]);
             q[3] = atan2(-R[1][2], -R[0][2]);
             q[4] = -acos(-R[2][2]); //esto impide abs(q5) > pi/2
             q[5] = atan2(R[2][1], -R[2][0]);
         }
+
+        
     }
     else //pata extendida, q4 y q6 acoplados, no se resuelve de momento
     {
@@ -171,7 +179,6 @@ bool _RomKin<REAL>::IKwrist(REAL* q, REAL x, REAL y, REAL z, bool elbow)
     q[2] += (alpha + beta);
     return true;
 }
-
 //from q angles to motor values(also angles but deg and with differente offset)
 template<class REAL>
 void _RomKin<REAL>::q2m(REAL m[], REAL q[], bool gdl3)
