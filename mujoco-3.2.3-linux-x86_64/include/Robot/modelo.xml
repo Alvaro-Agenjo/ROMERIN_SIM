@@ -7,7 +7,7 @@
 
     <worldbody>
     <geom name="bodyfloor" type="plane" condim="3" contype="3" conaffinity="3" size="0 0 0.0000005" material="grid" pos="0 0 0"/>
-        <body name="Cuerpo" pos="0 0 2.5">
+        <body name="Cuerpo" pos="0 0 0.5">
             <include file="../Cuerpo/cuerpo.xml"/>
             <freejoint name="libre"/>
             <body name="THOR" pos="0.08 0.0825 0" euler="0 0 45.8814">
