@@ -268,7 +268,7 @@ void MainWindow::on_btn_relax_clicked()
 }
 void MainWindow::on_btn_fixRot_clicked()
 {
-    commander.fixed_rotation(2);
+    commander.fixed_rotation();
     test_timer.stop();
 }
 

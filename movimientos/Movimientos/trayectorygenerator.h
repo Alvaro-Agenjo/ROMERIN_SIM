@@ -61,7 +61,7 @@ public:
     void reset();
     void stand();
     void relax();
-    void fixed_rotation(int n);
+    void fixed_rotation(int n = 1);
     bool nextOrder();
 
 

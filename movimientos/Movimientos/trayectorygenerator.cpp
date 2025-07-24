@@ -103,7 +103,6 @@ void trayectoryGenerator::setMotorVel(ModuleController *modulo, float max_vels[]
 }
 void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle[])
 {
-    QElapsedTimer millis;
     qDebug()<<module->name;
     for(int i = 0; i<6; i++){
         RomerinMsg m = romerinMsg_ServoGoalAngle(i, angle[i]);
@@ -161,9 +160,9 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
         return false;
     }
 
-    for(int i= 0; i<6; i++){
-        qDebug()<<"Q"<<i+1<<" = "<<q[i]* RomKin::rad2deg;
-    }
+//    for(int i= 0; i<6; i++){
+//        qDebug()<<"Q"<<i+1<<" = "<<q[i]* RomKin::rad2deg;
+//    }
     module->mod->romkin.q2m(m,q);
 
 
@@ -171,8 +170,8 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
     * Provisional hasta resolver problema con angulos muñeca
     */
     //Check if joint physical limits are not surpassed
-    //if(module->mod->checkJointsLimits(m, false))    return false;
-    if(module->mod->checkJointsLimits(m, true))    return false;
+    if(module->mod->checkJointsLimits(m, false))    return false;
+    //if(module->mod->checkJointsLimits(m, true))    return false;
 
     for(int i = 0; i< 6; i++){
         angle[i] = m[i];
@@ -184,7 +183,7 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
 bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, bool elbow, bool fixed)
 {
     ModuleController *module = ModulesHandler::getWithName(leg);
-    double m[6], q[6];
+    double m[6]; //, q[6];
     //setTorque(module, simple);
     validateMovement(m, module, x, y, z, elbow);
     //Sends suction power command if necessary
@@ -319,7 +318,7 @@ void trayectoryGenerator::reset()
 
     qDebug()<<"Reset";
     center = {0,0,0};
-    double m[6] = {180,257,191,180,245,114};
+    double m[6] = {180,257,200,180,123,236};
     for(const auto module : ModulesHandler::module_list){
         setTorque(module, full);
         setMotorAngles(module, m);
@@ -332,9 +331,9 @@ void trayectoryGenerator::stand()
     constexpr int ms = 2000;
     unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
     int n_orders = ms /100.0;
-    float def[3] = {0,180,0};
+    float def[3] = {0,179,180};
     Vector3D up{0,0,0.2};
-    double pos[3];
+//    double pos[3];
 
     refreshTCPs();
 
@@ -343,38 +342,38 @@ void trayectoryGenerator::stand()
         //moveBotAbsolute(up, def, i);
         moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW );  //und40 * 40ms/und40 + (i+1)*100ms
     }
-    center = center + up;
+    //center = center + up;
 }
 void trayectoryGenerator::relax()
 {
     constexpr int ms = 3000;
     unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
     int n_orders = ms /100.0;
-    float def[3] = {0,180,0};
+    float def[3] = {0,179,180};
     Vector3D up{0,0,-0.2};
 
     refreshTCPs();
 
 
     for(int i= 0; i< ms/100.0; i++){
-        moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW );  //und40 * 40ms/und40 + (i+1)*100ms
+        moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW);  //und40 * 40ms/und40 + (i+1)*100ms
     }
-    center = center + up;
+    //center = center + up;
 }
 
 void trayectoryGenerator::fixed_rotation(int n)
 {
     refreshTCPs();
 
-    constexpr double r = 0.1;
+    constexpr double r = 0.08;
     Vector3D pos = {r, 0, center.z};
-    float RPY[3] = {0,180,0};
+    float RPY[3] = {0,180,180};
     moveBotAbsolute(pos, RPY, 1000);
 
     for(int i = 0; i < n; i++ ){
-        for(int m = 1; m < 361; m+= 5 ){
+        for(int m = 0; m <= 360; m+= 10 ){ //0-360, 5
             pos.x = r * cos(m / RomKin::rad2deg); pos.y = r * sin(m / RomKin::rad2deg);
-            moveBotAbsolute(pos, RPY, 100);
+            moveBotAbsolute(pos, RPY, 200); //100
         }
     }
     pos.x = 0; pos.y = 0;
@@ -397,6 +396,9 @@ bool trayectoryGenerator::nextOrder()
     if(movement.suctionPercentaje != standby && movement.module->mod->isAttached()){
         setTorque(movement.module, simple);
     }
+    else {
+        setTorque(movement.module, full);
+    }
     setAdhesion(movement.module, movement.suctionPercentaje);
     setMotorAngles(movement.module, movement.angulos);
 
@@ -406,6 +408,9 @@ bool trayectoryGenerator::nextOrder()
 
         if(movement.suctionPercentaje != standby && movement.module->mod->isAttached()){
             setTorque(movement.module, simple);
+        }
+        else{
+            setTorque(movement.module, full);
         }
         setAdhesion(movement.module, movement.suctionPercentaje);
         setMotorAngles(movement.module, movement.angulos);
