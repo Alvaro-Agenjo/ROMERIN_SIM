@@ -152,6 +152,8 @@ bool Module::isAttached()
     return (suction_cup.distance[0]<threshold && suction_cup.distance[1] < threshold && suction_cup.distance[2] < threshold);
 }
 
-
-
+void Module::on_btn_refresh_clicked()
+{
+    module->getConfig();
+}
 

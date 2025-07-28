@@ -76,6 +76,8 @@ private:
 
 public:
     RomKin romkin{};
+private slots:
+    void on_btn_refresh_clicked();
 };
 
 #endif // MODULE_H
