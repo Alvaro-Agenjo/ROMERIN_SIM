@@ -37,9 +37,10 @@ public:
 
     void updateRobotState();
     void setConfigInfo(ConfigurationInfo &info){config.setConfigInfo(info);
-        ConfigurationInfoV2 tmp;
-        config.setConfigInfo(tmp);
-        romkin.set_lenghts(tmp.lenghts);
+    //--------------------------Temporal-------------------------//
+        // ConfigurationInfoV2 tmp;
+        // config.setConfigInfo(info);
+        // romkin.set_lenghts(tmp.lenghts);
     }
     void setConfigInfo(ConfigurationInfoV2 &info){
         config.setConfigInfo(info);

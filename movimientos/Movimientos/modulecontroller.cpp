@@ -100,19 +100,18 @@ RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
 {
     MainWindow::info("Message id: "+ QString::number(m.id));
     switch(m.id){
-      case ROM_MOTOR_INFO:{
-        int m_id=m.info[0];
-          MotorInfoData &&minfo=romerin_getMotorInfo(m.info);
-        // if(tab)tab->getMotorUI(m_id)->updateInfo(minfo);
-        mod->getMotorUI(m_id)->updateInfo(minfo);
-
+        case ROM_MOTOR_INFO:{
+            int m_id=m.info[0];
+            MotorInfoData &&minfo=romerin_getMotorInfo(m.info);
+            // if(tab)tab->getMotorUI(m_id)->updateInfo(minfo);
+            mod->getMotorUI(m_id)->updateInfo(minfo);
         }
-      break;
-      case ROM_ANALOG_INFO:{
+        break;
+        case ROM_ANALOG_INFO:{
             AnalogInfoData &&an=romerin_getAnalogInfo(m.info);
             //if(tab)tab->updateInfo(an);
         }
-      break;
+        break;
     case ROM_STATE:
         robot_state=m.info[0];
         robot_cicle_time=m.info[1];
