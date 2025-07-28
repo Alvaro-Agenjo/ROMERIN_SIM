@@ -6,7 +6,10 @@
 #include <stdio.h>
 #include <vector>
 
-void FKfast(const double* q, double m[][3], double p[]);
+void FKfast1(const double* q, double m[][3], double p[]);
+void FKfast2(const double* q, double m[][3], double p[]);
+bool Compare(const double m1[][3], const double p1[], const double m2[][3], const double p2[]);
+
 bool IKfast(double* q, const double m[][3], const double p[], bool elbow, bool wrist = true);
 bool IKwrist(double* q, double x, double y, double z, bool elbow);
 bool calculo(double x);
@@ -57,15 +60,28 @@ int main() {
     double m[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}, m2[3][3]; // Matriz identidad
     double p[3] = {0.4,0,0.1}, p2[3];
 
-    printVector(p, 3); printMatrix(m, 3);
-    if(IKfast(q, m, p, elbow, true)){
-       
-        //std::cout << " | Q1:" << q[0] << " | Q2:" << q[1] << " | Q3:" << q[2] << " | Q4:" << q[3] << " | Q5:" << q[4] << " | Q6:" << q[5] << std::endl;
-        FKfast(q, m2, p2);
-        printVector(p2,3); printMatrix(m2,3);
+
+    for(int q1= 70; q1 <= 290; q1+= 20){
+        std::cout << "Q1: " << q1 << std::endl;
+        for( int q2 = 70; q2 <= 290; q2+= 10){
+            for(int q3 = 55; q3 <= 260; q3+= 10){
+                for(int q4 = 0; q4 <= 360; q4+= 30){
+                    for(int q5 = 0; q5 <= 360; q5+= 20){
+                        for(int q6 = 0; q6 <= 360; q6+= 20){
+                            double q[6] = {q1 * M_PI / 180.0, q2 * M_PI / 180.0, q3 * M_PI / 180.0, 
+                                            q4 * M_PI / 180.0, q5 * M_PI / 180.0, q6 * M_PI / 180.0};
+                            FKfast1(q, m, p);
+                            FKfast2(q, m2, p2);
+                            elbow = Compare(m, p, m2, p2);
+                        }
+                    }
+                }
+            }
+        }                      
     }
-    else
-        std::cout << " | Q1:" << "---" << " | Q2:" << "---" << " | Q3:" << "---" << " | Q4:" << "---" << " | Q5:" << "---" << " | Q6:" << "---" << std::endl;
+    std::cout << "Finalizado, resultado = " << elbow << std::endl;
+
+
     // for(float x = 0.0; x <= max_x; x += step) {
     //     if(IKwrist(q, x, y, z, elbow)){
     //         std::cout << "X:" << x << " | Q1:" << q[0] << " | Q2:" << q[1] << " | Q3:" << q[2] << std::endl;
@@ -83,7 +99,7 @@ int main() {
     return 0;
 }
 
-void FKfast(const double* q, double m[][3], double p[])
+void FKfast1(const double* q, double m[][3], double p[])
 {
 
     // double c1 = cos(q[0]), s1 = sin(q[0]), c2 = cos(q[1]), s2 = sin(q[1]);
@@ -112,22 +128,62 @@ void FKfast(const double* q, double m[][3], double p[])
     //     p[2] = L5 * c2 * c3 + Lc * cos(alpha) * s2 - Lc * c2 * sin(alpha) - L4 * c2 * s3 + L4 * c3 * s2 + L5 * s2 * s3 - L6 * c2 * c5 * s3 + L6 * c3 * c5 * s2 + L6 * c2 * c3 * c4 * s5 + L6 * c4 * s2 * s3 * s5;
     
 
-    m[0][0] = c1 * s3_2 * (c4 * c5 * c6 + s4 * s6)  - s1 * (s4 * c5 * c6 - c4 * s6)  - c1 * c2_3 * (s5 * c6);
-    m[0][1] = c1 * s3_2 * (-c4 * c5 * s6 + s4 * c6) - s1 * (-s4 * s6 * c5 - c4 * c6) - c1 * c2_3 * (-s5 * s6);
+    m[0][0] = c1 * s3_2 * (c4 * c5 * s6 - s4 * c6)  - s1 * (s4 * c5 * s6 + c4 * c6)  - c1 * c2_3 * (s5 * s6);
+    m[0][1] = c1 * s3_2 * (c4 * c5 * c6 + s4 * s6)  - s1 * (s4 * c5 * c6 - c4 * s6)  - c1 * c2_3 * (s5 * c6);
     m[0][2] = c1 * s3_2 * (c4 * s5)                 - s1 * (s4 * s5)                 - c1 * c2_3 * (-c5);
     p[0]    = c1 * s3_2 * (L6 * c4 * s5)            - s1 * (L6 * s4 * s5)            - c1 * c2_3 * (-L6 * c5 - L4)   + c1 * (L5 * s3_2 + Lc * c2 + L1);
     
 
-    m[1][0] = s1 * s3_2 * (c4 * c5 * c6 + s4 * s6)  + c1 * (s4 * c5 * c6 - c4 * s6)  - s1 * c2_3 * (s5 * c6);     
-    m[1][1] = s1 * s3_2 * (-c4 * c5 * s6 + s4 * c6) + c1 * (-s4 * s6 * c5 - c4 * c6) - s1 * c2_3 * (-s5 * s6);
+    m[1][0] = s1 * s3_2 * (c4 * c5 * s6 - s4 * c6)  + c1 * (s4 * c5 * s6 + c4 * c6)  - s1 * c2_3 * (s5 * s6);     
+    m[1][1] = s1 * s3_2 * (c4 * c5 * c6 + s4 * s6)  + c1 * (s4 * c5 * c6 - c4 * s6)  - s1 * c2_3 * (s5 * c6);
     m[1][2] = s1 * s3_2 * (c4 * s5)                 + c1 * (s4 * s5)                 - s1 * c2_3 * (-c5);
     p[1]    = s1 * s3_2 * (L6 * c4 * s5)            + c1 * (L6 * s4 * s5)            - s1 * c2_3 * (-L6 * c5 - L4)   + s1 * (L5 * s3_2 + Lc * c2 + L1);    
 
-    m[2][0] = c2_3 * (c4 * c5 * c6 + s4 * s6)                                        + s3_2 * (s5 * c6);
-    m[2][1] = c2_3 * (-c4 * c5 * s6 + s4 * c6)                                       + s3_2 * (-s5 * s6);
+    m[2][0] = c2_3 * (c4 * c5 * s6 - s4 * c6)                                        + s3_2 * (s5 * s6);
+    m[2][1] = c2_3 * (c4 * c5 * c6 + s4 * s6)                                        + s3_2 * (s5 * c6);
     m[2][2] = c2_3 * (c4 * s5)                                                       + s3_2 * (-c5);
     p[2]    = c2_3 * (L6 * c4 * s5)                                                  + s3_2 * (-L6 * c5 - L4)        + L5 * c2_3 + Lc * s2;
 }
+void FKfast2(const double* q, double m[][3], double p[])
+{
+
+    double c1 = cos(q[0]), s1 = sin(q[0]), c2 = cos(q[1]), s2 = sin(q[1]);
+    double c3 = cos(q[2]), s3 = sin(q[2]), c4 = cos(q[3]), s4 = sin(q[3]);
+    double c5 = cos(q[4]), s5 = sin(q[4]), c6 = cos(q[5]), s6 = sin(q[5]);
+    
+    m[0][0] = c1 * c3 * s2* (c6 * s4 - c4 * c5 * s6) + c1 * c2 * s6 * (c4 * c5 * s3  -  c3 * s5 ) - c5 * s1 * s4 * s6 - c1 * c2 * c6 * s3 * s4 - c4 * c6 * s1  - c1 * s2 * s3 * s5 * s6  ;
+    m[0][1] = c4 * s1 * s6 - c5 * c6 * s1 * s4 - c1 * c2 * c3 * c6 * s5 + c1 * c2 * s3 * s4 * s6 - c1 * c3 * s2 * s4 * s6 - c1 * c6 * s2 * s3 * s5 + c1 * c2 * c4 * c5 * c6 * s3 - c1 * c3 * c4 * c5 * c6 * s2;
+    m[0][2] = c1* c2* c3* c5 - s1 * s4 * s5 + c1 * c5 * s2 * s3 + c1 * c2 * c4 * s3 * s5 - c1 * c3 * c4 * s2 * s5;
+    p[0] = L1 * c1 + Lc * cos(alpha) * c1 * c2 + L4 * c1 * c2 * c3 + L5 * c1 * c2 * s3 - L5 * c1 * c3 * s2 + Lc * c1 * sin(alpha) * s2 + L4 * c1 * s2 * s3 - L6 * s1 * s4 * s5 + L6 * c1 * c5 * s2 * s3 + L6 * c1 * c2 * c3 * c5 + L6 * c1 * c2 * c4 * s3 * s5 - L6 * c1 * c3 * c4 * s2 * s5;
+
+    m[1][0] = c1 * c4 * c6 + c1 * c5 * s4 * s6 - c2 * c6 * s1 * s3 * s4 + c3 * c6 * s1 * s2 * s4 - c2 * c3 * s1 * s5 * s6 - s1 * s2 * s3 * s5 * s6 + c2 * c4 * c5 * s1 * s3 * s6 - c3 * c4 * c5 * s1 * s2 * s6;
+    m[1][1] = c1 * c5 * c6 * s4 - c1 * c4 * s6 - c2 * c3 * c6 * s1 * s5 + c2 * s1 * s3 * s4 * s6 - c3 * s1 * s2 * s4 * s6 - c6 * s1 * s2 * s3 * s5 + c2 * c4 * c5 * c6 * s1 * s3 - c3 * c4 * c5 * c6 * s1 * s2;
+    m[1][2] = c1 * s4 * s5 + c2 * c3 * c5 * s1 + c5 * s1 * s2 * s3 + c2 * c4 * s1 * s3 * s5 - c3 * c4 * s1 * s2 * s5;
+    p[1] = L1* s1 + Lc * cos(alpha) * c2 * s1 + L4 * c2 * c3 * s1 + L5 * c2 * s1 * s3 - L5 * c3 * s1 * s2 + L6 * c1 * s4 * s5 + Lc * sin(alpha) * s1 * s2 + L4 * s1 * s2 * s3 + L6 * c2 * c3 * c5 * s1 + L6 * c5 * s1 * s2 * s3 + L6 * c2 * c4 * s1 * s3 * s5 - L6 * c3 * c4 * s1 * s2 * s5;
+
+    m[2][0] = c2 * s3 * s5 * s6 - c6 * s2 * s3 * s4 - c2 * c3 * c6 * s4 - c3 * s2 * s5 * s6 + c2 * c3 * c4 * c5 * s6 + c4 * c5 * s2 * s3 * s6,
+    m[2][1] = c2 * c3 * s4 * s6 + c2 * c6 * s3 * s5 - c3 * c6 * s2 * s5 + s2 * s3 * s4 * s6 + c2 * c3 * c4 * c5 * c6 + c4 * c5 * c6 * s2 * s3,
+    m[2][2] = c3 * c5 * s2 - c2 * c5 * s3 + c2 * c3 * c4 * s5 + c4 * s2 * s3 * s5,
+    p[2] = L5 * c2 * c3 + Lc * cos(alpha) * s2 - Lc * c2 * sin(alpha) - L4 * c2 * s3 + L4 * c3 * s2 + L5 * s2 * s3 - L6 * c2 * c5 * s3 + L6 * c3 * c5 * s2 + L6 * c2 * c3 * c4 * s5 + L6 * c4 * s2 * s3 * s5;
+}
+bool Compare(const double m1[][3], const double p1[], const double m2[][3], const double p2[])
+{
+    bool ok = true;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (abs(m1[i][j] - m2[i][j]) > 0.00001) {
+                std::cout << "Error in matrix at (" << i << "," << j << "): " << m1[i][j] << " != " << m2[i][j] << std::endl;
+                ok = false;
+            }
+        }
+        if (abs(p1[i] - p2[i]) > 0.00001) {
+            std::cout << "Error in position at index " << i << ": " << p1[i] << " != " << p2[i] << std::endl;
+            ok = false;
+        }
+    }
+    return ok;
+}
+
 bool IKfast(double* q, const double m[][3], const double p[], bool elbow, bool wrist)
 {
     double pm[3] = { p[0] - L6 * m[0][2], p[1] - L6 * m[1][2], p[2] - L6 * m[2][2]};
