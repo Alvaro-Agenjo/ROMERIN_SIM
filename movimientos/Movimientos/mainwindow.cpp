@@ -357,16 +357,16 @@ void MainWindow::on_btn_record_clicked()
         file.setFileName(Directory);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             qDebug() << "Error al abrir el archivo: " << file.errorString();
+            qDebug() << "Segundo método de acceso";
 
 
-            //Second route
-            /*Moduficar ruta para PC lab*/
-            QString Directory = "../../../../Datalogs/" +str_fecha + ".txt";
+            //Second acces route
+            QString Directory = "../../Datalogs/" + str_fecha + ".txt";
             qDebug() << Directory;
 
             file.setFileName(Directory);
             if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qDebug() << "Error al abrir el archivo: " << file.errorString();
+                qDebug() << "Error al abrir el archivo: " << file.errorString()<<"Segundo acceso";
                 return;
             }
         }
