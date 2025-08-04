@@ -113,14 +113,15 @@ void Module::get_motor_info(MotorInfoData *m)
 
 void Module::setMatrizTransformacion()
 {
-    double m[3][3];
-    ConfigurationInfoV2 info = config.getConfigInvoV2();
+//    double m[3][3];
+//    ConfigurationInfoV2 info = config.getConfigInvoV2();
 
-    qDebug()<<"Position: "<<info.position[0]<<", "<<info.position[1]<<", "<<info.position[2]<<".\n Orientation: "<<info.orientation[0]<<", "<<info.orientation[1]<<", "<<info.orientation[2];
+//    qDebug()<<"Position: "<<info.position[0]<<", "<<info.position[1]<<", "<<info.position[2]<<".\n Orientation: "<<info.orientation[0]<<", "<<info.orientation[1]<<", "<<info.orientation[2];
 
-    Calc3x3ROT(info.orientation[0], info.orientation[1], info.orientation[2], m);
-    T = Matriz_Transformacion(m,info.position);
+//    Calc3x3ROT(info.orientation[0], info.orientation[1], info.orientation[2], m);
+//    T = Matriz_Transformacion(m,info.position);
 }
+
 
 /* Funcion para comprobar que los valores articulares están dentro de límites.
  * Devuelve true si se superan los límites para alguna articulación */
@@ -166,5 +167,6 @@ bool Module::isAttached()
 void Module::on_btn_refresh_clicked()
 {
     module->getConfig();
+
 }
 

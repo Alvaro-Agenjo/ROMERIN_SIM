@@ -70,7 +70,7 @@ private:
 
     std::list<Movimiento> orders_list;
     Vector3D center, TCPs[4];
-    //Matriz_Transformacion centro2leg_DU, centro2leg_IU, centro2leg_ID, centro2leg_DD;
+    Matriz_Transformacion centro2leg_DU, centro2leg_IU, centro2leg_ID, centro2leg_DD;
 };
 
 struct MotorsAngles{

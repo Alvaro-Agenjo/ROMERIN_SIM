@@ -56,6 +56,7 @@ public:
     ConfigurationInfoV2 getConfigInfoV2(){return config.getConfigInvoV2();}
 
     void setMatrizTransformacion();
+    void setMatrizTransformacion(Matriz_Transformacion m){T = m;}
     bool checkJointsLimits(double m[], bool simple = false);
     bool objetiveReached();
     bool newTCP_mov(Vector3D actualTCP, Vector3D * futureTCP, Matriz_Transformacion movimiento);

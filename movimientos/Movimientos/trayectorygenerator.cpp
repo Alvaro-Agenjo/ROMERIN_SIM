@@ -5,21 +5,21 @@
 #include <QTime>
 
 trayectoryGenerator::trayectoryGenerator() {
-    // double m[3][3], p[] ={0.08,0.0825,0};
-    // Calc3x3ROT(0,0,45.8814, m);
-    // centro2leg_DU = *new Matriz_Transformacion(m, p);
+     double m[3][3], p[] ={0.08,0.0825,0};
+     Calc3x3ROT(0,0,45.8814, m);
+     centro2leg_DU = *new Matriz_Transformacion(m, p);
 
-    // p[0] = -0.08;   p[1] = 0.0825;
-    // Calc3x3ROT(0,0,134.1186, m);
-    // centro2leg_IU = *new Matriz_Transformacion(m,p);
+     p[0] = -0.08;   p[1] = 0.0825;
+     Calc3x3ROT(0,0,134.1186, m);
+     centro2leg_IU = *new Matriz_Transformacion(m,p);
 
-    // p[0] = -0.08;   p[1] = -0.0825;
-    // Calc3x3ROT(0,0,-134.1186, m);
-    // centro2leg_ID = *new Matriz_Transformacion(m, p);
+     p[0] = -0.08;   p[1] = -0.0825;
+     Calc3x3ROT(0,0,-134.1186, m);
+     centro2leg_ID = *new Matriz_Transformacion(m, p);
 
-    // p[0] = 0.08;   p[1] = -0.0825;
-    // Calc3x3ROT(0,0,-45.8814, m);
-    // centro2leg_DD = centro2leg_DD* *new Matriz_Transformacion(m, p);
+     p[0] = 0.08;   p[1] = -0.0825;
+     Calc3x3ROT(0,0,-45.8814, m);
+     centro2leg_DD = centro2leg_DD* *new Matriz_Transformacion(m, p);
 
     //connect(&timer, &QTimer::timeout, this, &trayectoryGenerator::nextOrder);
     //timer.start(50);//antes 50ms
@@ -34,33 +34,33 @@ bool trayectoryGenerator::isMoving(){
 
 void trayectoryGenerator::setMatrizTransformacion(ModuleController *modulo)
 {
-    // static int id = 0;
-    // switch(id){
-    // case 0:
-    //     modulo->mod->setMatrizTransformacion(centro2leg_DU);
-    //     break;
-    // case 1:
-    //     modulo->mod->setMatrizTransformacion(centro2leg_IU);
-    //     break;
-    // case 2:
-    //     modulo->mod->setMatrizTransformacion(centro2leg_ID);
-    //     break;
-    // case 3:
-    //     modulo->mod->setMatrizTransformacion(centro2leg_DD);
-    //     break;
-    // case 4:
-    //     id = -1;
-    //     //modulo->mod->setMatrizTransformacion();
-    //     break;
-    // case 5:
-    //     //moulo->mod->setMatrizTransformacion();
-    //     break;
-    // default:
-    //     id = 0;
-    //     break;
-    // }
+     static int id = 0;
+     switch(id){
+     case 0:
+         modulo->mod->setMatrizTransformacion(centro2leg_DU);
+         break;
+     case 1:
+         modulo->mod->setMatrizTransformacion(centro2leg_IU);
+         break;
+     case 2:
+         modulo->mod->setMatrizTransformacion(centro2leg_ID);
+         break;
+     case 3:
+         modulo->mod->setMatrizTransformacion(centro2leg_DD);
+         break;
+     case 4:
+         id = -1;
+         //modulo->mod->setMatrizTransformacion();
+         break;
+     case 5:
+         //moulo->mod->setMatrizTransformacion();
+         break;
+     default:
+         id = 0;
+         break;
+     }
 
-    // id++;
+     id++;
 }
 
 void trayectoryGenerator::refreshTCPs()
