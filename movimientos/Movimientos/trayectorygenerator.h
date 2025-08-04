@@ -52,7 +52,7 @@ public:
     bool moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
     bool moveLeg(ModuleController *module, double x, double y, double z, float RPY[], bool elbow, bool fixed);
 
-    void Calc3x3ROT(float a, float b, float c, double ortientacion[][3]);
+    //void Calc3x3ROT(float a, float b, float c, double ortientacion[][3]);
 
     bool moveBotAbsolute(Vector3D new_center, float RPY[3], int batch);
     bool moveBotRelative(Vector3D new_center, float RPY[3], int batch, bool fixed = false);
@@ -70,7 +70,7 @@ private:
 
     std::list<Movimiento> orders_list;
     Vector3D center, TCPs[4];
-    Matriz_Transformacion centro2leg_DU, centro2leg_IU, centro2leg_ID, centro2leg_DD;
+    //Matriz_Transformacion centro2leg_DU, centro2leg_IU, centro2leg_ID, centro2leg_DD;
 };
 
 struct MotorsAngles{

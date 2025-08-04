@@ -5,21 +5,21 @@
 #include <QTime>
 
 trayectoryGenerator::trayectoryGenerator() {
-    double m[3][3], p[] ={0.08,0.0825,0};
-    Calc3x3ROT(0,0,45.8814, m);
-    centro2leg_DU = *new Matriz_Transformacion(m, p);
+    // double m[3][3], p[] ={0.08,0.0825,0};
+    // Calc3x3ROT(0,0,45.8814, m);
+    // centro2leg_DU = *new Matriz_Transformacion(m, p);
 
-    p[0] = -0.08;   p[1] = 0.0825;
-    Calc3x3ROT(0,0,134.1186, m);
-    centro2leg_IU = *new Matriz_Transformacion(m,p);
+    // p[0] = -0.08;   p[1] = 0.0825;
+    // Calc3x3ROT(0,0,134.1186, m);
+    // centro2leg_IU = *new Matriz_Transformacion(m,p);
 
-    p[0] = -0.08;   p[1] = -0.0825;
-    Calc3x3ROT(0,0,-134.1186, m);
-    centro2leg_ID = *new Matriz_Transformacion(m, p);
+    // p[0] = -0.08;   p[1] = -0.0825;
+    // Calc3x3ROT(0,0,-134.1186, m);
+    // centro2leg_ID = *new Matriz_Transformacion(m, p);
 
-    p[0] = 0.08;   p[1] = -0.0825;
-    Calc3x3ROT(0,0,-45.8814, m);
-    centro2leg_DD = centro2leg_DD* *new Matriz_Transformacion(m, p);
+    // p[0] = 0.08;   p[1] = -0.0825;
+    // Calc3x3ROT(0,0,-45.8814, m);
+    // centro2leg_DD = centro2leg_DD* *new Matriz_Transformacion(m, p);
 
     //connect(&timer, &QTimer::timeout, this, &trayectoryGenerator::nextOrder);
     //timer.start(50);//antes 50ms
@@ -34,33 +34,33 @@ bool trayectoryGenerator::isMoving(){
 
 void trayectoryGenerator::setMatrizTransformacion(ModuleController *modulo)
 {
-    static int id = 0;
-    switch(id){
-    case 0:
-        modulo->mod->setMatrizTransformacion(centro2leg_DU);
-        break;
-    case 1:
-        modulo->mod->setMatrizTransformacion(centro2leg_IU);
-        break;
-    case 2:
-        modulo->mod->setMatrizTransformacion(centro2leg_ID);
-        break;
-    case 3:
-        modulo->mod->setMatrizTransformacion(centro2leg_DD);
-        break;
-    case 4:
-        id = -1;
-        //modulo->mod->setMatrizTransformacion();
-        break;
-    case 5:
-        //moulo->mod->setMatrizTransformacion();
-        break;
-    default:
-        id = 0;
-        break;
-    }
+    // static int id = 0;
+    // switch(id){
+    // case 0:
+    //     modulo->mod->setMatrizTransformacion(centro2leg_DU);
+    //     break;
+    // case 1:
+    //     modulo->mod->setMatrizTransformacion(centro2leg_IU);
+    //     break;
+    // case 2:
+    //     modulo->mod->setMatrizTransformacion(centro2leg_ID);
+    //     break;
+    // case 3:
+    //     modulo->mod->setMatrizTransformacion(centro2leg_DD);
+    //     break;
+    // case 4:
+    //     id = -1;
+    //     //modulo->mod->setMatrizTransformacion();
+    //     break;
+    // case 5:
+    //     //moulo->mod->setMatrizTransformacion();
+    //     break;
+    // default:
+    //     id = 0;
+    //     break;
+    // }
 
-    id++;
+    // id++;
 }
 
 void trayectoryGenerator::refreshTCPs()
@@ -233,31 +233,31 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
     return true; //Return true movement command successfull
 }
 
-void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientacion[][3])
-{
-    // c+=90;
-    // Convertir grados a radianes
-    a /= RomKin::rad2deg;
-    b /= RomKin::rad2deg;
-    c /= RomKin::rad2deg;
+// void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientacion[][3])
+// {
+//     // c+=90;
+//     // Convertir grados a radianes
+//     a /= RomKin::rad2deg;
+//     b /= RomKin::rad2deg;
+//     c /= RomKin::rad2deg;
 
-    double cx = cos(a), sx = sin(a);
-    double cy = cos(b), sy = sin(b);
-    double cz = cos(c), sz = sin(c);
+//     double cx = cos(a), sx = sin(a);
+//     double cy = cos(b), sy = sin(b);
+//     double cz = cos(c), sz = sin(c);
 
-    // Matriz de rotación sobre ejes globales (Rx * Ry * Rz)
-    orientacion[0][0] = cy * cz;
-    orientacion[0][1] = -cy * sz;
-    orientacion[0][2] = sy;
+//     // Matriz de rotación sobre ejes globales (Rx * Ry * Rz)
+//     orientacion[0][0] = cy * cz;
+//     orientacion[0][1] = -cy * sz;
+//     orientacion[0][2] = sy;
 
-    orientacion[1][0] = sx * sy * cz + cx * sz;
-    orientacion[1][1] = -sx * sy * sz + cx * cz;
-    orientacion[1][2] = -sx * cy;
+//     orientacion[1][0] = sx * sy * cz + cx * sz;
+//     orientacion[1][1] = -sx * sy * sz + cx * cz;
+//     orientacion[1][2] = -sx * cy;
 
-    orientacion[2][0] = -cx * sy * cz + sx * sz;
-    orientacion[2][1] = cx * sy * sz + sx * cz;
-    orientacion[2][2] = cx * cy;
-}
+//     orientacion[2][0] = -cx * sy * cz + sx * sz;
+//     orientacion[2][1] = cx * sy * sz + sx * cz;
+//     orientacion[2][2] = cx * cy;
+// }
 
 /* New_center in meters */
 bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int tiempo)

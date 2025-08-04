@@ -32,6 +32,14 @@ Matriz_Transformacion::Matriz_Transformacion(double m[3][3], double p[3]){
         this->m[3][j] = (j == 3) ? 1 : 0; // Last row for homogeneous coordinates
 }
 
+Matriz_Transformacion::Matriz_Transformacion(double m[3][3], int16_t p[])
+{
+    double pos[3] = {static_cast<double>(p[0]), static_cast<double>(p[1]), static_cast<double>(p[2])};
+    Matriz_Transformacion(m,pos);
+}
+
+
+
 Matriz_Transformacion Matriz_Transformacion::Inversa() const{
     Matriz_Transformacion inv;  // M-1 =M^t
     for(int i = 0; i < 3; i++)
@@ -151,4 +159,29 @@ bool operator !=(const Vector3D &lhs, const Vector3D &rhs){
     return !(lhs==rhs);
 }
 
+void Calc3x3ROT(float a, float b, float c, double orientacion[][3])
+{
+    double rad2deg = 180.0/M_PI;
+    // c+=90;
+    // Convertir grados a radianes
+    a /= rad2deg;
+    b /= rad2deg;
+    c /= rad2deg;
 
+    double cx = cos(a), sx = sin(a);
+    double cy = cos(b), sy = sin(b);
+    double cz = cos(c), sz = sin(c);
+
+    // Matriz de rotación sobre ejes globales (Rx * Ry * Rz)
+    orientacion[0][0] = cy * cz;
+    orientacion[0][1] = -cy * sz;
+    orientacion[0][2] = sy;
+
+    orientacion[1][0] = sx * sy * cz + cx * sz;
+    orientacion[1][1] = -sx * sy * sz + cx * cz;
+    orientacion[1][2] = -sx * cy;
+
+    orientacion[2][0] = -cx * sy * cz + sx * sz;
+    orientacion[2][1] = cx * sy * sz + sx * cz;
+    orientacion[2][2] = cx * cy;
+}

@@ -148,6 +148,7 @@ RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
            ConfigurationInfoV2 &&conf=ConfigurationInfoV2::getFromBuffer(m.info);
            //if(tab)tab->setConfigInfo(conf);
            mod->setConfigInfo(conf);
+           mod->setMatrizTransformacion();
     }
     break;
     case ROM_COMPACT_ROBOT_DATA:{
