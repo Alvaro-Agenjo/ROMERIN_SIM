@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>198</width>
+    <width>230</width>
     <height>232</height>
    </rect>
   </property>
@@ -15,7 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1">
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item alignment="Qt::AlignRight">
@@ -31,6 +31,30 @@
           <string>ON</string>
          </property>
         </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="txt_min">
+         <property name="text">
+          <string>min:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="num_min"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="txt_max">
+         <property name="text">
+          <string>max:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLCDNumber" name="num_max"/>
        </item>
       </layout>
      </item>

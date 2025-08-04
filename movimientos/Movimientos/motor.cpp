@@ -37,6 +37,9 @@ void Motor::updateInfo(MotorInfoData &minfo)
     //ui->intensity->display(QString::number(minfo.intensity, 'f', 1));
     //ui->temperature->display(minfo.temperature);
     //ui->voltage->display(QString::number(minfo.voltage, 'f', 1));
+
+    ui->num_min->display(QString::number(limits_motor.min_angle,'f', 1));
+    ui->num_max->display(QString::number(limits_motor.max_angle,'f', 1));
 }
 
 void Motor::setTorque(bool check)

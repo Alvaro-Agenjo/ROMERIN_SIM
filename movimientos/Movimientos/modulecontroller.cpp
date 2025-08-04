@@ -135,6 +135,7 @@ RomerinMsg ModuleController::executeMessage(const RomerinMsg &m)
             FixedMotorInfoData &&minfo=romerin_getFixedMotorInfo(m.info+1);
             //if(tab)tab->getMotorUI(m_id)->updateFixedInfo(minfo);
             mod->getMotorUI(m_id)->updateFixedInfo(minfo);
+            qDebug()<< name <<": m"<<m_id<<" = ["<<minfo.min_angle<<" "<<minfo.max_angle<<"]";
     }
     break;
     case ROM_CONFIG:{
@@ -205,12 +206,12 @@ void ModuleController::save_data()
     mod->get_motor_info(mi);
     QTextStream fichero(_file);
 
-    fichero << name << ":\n Q: ";
-    for(auto q:qs)fichero<<q<<" ;\t";
-    fichero << "\nTorque: ";
-    for(auto m:mt)fichero<<m<<" ;\t ";
-    fichero << "\n MotorD: ";
-    for(auto m:mi)fichero<<m.position<<" ;\t "<<m.velocity<<" ;\t " << m.intensity << " ;\n ";
+    fichero << name << ":\nQ ";
+    for(auto q:qs)fichero<<q<<";";
+    fichero << "\nTorque ";
+    for(auto m:mt)fichero<<m<<";";
+    fichero << "\nMotorD ";
+    for(auto m:mi)fichero<<m.position<<";"<<m.velocity<<";" << m.intensity << ";\n ";
     fichero<<"\n" << millis()-init_t<<"\n";
 
 
