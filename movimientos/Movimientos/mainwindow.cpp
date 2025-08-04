@@ -351,14 +351,26 @@ void MainWindow::on_btn_record_clicked()
         activo = true;
         QDateTime fecha = QDateTime::currentDateTime();
         QString str_fecha = fecha.toString("log_yyyyMMdd_hhmmss");
-        str_fecha = "../../../../Datalogs/" +str_fecha + ".txt";
-        qDebug() << str_fecha;
+        QString Directory = "../../../../Datalogs/" +str_fecha + ".txt";
+        qDebug() << Directory;
 
-        file.setFileName(str_fecha);        
+        file.setFileName(Directory);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             qDebug() << "Error al abrir el archivo: " << file.errorString();
-            return;
+
+
+            //Second route
+            /*Moduficar ruta para PC lab*/
+            QString Directory = "../../../../Datalogs/" +str_fecha + ".txt";
+            qDebug() << Directory;
+
+            file.setFileName(Directory);
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qDebug() << "Error al abrir el archivo: " << file.errorString();
+                return;
+            }
         }
+
 
         ulong tiempo = millis();
         for(auto module : ModulesHandler::module_list){
