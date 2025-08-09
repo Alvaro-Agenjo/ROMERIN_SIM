@@ -227,32 +227,6 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
     return true; //Return true movement command successfull
 }
 
-// void trayectoryGenerator::Calc3x3ROT(float a, float b, float c, double orientacion[][3])
-// {
-//     // c+=90;
-//     // Convertir grados a radianes
-//     a /= RomKin::rad2deg;
-//     b /= RomKin::rad2deg;
-//     c /= RomKin::rad2deg;
-
-//     double cx = cos(a), sx = sin(a);
-//     double cy = cos(b), sy = sin(b);
-//     double cz = cos(c), sz = sin(c);
-
-//     // Matriz de rotación sobre ejes globales (Rx * Ry * Rz)
-//     orientacion[0][0] = cy * cz;
-//     orientacion[0][1] = -cy * sz;
-//     orientacion[0][2] = sy;
-
-//     orientacion[1][0] = sx * sy * cz + cx * sz;
-//     orientacion[1][1] = -sx * sy * sz + cx * cz;
-//     orientacion[1][2] = -sx * cy;
-
-//     orientacion[2][0] = -cx * sy * cz + sx * sz;
-//     orientacion[2][1] = cx * sy * sz + sx * cz;
-//     orientacion[2][2] = cx * cy;
-// }
-
 /* New_center in meters */
 bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int tiempo)
 {
@@ -325,25 +299,21 @@ void trayectoryGenerator::stand()
     constexpr int ms = 2000;
     unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
     int n_orders = ms /100.0;
-    float def[3] = {0,179,180};
+    float def[3] = {0,180,90};
     Vector3D up{0,0,0.2};
-//    double pos[3];
 
     refreshTCPs();
 
-
     for(int i= 0; i< n_orders; i++){
-        //moveBotAbsolute(up, def, i);
         moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW );  //und40 * 40ms/und40 + (i+1)*100ms
     }
-    //center = center + up;
 }
 void trayectoryGenerator::relax()
 {
     constexpr int ms = 3000;
     unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
     int n_orders = ms /100.0;
-    float def[3] = {0,179,180};
+    float def[3] = {0,180,90};
     Vector3D up{0,0,-0.2};
 
     refreshTCPs();
@@ -352,7 +322,6 @@ void trayectoryGenerator::relax()
     for(int i= 0; i< ms/100.0; i++){
         moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW);  //und40 * 40ms/und40 + (i+1)*100ms
     }
-    //center = center + up;
 }
 
 void trayectoryGenerator::fixed_rotation(int n)
@@ -361,7 +330,7 @@ void trayectoryGenerator::fixed_rotation(int n)
 
     constexpr double r = 0.08;
     Vector3D pos = {r, 0, center.z};
-    float RPY[3] = {0,180,180};
+    float RPY[3] = {0,180,90};
     moveBotAbsolute(pos, RPY, 1000);
 
     for(int i = 0; i < n; i++ ){

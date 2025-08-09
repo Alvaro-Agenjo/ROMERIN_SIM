@@ -9,11 +9,9 @@
 #define standby 8
 constexpr float counterTG2MW = 100/40;
 
-//constexpr float down[3] = {0,180,90};
-
 constexpr bool simple[6] = {1,1,1,0,0,0};
 constexpr bool full[6] = {1,1,1,1,1,1};
-//enum class state_t { STAND, RELAX, FIXED_ROTATION, RESET};
+
 
 struct Movimiento{
     ModuleController* module;
@@ -51,8 +49,6 @@ public:
     bool moveLeg(QString leg, double x, double y, double z, bool elbow = true, bool fixed = false);
     bool moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
     bool moveLeg(ModuleController *module, double x, double y, double z, float RPY[], bool elbow, bool fixed);
-
-    //void Calc3x3ROT(float a, float b, float c, double ortientacion[][3]);
 
     bool moveBotAbsolute(Vector3D new_center, float RPY[3], int batch);
     bool moveBotRelative(Vector3D new_center, float RPY[3], int batch, bool fixed = false);
