@@ -250,7 +250,7 @@ void MainWindow::on_txt_masterVel_editingFinished()
 void MainWindow::on_btn_enableMotors_clicked(bool checked)
 {
     for(auto mod : ModulesHandler::module_list){
-        mod->activateMotors(checked);
+        mod->mod->updateTorque(checked);
     }
 }
 

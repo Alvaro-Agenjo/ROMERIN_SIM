@@ -158,6 +158,20 @@ void Module::updateTorque(int motor_id, bool torque)
     motors[motor_id]->setTorque(torque);
 }
 
+void Module::updateTorque(bool torques[])
+{
+    for(int i= 0; i< 6; i++){
+        motors[i]->setTorque(torques[i]);
+    }
+}
+
+void Module::updateTorque(bool torques)
+{
+    for(int i= 0; i< 6; i++){
+        motors[i]->setTorque(torques);
+    }
+}
+
 bool Module::isAttached()
 {
     uint8_t threshold = 18;

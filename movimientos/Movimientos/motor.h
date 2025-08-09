@@ -37,6 +37,7 @@ private:
     ModuleController *_module;
     int motor_id;
     bool moving = false;
+    bool torque = false;
 };
 
 #endif // MOTOR_H

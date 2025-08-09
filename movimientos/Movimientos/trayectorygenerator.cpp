@@ -77,17 +77,11 @@ void trayectoryGenerator::refreshTCPs()
 
 void trayectoryGenerator::setTorque(ModuleController *modulo, int motor_id, const bool torque)
 {
-    RomerinMsg m = romerinMsg_Torque(motor_id, torque);
-    modulo->sendMessage(m);
     modulo->mod->updateTorque(motor_id,torque);
 }
 void trayectoryGenerator::setTorque(ModuleController *modulo, const bool torques[])
 {
-    for(int i = 0; i< 6; i++){
-        RomerinMsg m = romerinMsg_Torque(i, torques[i]);
-        modulo->sendMessage(m);
-        modulo->mod->updateTorque(i,torques[i]);
-    }
+    modulo->mod->updateTorque(torques);
 }
 void trayectoryGenerator::setMotorVel(ModuleController *modulo, float max_vel, int motor_id)
 {

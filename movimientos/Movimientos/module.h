@@ -61,6 +61,8 @@ public:
     bool objetiveReached();
     bool newTCP_mov(Vector3D actualTCP, Vector3D * futureTCP, Matriz_Transformacion movimiento);
     void updateTorque(int motor_id, bool torque);
+    void updateTorque(bool torques []);
+    void updateTorque(bool torques);
     bool isAttached();
 
 private:

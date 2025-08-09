@@ -59,7 +59,6 @@ public:
     ulong init_t;
 
     //--------------------------------------------//
-    void activateMotors(bool on = true);
 };
 
 

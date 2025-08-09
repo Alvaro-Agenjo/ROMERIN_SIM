@@ -44,12 +44,18 @@ void Motor::updateInfo(MotorInfoData &minfo)
 
 void Motor::setTorque(bool check)
 {
-    ui->chk_torque->setChecked(check);
+    if(torque == check) return;
+    torque = check;
+    RomerinMsg m = romerinMsg_Torque(motor_id, torque);
+    _module->sendMessage(m);
+
+    ui->chk_torque->setChecked(torque);
 }
 
 void Motor::on_chk_torque_clicked(bool checked)
 {
     RomerinMsg m = romerinMsg_Torque(motor_id, checked);
     _module->sendMessage(m);
+    torque = checked;
 }
 
