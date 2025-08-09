@@ -32,7 +32,12 @@ void Motor::updateInfo(MotorInfoData &minfo)
     torque /= 1000.0; //conversion to Nm
     ui->num_torque->display(QString::number(torque, 'f', 2));
 
-    if(abs(torque) > 3.3) ui->Overload->setChecked(true);
+    if(_module->simulated){
+        if(abs(torque) > 5)
+            ui->Overload->setChecked(true);
+    }
+    else
+        ui->Overload->setChecked(info_motor.status&0x01);
     //QDebug info(minfo.intensity);
     //ui->intensity->display(QString::number(minfo.intensity, 'f', 1));
     //ui->temperature->display(minfo.temperature);
