@@ -351,7 +351,7 @@ void MainWindow::on_btn_record_clicked()
         activo = true;
         QDateTime fecha = QDateTime::currentDateTime();
         QString str_fecha = fecha.toString("log_yyyyMMdd_hhmmss");
-        QString Directory = "../../../../Datalogs/" +str_fecha + ".txt";
+        QString Directory = "../../../../Datalogs/raw/" +str_fecha + ".txt";
         qDebug() << Directory;
 
         file.setFileName(Directory);
@@ -361,7 +361,7 @@ void MainWindow::on_btn_record_clicked()
 
 
             //Second acces route
-            QString Directory = "../../Datalogs/" + str_fecha + ".txt";
+            QString Directory = "../../Datalogs/raw/" + str_fecha + ".txt";
             qDebug() << Directory;
 
             file.setFileName(Directory);
