@@ -6,13 +6,20 @@ import re
 
 # ...existing code...
 
-def agrupar_por_nombre(archivo_formateado, archivo_agrupado):
-    nombres = ["FRIGG", "TYR", "LOKI", "FREYJA"]
+def agrupar_por_nombre(archivo_formateado, archivo_agrupado, sim):
+    if sim == "false":
+        nombres = ["FRIGG", "TYR", "LOKI", "FREYJA"]
+    else:
+        nombres = ["THOR", "FRIGG", "ODIN", "LOKI"]
     grupos = {nombre: [] for nombre in nombres}
     nombre_actual = None
+    comentarios = []
 
     with open(archivo_formateado, 'r') as fin:
         for linea in fin:
+            if linea.startswith(("*", "/*")):
+                comentarios.append(linea)
+                continue
             for nombre in nombres:
                 if linea.startswith(nombre + "\t"):
                     nombre_actual = nombre
@@ -23,6 +30,8 @@ def agrupar_por_nombre(archivo_formateado, archivo_agrupado):
                     grupos[nombre_actual].append(linea)
 
     with open(archivo_agrupado, 'w') as fout:
+        fout.writelines(comentarios)
+        fout.write("\n")
         for nombre in nombres:
             fout.writelines(grupos[nombre])
 
@@ -45,26 +54,30 @@ def formatear_linea(linea):
         linea = linea.removeprefix("MotorD").strip(" \n")
         linea = linea.replace(";", "\t")
         return f"{linea}"
-    # Ejemplo: Si la línea empieza con una fecha en formato YYYY-MM-DD
-    elif re.match(r'^\s*-?\d+\.?\d*;-?\d+\.?\d*;-?\d+\.?\d*;\s*$', linea):
+        # Ejemplo: Si la línea empieza con una fecha en formato YYYY-MM-DD
+        # elif re.match(r'^\s*([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?;){2}[+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?;\s*$', linea):
+    elif re.match(r'^\s*([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?;){3}\s*$', linea):         # r'^ \s* ([+-]?\d + (?:\.\d+)? (?:[eE][+-]?\d+)? ;){3} \s* $'
         linea = linea.strip(" \n")
         linea = linea.replace(";", "\t")
         return f"{linea}"
     elif re.match(r'^\s*-?\d+\s*$', linea):
         numero = linea.strip(" \n")
         return f"{numero}\n"
+    elif linea.startswith(("*", "/*")):
+        return f"{linea}"
     # Si no cumple ninguna condición, aplica un formato por defecto
     else:
         return ""
 
 def main():
     # Verifica que se pasen los argumentos necesarios
-    if len(sys.argv) != 3:
-        print("Uso: python format.py archivo_entrada.txt archivo_salida.txt")
+    if len(sys.argv) < 3 or len(sys.argv) > 4:
+        print("Uso: python format.py archivo_entrada.txt archivo_salida.txt sim [false por defecto]")
         sys.exit(1)
-
+    
     archivo_entrada = sys.argv[1]
     archivo_salida = sys.argv[2]
+    sim = sys.argv[3] if len(sys.argv) == 4 else "false"
 
     # Abre el archivo de entrada para leer y el de salida para escribir
     with open(archivo_entrada, 'r') as fin, open(archivo_salida, 'w') as fout:
@@ -74,7 +87,7 @@ def main():
             fout.write(linea_formateada)
     
     
-    agrupar_por_nombre(archivo_salida, archivo_salida)
+    agrupar_por_nombre(archivo_salida, archivo_salida, sim)
 
 if __name__ == "__main__":
     main()
