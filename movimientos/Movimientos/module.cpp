@@ -64,9 +64,14 @@ void Module::updateRobotState()
     }
     romkin.m2q(q,m);
     auto pos = romkin.FKwrist(q[0],q[1],q[2]);
-    ui->lcd_x->display(QString::number(pos(0)*1000, 'f', 0));
-    ui->lcd_y->display(QString::number(pos(1)*1000, 'f', 0));
-    ui->lcd_z->display(QString::number(pos(2)*1000, 'f', 0));
+    ui->lcd_muneca_x->display(QString::number(pos(0)*1000, 'f', 0));
+    ui->lcd_muneca_y->display(QString::number(pos(1)*1000, 'f', 0));
+    ui->lcd_muneca_z->display(QString::number(pos(2)*1000, 'f', 0));
+
+    auto posicion = romkin.FK(q[0],q[1], q[2], q[3], q[4], q[5]);
+    ui->lcd_TCP_x->display(QString::number(posicion(0,3)*1000, 'f', 0));
+    ui->lcd_TCP_y->display(QString::number(posicion(1,3)*1000, 'f', 0));
+    ui->lcd_TCP_z->display(QString::number(posicion(2,3)*1000, 'f', 0));
 }
 
 void Module::get_qs(double *q)
