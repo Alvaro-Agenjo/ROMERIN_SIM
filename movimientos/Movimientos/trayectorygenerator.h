@@ -6,7 +6,8 @@
 #include "modulecontroller.h"
 #include "MTHomogenea.h"
 
-#define standby 8
+#define standby 2
+#define operating 35
 constexpr float counterTG2MW = 100/40;
 
 constexpr bool simple[6] = {1,1,1,0,0,0};
@@ -19,8 +20,9 @@ struct Movimiento{
     double vel[6]{1,1,1,1,1,1};
     int suctionPercentaje{};
     int time_code{};
-    Movimiento(ModuleController* module, double angulos[], int suctforce, int time_code);
-    Movimiento(ModuleController* module, double angulos[], double vel [], int suctforce, int time_code);
+    bool completo;
+    Movimiento(ModuleController* module, double angulos[], int suctforce, int time_code, bool full);
+    Movimiento(ModuleController* module, double angulos[], double vel [], int suctforce, int time_code, bool full);
 };
 
 class trayectoryGenerator : public QObject
@@ -38,11 +40,12 @@ public:
     void setTorque(ModuleController* modulo, const bool torques []);
     void setMotorVel(ModuleController * modulo, float max_vel, int motor_id);
     void setMotorVel(ModuleController * modulo, float max_vels[]);
-    void setMotorAngles(ModuleController *module, double angle[]);
     void setMotorAngles(ModuleController *module, double angle, int motor_id);
+    void setMotorAngles(ModuleController *module, double angle[]);
+
     void setAdhesion(ModuleController *module, int percentaje);
 
-    void addMovement(ModuleController *module, double angulo[6], int suctForce, int batch);
+    void addMovement(ModuleController *module, double angulo[6], int suctForce, int batch, bool full);
     bool validateMovement(double angle[],ModuleController *module, double x, double y, double z, bool elbow = true);
     bool validateMovement(double angle[],ModuleController *module, double x, double y, double z, float RPY[3], bool elbow = true);
 

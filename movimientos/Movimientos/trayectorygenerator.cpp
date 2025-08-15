@@ -34,33 +34,29 @@ bool trayectoryGenerator::isMoving(){
 
 void trayectoryGenerator::setMatrizTransformacion(ModuleController *modulo)
 {
-     static int id = 0;
-     switch(id){
-     case 0:
-         modulo->mod->setMatrizTransformacion(centro2leg_DU);
-         break;
-     case 1:
-         modulo->mod->setMatrizTransformacion(centro2leg_IU);
-         break;
-     case 2:
-         modulo->mod->setMatrizTransformacion(centro2leg_ID);
-         break;
-     case 3:
-         modulo->mod->setMatrizTransformacion(centro2leg_DD);
-         break;
-     case 4:
-         id = -1;
-         //modulo->mod->setMatrizTransformacion();
-         break;
-     case 5:
-         //moulo->mod->setMatrizTransformacion();
-         break;
-     default:
-         id = 0;
-         break;
-     }
+    static int id = 0;
+    switch(id){
+        case 0:
+            modulo->mod->setMatrizTransformacion(centro2leg_DU);
+            break;
+        case 1:
+            modulo->mod->setMatrizTransformacion(centro2leg_IU);
+            break;
+        case 2:
+            modulo->mod->setMatrizTransformacion(centro2leg_ID);
+            break;
+        case 3:
+            modulo->mod->setMatrizTransformacion(centro2leg_DD);
+            break;
+        case 4:
+            id = -1;
+            break;
+        default:
+            id = 0;
+            break;
+    }
 
-     id++;
+    id++;
 }
 
 void trayectoryGenerator::refreshTCPs()
@@ -95,6 +91,13 @@ void trayectoryGenerator::setMotorVel(ModuleController *modulo, float max_vels[]
         modulo->sendMessage(m);
     }
 }
+void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle, int motor_id)
+{
+
+    RomerinMsg m = romerinMsg_ServoGoalAngle(motor_id, angle);
+    module->sendMessage(m);
+
+}
 void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle[])
 {
     qDebug()<<module->name;
@@ -104,13 +107,6 @@ void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle[
         qDebug()<<"Motor "<< i<< ": "<<angle[i];
     }
 }
-void trayectoryGenerator::setMotorAngles(ModuleController *module, double angle, int motor_id)
-{
-
-    RomerinMsg m = romerinMsg_ServoGoalAngle(motor_id, angle);
-    module->sendMessage(m);
-
-}
 void trayectoryGenerator::setAdhesion(ModuleController *module, int percentaje)
 {
     RomerinMsg m = romerinMsg_SuctionCupPWM(percentaje);
@@ -119,19 +115,27 @@ void trayectoryGenerator::setAdhesion(ModuleController *module, int percentaje)
 
 
 
-void trayectoryGenerator::addMovement(ModuleController *module, double angulo[], int suctForce, int batch)
+void trayectoryGenerator::addMovement(ModuleController *module, double angulo[], int suctForce, int batch, bool full)
 {
-    Movimiento new_mov = Movimiento(module, angulo, suctForce, batch);
+    Movimiento new_mov = Movimiento(module, angulo, suctForce, batch, full);
     orders_list.push_back(new_mov);
 }
 bool trayectoryGenerator::validateMovement(double angle[], ModuleController *module, double x, double y, double z, bool elbow)
 {
-    double m[3]={}, q[3]= {};
+    double m[6]={}, q[3]= {}, q_last[6];
+    module->mod->get_qs(q_last);
+
+
     if(!module->mod->romkin.IKwrist(q,x, y, z, elbow)){
         qDebug()<<"Out of range position";
         return false;
     }
-    module->mod->romkin.q2m(m,q, true);
+
+
+    for(int i = 0; i< 3; i++){
+        q_last[i] = q[i];
+    }
+    module->mod->romkin.q2m(m,q_last, false);
 
     //Check if joint physical limits are not surpassed
     if(module->mod->checkJointsLimits(m, true)) {
@@ -139,7 +143,7 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
         return false;
     }
 
-    for(int i = 0; i< 3; i++){
+    for(int i = 0; i< 6; i++){
         angle[i] = m[i];
     }
     return true;
@@ -177,14 +181,19 @@ bool trayectoryGenerator::validateMovement(double angle[], ModuleController *mod
 bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, bool elbow, bool fixed)
 {
     ModuleController *module = ModulesHandler::getWithName(leg);
-    double m[6]; //, q[6];
-    //setTorque(module, simple);
+    //deactivate wrist motors
+    module->mod->updateTorque(simple);
+
+    //check movement
+    double m[6];
     validateMovement(m, module, x, y, z, elbow);
+
     //Sends suction power command if necessary
     RomerinMsg msg;
-    if(fixed)   msg = romerinMsg_SuctionCupPWM(35);
+    if(fixed)   msg = romerinMsg_SuctionCupPWM(operating);
     else msg = romerinMsg_SuctionCupPWM(standby);
     module->sendMessage(msg);
+
 
     //Sends movement commands
     setMotorAngles(module, m);
@@ -194,22 +203,20 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, boo
 }
 bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow, bool fixed)
 {
-
     ModuleController *module = ModulesHandler::getWithName(leg);
+    //reactivate wrist motors
+    module->mod->updateTorque(full);
+
     double m[6]={};
     if(!validateMovement(m, module, x, y, z, RPY, elbow)) return false;
 
-
     //Sends suction power command if necessary
     RomerinMsg msg;
-    if(fixed) {
-        msg = romerinMsg_SuctionCupPWM(35);
-        setTorque(module, simple);
-    }
-    else {
-        msg = romerinMsg_SuctionCupPWM(standby);
-        setTorque(module, full );
-    }
+    if(fixed)   msg = romerinMsg_SuctionCupPWM(operating);
+    else msg = romerinMsg_SuctionCupPWM(standby);
+    module->sendMessage(msg);
+
+
     //Sends movement commands
     setMotorAngles(module, m);
     // qDebug()<<"Q1: "<<q[0]<<" Q2: "<<q[1]<<" Q3: "<<q[2];
@@ -222,7 +229,7 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
     if(!validateMovement(m, module, x, y, z, RPY, elbow)) return false;
 
     int power;
-    addMovement(module, m,power = fixed? 20 : standby, time + 100.0/40.0);
+    addMovement(module, m,power = fixed? operating : standby, time + 100.0/40.0, true);
 
     return true; //Return true movement command successfull
 }
@@ -273,7 +280,7 @@ bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int
 
     n = 0;
     for(auto module : ModulesHandler::module_list){
-        addMovement(module, points.front().angle, fixed? 25 : standby , batch );
+        addMovement(module, points.front().angle, fixed? operating : standby , batch, true);
         points.pop_front();
         TCPs[n] = newTCPs[n];
         n++;
@@ -353,31 +360,18 @@ bool trayectoryGenerator::nextOrder()
     if(orders_list.size() == 0) return false;
     //if(isMoving()) return false;
 
-    Movimiento movement = orders_list.front();
-    int num = movement.time_code;
+    int timecode = orders_list.front().time_code;
+    while(orders_list.front().time_code == timecode){
+        Movimiento movement = orders_list.front();
 
-    if(movement.suctionPercentaje != standby && movement.module->mod->isAttached()){
-        setTorque(movement.module, simple);
-    }
-    else {
-        setTorque(movement.module, full);
-    }
-    setAdhesion(movement.module, movement.suctionPercentaje);
-    setMotorAngles(movement.module, movement.angulos);
-
-    orders_list.pop_front();
-    while(orders_list.front().time_code == num){
-        movement = orders_list.front();
-
-        if(movement.suctionPercentaje != standby && movement.module->mod->isAttached()){
+        if(movement.completo || (movement.suctionPercentaje != standby && movement.module->mod->isAttached())){
             setTorque(movement.module, simple);
         }
-        else{
+        else {
             setTorque(movement.module, full);
         }
         setAdhesion(movement.module, movement.suctionPercentaje);
         setMotorAngles(movement.module, movement.angulos);
-
         orders_list.pop_front();
     }
 
@@ -420,7 +414,7 @@ bool trayectoryGenerator::nextOrder()
 }
 
 
-Movimiento::Movimiento(ModuleController *module, double angulos[], int suctforce, int batch)
+Movimiento::Movimiento(ModuleController *module, double angulos[], int suctforce, int batch, bool full)
 {
     this->module = module;
     suctionPercentaje = suctforce;
@@ -428,8 +422,9 @@ Movimiento::Movimiento(ModuleController *module, double angulos[], int suctforce
         this->angulos[i] = angulos[i];
     }
     time_code = batch;
+    completo = full;
 }
-Movimiento::Movimiento(ModuleController *module, double angulos[], double vel[], int suctforce, int batch)
+Movimiento::Movimiento(ModuleController *module, double angulos[], double vel[], int suctforce, int batch, bool full)
 {
     this->module = module;
     suctionPercentaje = suctforce;
@@ -438,4 +433,5 @@ Movimiento::Movimiento(ModuleController *module, double angulos[], double vel[],
         this->vel[i] = vel[i];
     }
     time_code = batch;
+    completo = full;
 }
