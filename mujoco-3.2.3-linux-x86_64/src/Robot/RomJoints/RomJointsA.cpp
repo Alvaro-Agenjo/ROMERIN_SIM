@@ -399,9 +399,11 @@ void RomJoints::loop(QString module_name)
   //        Codified torque into current (sym_only)       //
   //////////////////////////////////////////////////////////
 
-  if(i == 0) motors[i].intensity *= 4.0 / 6.0;  // 4A / 6Nm
-  else if( i < 3) motors[i].intensity *= 5.0 / 10.0; // 5A / 10 Nm
-  else motors[i].intensity *= 1.4 / 1.9; // 1.4A / 1.9Nm
+  if(i == 0) motors[i].intensity /= 1.5;  // 4A / 6Nm
+  else if( i < 3) motors[i].intensity /= 2.0; // 5A / 10 Nm
+  else if (i==3) motors[i].intensity /= 1.4 / (1.9 * romkin.factor_4); // 1.4A / 1.9Nm
+  else if (i==4) motors[i].intensity = (dynamixels[i].getTorqueForce() - dynamixels[i+1].getTorqueForce()) * 1.4 / 1.9 ; // 1.4A / 1.9Nm
+  else if (i==5) motors[i].intensity = -(dynamixels[i-1].getTorqueForce() + dynamixels[i].getTorqueForce()) * 1.4 / (1.9 * romkin.factor_6); // 1.4A / 1.9Nm  
   
   motors[i].intensity *= 1000.0; //conversion to mA
 }
