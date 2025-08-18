@@ -3,16 +3,15 @@
 
 #include <QTimer>
 #include <QElapsedTimer>
+
 #include "modulecontroller.h"
 #include "MTHomogenea.h"
 
 #define standby 2
 #define operating 35
 constexpr float counterTG2MW = 100/40;
-
 constexpr bool simple[6] = {1,1,1,0,0,0};
 constexpr bool full[6] = {1,1,1,1,1,1};
-
 
 struct Movimiento{
     ModuleController* module;
@@ -53,8 +52,10 @@ public:
     bool moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
     bool moveLeg(ModuleController *module, double x, double y, double z, float RPY[], bool elbow, bool fixed);
 
-    bool moveBotAbsolute(Vector3D new_center, float RPY[3], int batch);
-    bool moveBotRelative(Vector3D new_center, float RPY[3], int batch, bool fixed = false);
+    bool moveBotAbsolute(Vector3D new_center, float RPY[3], int tiempo, bool fixed = true);
+    bool moveBotRelative(Vector3D desplazamiento, float RPY[3], int tiempo, bool fixed);
+    bool moveBot(Vector3D new_center, float RPY[3], int batch, bool fixed = false);
+    bool chopper(Vector3D coord, float RPY[3],int tiempo, bool fixed);
 
 
     void reset();
