@@ -2,22 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-//--------------------------------------------//
 #include <QUdpSocket>
 #include <list>
 #include <QTimer>
 #include <QFile>
 
-#include "../include/RomerinMessage.h"
+#include "trayectorygenerator.h"
 #include "modulecontroller.h"
 #include "module.h"
-#include "trayectorygenerator.h"
+#include "../include/RomerinMessage.h"
 #include "components/utils.h"
-
-#include <QtCharts>
-#include <QChartView>
-
 
 
 constexpr int  MAIN_TIMER_MS=40; //ms before 50
@@ -38,13 +32,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    //--------------------------------------------//
     void updateTable();
     static void info(const QString &mens);
 
 private slots:
 
-    //--------------------------------------------//
     void loop();
     void read_ip_port();
 
@@ -58,35 +50,26 @@ private slots:
 
     void on_btn_enableMotors_clicked(bool checked);
 
+    void on_btn_stand_clicked();
+    void on_btn_reset_clicked();
+    void on_btn_relax_clicked();
+
     void on_btn_thor_test_simple_clicked();
     void on_btn_thor_test_complete_clicked();
-
-
-
-
-    void on_btn_stand_clicked();
-
-    void on_btn_reset_clicked();
+    void on_btn_fixRot_clicked();
 
     void on_btn_test1_clicked();
-
     void on_btn_test_2_clicked();
-
+    void on_btn_test_3_clicked();
 
     void on_btn_record_clicked();
 
-    void on_btn_relax_clicked();
-
-    void on_btn_fixRot_clicked();
-
-    void on_btn_test_3_clicked();
 
 private:
     Ui::MainWindow *ui;
 
-    //--------------------------------------------//
     QUdpSocket * ip_port;
-    QTimer timer, test_timer;
+    QTimer timer;
     MsgReader udp_reader;
     //RomerinModel robot;
 

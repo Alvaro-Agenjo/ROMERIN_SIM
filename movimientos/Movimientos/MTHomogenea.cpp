@@ -80,6 +80,7 @@ QDebug & operator<<(QDebug & os, const Vector3D& v) {
     return os;
 }
 
+
 /* Da las coordenadas de un punto v respecto al sistema final en el sistema origen */
 Vector3D Transformacion(const Vector3D& v, const Matriz_Transformacion &matriz) {
     Vector3D result;
@@ -87,6 +88,10 @@ Vector3D Transformacion(const Vector3D& v, const Matriz_Transformacion &matriz) 
     result.y = v.x * matriz.m[1][0] + v.y * matriz.m[1][1] + v.z * matriz.m[1][2] + matriz.m[1][3];
     result.z = v.x * matriz.m[2][0] + v.y * matriz.m[2][1] + v.z * matriz.m[2][2] + matriz.m[2][3];
     return result;
+}
+double Vector3D::module()
+{
+    return cbrt(this->x * this->x + this->y * this->y + this->z *this->z);
 }
 
 Vector3D& Vector3D::operator+=(const Vector3D& rhs)
@@ -117,24 +122,16 @@ Vector3D &Vector3D::operator /=(const int &rhs)
     this->z /= rhs;
     return *this;
 }
-double Vector3D::module()
-{
-    return cbrt(this->x * this->x + this->y * this->y + this->z *this->z);
-}
-
 Vector3D &Vector3D::operator=(const double pos[])
 {
     this->x= pos[0]; this->y= pos[1]; this->z = pos[2];
     return *this;
 }
-
-
 Vector3D operator+(Vector3D lhs, const Vector3D& rhs)
 {
     lhs += rhs;
     return lhs;
 }
-
 Vector3D operator-(Vector3D lhs, const Vector3D& rhs)
 {
     lhs -= rhs;
@@ -162,7 +159,6 @@ bool operator !=(const Vector3D &lhs, const Vector3D &rhs){
 void Calc3x3ROT(float a, float b, float c, double orientacion[][3])
 {
     double rad2deg = 180.0/M_PI;
-    // c+=90;
     // Convertir grados a radianes
     a /= rad2deg;
     b /= rad2deg;

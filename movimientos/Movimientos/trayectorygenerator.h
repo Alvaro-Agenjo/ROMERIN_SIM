@@ -18,7 +18,7 @@ struct Movimiento{
     double angulos[6]{180,180,90,180,180,180};
     double vel[6]{1,1,1,1,1,1};
     int suctionPercentaje{};
-    int time_code{};
+    unsigned long time_code{};
     bool completo;
     Movimiento(ModuleController* module, double angulos[], int suctforce, int time_code, bool full);
     Movimiento(ModuleController* module, double angulos[], double vel [], int suctforce, int time_code, bool full);
@@ -49,20 +49,20 @@ public:
     bool validateMovement(double angle[],ModuleController *module, double x, double y, double z, float RPY[3], bool elbow = true);
 
     bool moveLeg(QString leg, double x, double y, double z, bool elbow = true, bool fixed = false);
-    bool moveLeg(QString leg, double x, double y, double z, float RPY[3], bool elbow = true, bool fixed = false);
+    bool moveLeg(QString leg, double x, double y, double z, float RPY[], bool elbow = true, bool fixed = false);
     bool moveLeg(ModuleController *module, double x, double y, double z, float RPY[], bool elbow, bool fixed);
 
-    bool moveBotAbsolute(Vector3D new_center, float RPY[3], int tiempo, bool fixed = true);
-    bool moveBotRelative(Vector3D desplazamiento, float RPY[3], int tiempo, bool fixed);
-    bool moveBot(Vector3D new_center, float RPY[3], int batch, bool fixed = false);
-    bool chopper(Vector3D coord, float RPY[3],int tiempo, bool fixed);
+    bool moveBotAbsolute(Vector3D new_center, float RPY[], int tiempo, bool fixed = true);
+    bool moveBotRelative(Vector3D desplazamiento, float RPY[], int tiempo, bool fixed);
+    bool moveBot(Vector3D new_center, float RPY[], int batch, bool fixed = false);
+    bool chopper(Vector3D coord, float RPY[],int tiempo, bool fixed);
 
 
     void reset();
     void stand();
     void relax();
     void fixed_rotation(int n = 1);
-    bool nextOrder();
+    void nextOrder();
 
 
 private:

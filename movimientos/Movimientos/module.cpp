@@ -19,8 +19,8 @@ Module::Module(QWidget *parent) : QWidget(parent),ui(new Ui::Module), config(thi
     //     motors[i]->updateFixedInfo(limits);
     // }
     //------------------------------------Temporal hasta actualización de software---------------------------------//
-    connect(&timer, &QTimer::timeout, this, &Module::loop);
-    timer.start(40);
+    //connect(&timer, &QTimer::timeout, this, &Module::loop);
+    //timer.start(40);
 }
 Module::~Module()
 {
@@ -32,11 +32,15 @@ void Module::setModule(ModuleController *mod)
     module=mod;
     for(int i = 0; i<6; i++)motors[i]->setModuleController(module);
 }
-
-
-void Module::loop()
+void Module::setMatrizTransformacion()
 {
+    double m[3][3];
+    ConfigurationInfoV2 info = config.getConfigInvoV2();
 
+    qDebug()<<"Position: "<<info.position[0]<<", "<<info.position[1]<<", "<<info.position[2]<<".\n Orientation: "<<info.orientation[0]<<", "<<info.orientation[1]<<", "<<info.orientation[2];
+
+    Calc3x3ROT(info.orientation[0], info.orientation[1], info.orientation[2], m);
+    T = Matriz_Transformacion(m,info.position);
 }
 
 void Module::updateInfo(SuctionCupInfoData &data)
@@ -53,10 +57,9 @@ void Module::updateInfo(SuctionCupInfoData &data)
     ui->lcd_d2->display(QString::number(data.distance[1], 'f', 0));
     ui->lcd_d3->display(QString::number(data.distance[2], 'f', 0));
 }
-
 void Module::updateRobotState()
 {
-    uchar_t robot_cicle_time=module->robot_cicle_time;
+    //uchar_t robot_cicle_time=module->robot_cicle_time;
 
     double m[6],q[6]{};
     for(int i = 0; i<6; i++){
@@ -74,60 +77,27 @@ void Module::updateRobotState()
     ui->lcd_TCP_z->display(QString::number(posicion(2,3)*1000, 'f', 0));
 }
 
-void Module::get_qs(double *q)
-{
-    double m[6]{};
-    for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info().position;
-    romkin.m2q(q,m);
-}
-
-void Module::get_torques(double *t)
-{
-    double mi[6]{};
-    for(int i = 0; i<6; i++)mi[i]=motors[i]->get_motor_info().intensity;
-    //TODO: ver si la info de signo es correcta
-    romkin.mt2qt(t,mi);
-}
-
-void Module::get_pos(double pos[])
-{
-    double q[6];
-    get_qs(q);
-    auto posicion = romkin.FKwrist(q[0],q[1],q[2]);
-
-    for(int i = 0; i< 3; i++){
-        pos[i] = posicion(i);
-    }
-}
-
-void Module::get_pos_TCP(double pos[])
-{
-    double q[6];
-    get_qs(q);
-    auto posicion = romkin.FK(q[0],q[1], q[2], q[3], q[4], q[5]);
-
-    for(int i = 0; i< 3; i++){
-        pos[i] = posicion(i, 3);
-    }
-}
-
 void Module::get_motor_info(MotorInfoData *m)
 {
     for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info();
 }
 
-void Module::setMatrizTransformacion()
+void Module::updateTorque(int motor_id, bool torque)
 {
-//    double m[3][3];
-//    ConfigurationInfoV2 info = config.getConfigInvoV2();
-
-//    qDebug()<<"Position: "<<info.position[0]<<", "<<info.position[1]<<", "<<info.position[2]<<".\n Orientation: "<<info.orientation[0]<<", "<<info.orientation[1]<<", "<<info.orientation[2];
-
-//    Calc3x3ROT(info.orientation[0], info.orientation[1], info.orientation[2], m);
-//    T = Matriz_Transformacion(m,info.position);
+    motors[motor_id]->setTorque(torque);
 }
-
-
+void Module::updateTorque(bool torques[])
+{
+    for(int i= 0; i< 6; i++){
+        motors[i]->setTorque(torques[i]);
+    }
+}
+void Module::updateTorque(bool torques)
+{
+    for(int i= 0; i< 6; i++){
+        motors[i]->setTorque(torques);
+    }
+}
 /* Funcion para comprobar que los valores articulares están dentro de límites.
  * Devuelve true si se superan los límites para alguna articulación */
 bool Module::checkJointsLimits(double m[], bool simple)
@@ -142,6 +112,54 @@ bool Module::checkJointsLimits(double m[], bool simple)
     return false;
 }
 
+
+void Module::get_qs(double *q)
+{
+    double m[6]{};
+    for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info().position;
+    romkin.m2q(q,m);
+}
+void Module::get_torques(double *t)
+{
+    double mi[6]{};
+    for(int i = 0; i<6; i++)mi[i]=motors[i]->get_motor_info().intensity;
+    //TODO: ver si la info de signo es correcta
+    romkin.mt2qt(t,mi);
+}
+void Module::get_pos(double pos[])
+{
+    double q[6];
+    get_qs(q);
+    auto posicion = romkin.FKwrist(q[0],q[1],q[2]);
+
+    for(int i = 0; i< 3; i++){
+        pos[i] = posicion(i);
+    }
+}
+void Module::get_pos_TCP(double pos[])
+{
+    double q[6], m[3][3], p[3];
+    get_qs(q);
+    romkin.FKfast(q,m, p );
+
+    for(int i = 0; i< 3; i++){
+        pos[i] = p[i];
+    }
+}
+
+bool Module::newTCP_mov(Vector3D actualTCP, Vector3D *futureTCP, Matriz_Transformacion movimiento)
+{
+    actualTCP = Transformacion(actualTCP, T);
+    *futureTCP = Transformacion(actualTCP, (movimiento*T).Inversa());
+    return true;
+}
+bool Module::isAttached()
+{
+    uint8_t threshold = 18;
+    return (suction_cup.distance[0]<threshold && suction_cup.distance[1] < threshold && suction_cup.distance[2] < threshold);
+}
+
+
 bool Module::objetiveReached()
 {
     for(const Motor *motor : motors){
@@ -150,42 +168,14 @@ bool Module::objetiveReached()
     return true;
 }
 
-bool Module::newTCP_mov(Vector3D actualTCP, Vector3D *futureTCP, Matriz_Transformacion movimiento)
-{
-
-    actualTCP = Transformacion(actualTCP, T);
-    *futureTCP = Transformacion(actualTCP, (movimiento*T).Inversa());
-    return true;
-}
-
-void Module::updateTorque(int motor_id, bool torque)
-{
-    motors[motor_id]->setTorque(torque);
-}
-
-void Module::updateTorque(bool torques[])
-{
-    for(int i= 0; i< 6; i++){
-        motors[i]->setTorque(torques[i]);
-    }
-}
-
-void Module::updateTorque(bool torques)
-{
-    for(int i= 0; i< 6; i++){
-        motors[i]->setTorque(torques);
-    }
-}
-
-bool Module::isAttached()
-{
-    uint8_t threshold = 18;
-    return (suction_cup.distance[0]<threshold && suction_cup.distance[1] < threshold && suction_cup.distance[2] < threshold);
-}
 
 void Module::on_btn_refresh_clicked()
 {
     module->getConfig();
-
+}
+void Module::on_btn_config_clicked()
+{
+    module->getConfig();
+    config.show();
 }
 

@@ -228,7 +228,7 @@ bool trayectoryGenerator::moveLeg(QString leg, double x, double y, double z, flo
 
     return true; //Return true movement command successfull
 }
-bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, double z, float RPY[3], bool elbow, bool fixed)
+bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, double z, float RPY[], bool elbow, bool fixed)
 {
     double m[6]={};
     if(!validateMovement(m, module, x, y, z, RPY, elbow)) return false;
@@ -247,20 +247,6 @@ bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int 
         return false;
     center = new_center;
     return true;
-
-
-
-
-//     int n_orders = tiempo / 100.0; // 100ms per order
-//     unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
-//     if(diff.module() > 0.01){
-//         for(int i= 0; i< n_orders; i++){
-//             if(!moveBotRelative(diff/n_orders, RPY, request_time + (i + 1) * counterTG2MW, true));  //und40 * 40ms/und40 + (i+1)*100ms) return false;
-//         }
-//         center = new_center;
-//         return true;
-//     }
-//     return true;
 }
 
 bool trayectoryGenerator::moveBotRelative(Vector3D desplazamiento, float RPY[], int tiempo, bool fixed)
@@ -271,13 +257,16 @@ bool trayectoryGenerator::moveBotRelative(Vector3D desplazamiento, float RPY[], 
 bool trayectoryGenerator::chopper(Vector3D coord, float RPY[],int tiempo, bool fixed )
 {
     int n_orders = tiempo / 100.0; // 100ms per order
-    unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
+    unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code;
     if(coord.module() > 0.01){
         for(int i= 0; i< n_orders; i++){
-            if(!moveBot(coord/n_orders, RPY, request_time + (i + 1) * counterTG2MW, fixed));  //und40 * 40ms/und40 + (i+1)*100ms) return false;
+            //und40 * 40ms/und40 + (i+1)*100ms)
+            if(!moveBot(coord/n_orders, RPY, request_time + (i + 1) * counterTG2MW, fixed))
+                qDebug() << "Movimiento no valido";
         }
         return true;
     }
+    return false;
 }
 bool trayectoryGenerator::moveBot(Vector3D new_center, float RPY[3], int batch, bool fixed)
 {
@@ -316,43 +305,6 @@ bool trayectoryGenerator::moveBot(Vector3D new_center, float RPY[3], int batch, 
     return true;
 }
 
-// bool trayectoryGenerator::moveBotRelative(Vector3D new_center, float RPY[3], int batch, bool fixed)
-// {
-//     Matriz_Transformacion movimiento(new_center);   //movimiento a aplicar sobre el centro del cuerpo
-
-//     std::list<MotorsAngles> points; //variable para almacenar las posiciones de los motores de todos los módulos
-//     bool oka = true;    //indicador de movimientos alcanzables
-
-//     Vector3D newTCPs[4];
-//     int n = 0;
-//     for(auto modulo :ModulesHandler::module_list){
-//         //Se calcula las nuevas coordenadas del TCP
-//         Vector3D TCP;
-//         modulo->mod->newTCP_mov(TCPs[n], &TCP, movimiento);
-//         newTCPs[n] = TCP;
-//         n++;
-
-//         //Validacioón del movimiento
-//         double angle[6];
-//         oka &= validateMovement(angle, modulo,TCP.x, TCP.y, TCP.z,RPY ,true);
-
-//         //En caso de que algún módulo no pueda completar el movimiento, finalizar ejecucion.
-//         if(!oka)    return false;
-//         //Si la orden es posible, añadir el movimiento
-//         else    points.push_back(MotorsAngles(angle));
-//     }
-
-//     //una vez comprobadas todas las ordenes poner en cola para su realizacion
-//     n = 0;
-//     for(auto module : ModulesHandler::module_list){
-//         addMovement(module, points.front().angle, fixed? operating : standby , batch, true);
-//         points.pop_front();
-//         TCPs[n] = newTCPs[n];
-//         n++;
-//     }
-//     return true;
-// }
-
 void trayectoryGenerator::reset()
 {
     qDebug()<<"Reset";
@@ -374,17 +326,6 @@ void trayectoryGenerator::stand()
     refreshTCPs();
 
     moveBotRelative(up, rot, ms, false);
-
-    // unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
-    // int n_orders = ms /100.0;
-    // float def[3] = {0,180,90};
-    // Vector3D up{0,0,0.2};
-
-    // refreshTCPs();
-
-    // for(int i= 0; i< n_orders; i++){
-    //     moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW );  //und40 * 40ms/und40 + (i+1)*100ms
-    // }
 }
 void trayectoryGenerator::relax()
 {
@@ -396,18 +337,6 @@ void trayectoryGenerator::relax()
     refreshTCPs();
 
     moveBotRelative(up, rot, ms, false);
-
-    // unsigned long request_time = (orders_list.size() == 0) ? time : orders_list.back().time_code; // (ms/40.0);
-    // int n_orders = ms /100.0;
-    // float def[3] = {0,180,90};
-    // Vector3D up{0,0,-0.2};
-
-    // refreshTCPs();
-
-
-    // for(int i= 0; i< ms/100.0; i++){
-    //     moveBotRelative(up/n_orders, def, request_time + (i + 1) * counterTG2MW);  //und40 * 40ms/und40 + (i+1)*100ms
-    // }
 }
 
 void trayectoryGenerator::fixed_rotation(int n)
@@ -420,7 +349,7 @@ void trayectoryGenerator::fixed_rotation(int n)
     moveBotAbsolute(pos, RPY, 1000);
 
     for(int i = 0; i < n; i++ ){
-        for(int m = 0; m <= 360; m+= 10 ){ //0-360, 5
+        for(int m = 1; m <= 360; m+= 10 ){ //0-360, 5
             pos.x = r * cos(m / RomKin::rad2deg); pos.y = r * sin(m / RomKin::rad2deg);
             moveBotAbsolute(pos, RPY, 200); //100
         }
@@ -429,68 +358,34 @@ void trayectoryGenerator::fixed_rotation(int n)
     moveBotAbsolute(pos, RPY, 2000);
 }
 
-bool trayectoryGenerator::nextOrder()
+void trayectoryGenerator::nextOrder()
 {
     static unsigned long last_time=0;
-    if(time - last_time < 100.0/40.0)  return false;    //und40 * ms/und40 < ms <====> und40 < ms/ms
-
+    if(time - last_time < 100.0/40.0)  return;    //und40 * ms/und40 < ms <====> und40 < ms/ms
     last_time = time;
 
-    if(orders_list.size() == 0) return false;
-    //if(isMoving()) return false;
-
-    int timecode = orders_list.front().time_code;
-    while(orders_list.front().time_code == timecode){
+    //if(orders_list.empty()) return false;
+    while(!orders_list.empty() && orders_list.front().time_code <= last_time){
         Movimiento movement = orders_list.front();
 
-        if(movement.completo || (movement.suctionPercentaje != standby && movement.module->mod->isAttached())){
+        if(movement.suctionPercentaje != standby && movement.module->mod->isAttached()){
             setTorque(movement.module, simple);
+            setAdhesion(movement.module, movement.suctionPercentaje);
+        }
+        else if(!movement.completo){
+            setTorque(movement.module, simple);
+            setAdhesion(movement.module, standby);
         }
         else {
             setTorque(movement.module, full);
+            setAdhesion(movement.module, standby);
         }
-        setAdhesion(movement.module, movement.suctionPercentaje);
         setMotorAngles(movement.module, movement.angulos);
         orders_list.pop_front();
     }
-
-    //------------------------------------V1------------------------------------------//
-    // if(orders_list.size() == 0) return false;
-    // if(isMoving()) return false;
-
-    // Movimiento movement = orders_list.front();
-    // if(movement.type_name)
-    //     moveLeg(movement.name, movement.pos.x, movement.pos.y, movement.pos.z, movement.rot, movement.elbow, movement.fixed);
-    // else
-    //     moveLeg(movement.module, movement.pos.x, movement.pos.y, movement.pos.z, movement.rot, movement.elbow, movement.fixed);
-
-    // orders_list.pop_front();
-
-
-
-
-    //------------------------------------V0------------------------------------------//
-    // command_t input = *orders_list.begin();
-    // switch(input){
-    // case command_t::STAND:
-    //     stand();
-    //     break;
-
-    // case command_t::RELAX:
-    //     relax();
-    //     break;
-    // case command_t::RESET:
-    //     reset();
-    //     break;
-    // case command_t::FIXED_ROTATION:
-    //     break;
-    // case command_t::MOVE_TO_POINT:
-    //     //moveBotRelative(Vector3D{0,0,0}, def_orientation);
-    //     break;
-    // }
-    // order_list.pop_front();
-    return true;
 }
+
+
 
 
 Movimiento::Movimiento(ModuleController *module, double angulos[], int suctforce, int batch, bool full)

@@ -33,7 +33,7 @@ void Motor::updateInfo(MotorInfoData &minfo)
     ui->num_torque->display(QString::number(torque, 'f', 2));
 
     if(_module->simulated){
-        if(abs(torque) > 5)
+        if(abs(torque) > 3.7)
             ui->Overload->setChecked(true);
     }
     else
