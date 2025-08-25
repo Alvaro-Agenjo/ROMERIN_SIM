@@ -12,22 +12,17 @@ def agrupar_por_nombre(archivo_formateado, archivo_agrupado, sim):
     else:
         nombres = ["THOR", "FRIGG", "ODIN", "LOKI"]
     grupos = {nombre: [] for nombre in nombres}
-    nombre_actual = None
     comentarios = []
 
     with open(archivo_formateado, 'r') as fin:
         for linea in fin:
-            if linea.startswith(("*", "/*")):
+            if linea.startswith(("*", "/")):
                 comentarios.append(linea)
                 continue
             for nombre in nombres:
                 if linea.startswith(nombre + "\t"):
-                    nombre_actual = nombre
                     grupos[nombre].append(linea)
                     break
-            else:
-                if nombre_actual:
-                    grupos[nombre_actual].append(linea)
 
     with open(archivo_agrupado, 'w') as fout:
         fout.writelines(comentarios)
@@ -55,15 +50,15 @@ def formatear_linea(linea):
         linea = linea.replace(";", "\t")
         return f"{linea}"
         # Ejemplo: Si la línea empieza con una fecha en formato YYYY-MM-DD
-        # elif re.match(r'^\s*([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?;){2}[+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?;\s*$', linea):
-    elif re.match(r'^\s*([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?;){3}\s*$', linea):         # r'^ \s* ([+-]?\d + (?:\.\d+)? (?:[eE][+-]?\d+)? ;){3} \s* $'
+    elif re.match(r'^\s*([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?;){3}\s*$', linea):         
+        # r'^ \s* ([+-]?\d + (?:\.\d+)? (?:[eE][+-]?\d+)? ;){3} \s* $'
         linea = linea.strip(" \n")
         linea = linea.replace(";", "\t")
         return f"{linea}"
-    elif re.match(r'^\s*-?\d+\s*$', linea):
+    elif re.match(r'^\s*\d+\s*$', linea):
         numero = linea.strip(" \n")
         return f"{numero}\n"
-    elif linea.startswith(("*", "/*")):
+    elif linea.startswith(("*", "/")):
         return f"{linea}"
     # Si no cumple ninguna condición, aplica un formato por defecto
     else:
