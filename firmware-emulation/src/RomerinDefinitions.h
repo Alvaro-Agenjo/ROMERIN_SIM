@@ -11,6 +11,10 @@
 #define ROM_CONF_COMPACT 0x01
 #define ROM_CONF_DISABLE_BT 0x10
 
+//WIFI AND BT TIMER UPDATE mseconds. time interval between updates to master
+#define WIFI_MS_UPDATE 50
+#define BT_MS_UPDATE 50
+
 struct MinMax{uint16_t min,max;};
 struct RomDefs{
     static char MODULE_NAME[100]; //"THOR"

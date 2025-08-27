@@ -3,7 +3,7 @@
 #include "RomerinDefinitions.h"
 #include <Servo.h>
 #include <Wire.h>
-#include "RomFilter.h"
+#include "RomUtils.h"
 #include "RomVL6180X.h"
 
 #if PRESSURE_SENSOR_SELECTION == 0

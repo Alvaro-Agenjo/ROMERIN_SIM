@@ -226,6 +226,16 @@ RomerinMsg ModuleEmulator::executeMessage(const RomerinMsg &m)
         case ROM_COMPACT_MODE_OFF:
           state.compact_mode=false;
         break;
+        case ROM_SET_MOTOR_ZERO:{
+            uchar_t m_id;
+            uint16_t val;
+            if(check_and_get_ServoOffset(m,m_id,val)){
+                BT_DEBUG_PRINT("offset for m:%d set at %d",m_id,val);
+            }else {
+                BT_DEBUG("Offset Message error");
+            }
+        }
+        break;
       default:
 
         BT_DEBUG("UNKNOWN MESSAGE");

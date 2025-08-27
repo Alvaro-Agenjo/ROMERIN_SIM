@@ -31,8 +31,36 @@ void Motor::updateInfo(MotorInfoData &minfo)
 
     torque /= 1000.0; //conversion to Nm
     ui->num_torque->display(QString::number(torque, 'f', 2));
+
+    if(_module->simulated){
+        if(abs(torque) > 3.7)
+            ui->Overload->setChecked(true);
+    }
+    else
+        ui->Overload->setChecked(info_motor.status&0x01);
     //QDebug info(minfo.intensity);
     //ui->intensity->display(QString::number(minfo.intensity, 'f', 1));
     //ui->temperature->display(minfo.temperature);
     //ui->voltage->display(QString::number(minfo.voltage, 'f', 1));
+
+    ui->num_min->display(QString::number(limits_motor.min_angle,'f', 1));
+    ui->num_max->display(QString::number(limits_motor.max_angle,'f', 1));
 }
+
+void Motor::setTorque(bool check)
+{
+    if(torque == check) return;
+    torque = check;
+    RomerinMsg m = romerinMsg_Torque(motor_id, torque);
+    _module->sendMessage(m);
+
+    ui->chk_torque->setChecked(torque);
+}
+
+void Motor::on_chk_torque_clicked(bool checked)
+{
+    RomerinMsg m = romerinMsg_Torque(motor_id, checked);
+    _module->sendMessage(m);
+    torque = checked;
+}
+

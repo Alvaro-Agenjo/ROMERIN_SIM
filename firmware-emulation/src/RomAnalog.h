@@ -2,7 +2,7 @@
 #pragma once
 #include <Arduino.h>
 #include "RomerinDefinitions.h"
-#include "RomFilter.h"
+#include "RomUtils.h"
 #define N_FILTER 10
 
 /** @class RomAnalog

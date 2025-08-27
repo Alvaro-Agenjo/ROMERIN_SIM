@@ -114,7 +114,7 @@ bool _RomKin<REAL>::IKwrist(REAL* q, REAL x, REAL y, REAL z, bool elbow)
 
     REAL num = abs(x * x + y * y + z * z - Lc * Lc - Ld * Ld); //positive q3 (elbow up)
     const REAL den = 2 * Lc * Ld;
-    if (num > den) return false;//out of range
+    if (abs(num) > den) return false;//out of range
     q[2] = (elbow ? 1 : -1) * acos(num / den);
     q[1] = atan2(z, sqrt(x * x + y * y)) + (elbow ? 1 : -1) * atan2(Ld * sin(q[2]), Lc + Ld * cos(q[2]));
 

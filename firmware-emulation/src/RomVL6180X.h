@@ -40,7 +40,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include "RomFilter.h"
+#include "RomUtils.h"
 #define VL6180x_FAILURE_RESET  -1
 
 #define VL6180X_IDENTIFICATION_MODEL_ID              0x0000

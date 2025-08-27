@@ -1,4 +1,5 @@
 #include "RomJoints.h"
+#include "RomDebug.h"
 
 #define DXL_PROTOCOL_1 1.0F
 #define DXL_PROTOCOL_2 2.0F
@@ -322,6 +323,22 @@ void RomJoints::setGoalCurrent(int8_t id,float value)
 void RomJoints::setGoalAngle(int8_t id,float ang)
 {
  if(id<DXL_ID_CNT)dxl.setGoalPosition(ROM_MOTOR_IDS[id],ang+RomDefs::offset[id],UNIT_DEGREE);
+}
+void RomJoints::set_current_pos_as(int8_t m_id,uint16_t val)
+{
+  int32_t p_pos=dxl.readControlTableItem(PRESENT_POSITION,ROM_MOTOR_IDS[m_id]);
+  int32_t h_offset=dxl.readControlTableItem(HOMING_OFFSET,ROM_MOTOR_IDS[m_id]);
+  int32_t actual_position= p_pos-h_offset;
+  BT_DEBUG_PRINT("p_pos=%d h_off=%d act_pos=%d", p_pos, h_offset, actual_position);
+  //new offset
+  h_offset=(int32_t)((val*1.0+RomDefs::offset[m_id])/0.088)-actual_position;
+  //save it in the EEPROM
+  if(abs(h_offset)>1024){
+    BT_DEBUG_PRINT("Corrections should be <90 and it is %d", (int32_t)(h_offset*0.088));
+    h_offset=0;
+  }
+  BT_DEBUG_PRINT("new_offset=%d", h_offset);
+  dxl.writeControlTableItem(HOMING_OFFSET,ROM_MOTOR_IDS[m_id],h_offset);
 }
 void RomJoints::reboot(int8_t id)
 {

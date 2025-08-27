@@ -7,20 +7,20 @@
 
     <worldbody>
     <geom name="bodyfloor" type="plane" condim="3" contype="3" conaffinity="3" size="0 0 0.0000005" material="grid" pos="0 0 0"/>
-        <body name="Cuerpo" pos="0 0 2.5">
-            <include file="cuerpo.xml"/>
+        <body name="Cuerpo" pos="0 0 2.035">
+            <include file="../../example/robot/cuerpo.xml"/>
             <freejoint name="libre"/>
-            <body name="THOR" pos="0.08 0.0825 0" euler="0 0 45.8814">
-                <include file="THOR.xml"/>
+            <body name="THOR" pos="0.0775 0.0815 0" euler="0 0 46.4411">
+                <include file="../../example/robot/THOR.xml"/>
             </body>
-            <body name="FRIGG" pos="-0.08 0.0825 0" euler="0 0 134.1186">
-                <include file="FRIGG.xml"/>
+            <body name="FRIGG" pos="-0.0775 0.0815 0" euler="0 0 133.5589">
+                <include file="../../example/robot/FRIGG.xml"/>
             </body>
-            <body name="ODIN" pos="-0.08 -0.0825 0" euler="0 0 -134.1186">
-                <include file="ODIN.xml"/>
+            <body name="ODIN" pos="-0.0775 -0.0815 0" euler="0 0 -133.5589">
+                <include file="../../example/robot/ODIN.xml"/>
             </body>
-            <body name="LOKI" pos="0.08 -0.0825 0" euler="0 0 -45.8814">
-                <include file="LOKI.xml"/>
+            <body name="LOKI" pos="0.0775 -0.0815 0" euler="0 0 -46.4411">
+                <include file="../../example/robot/LOKI.xml"/>
             </body>
             
             

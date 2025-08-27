@@ -664,6 +664,19 @@
     </item>
    </layout>
   </widget>
+  <widget class="QPushButton" name="button_set0">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>270</y>
+     <width>61</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>set 0 (180)</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

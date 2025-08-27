@@ -10,16 +10,16 @@
         <body name="Cuerpo" pos="0 0 0.5">
             <include file="../Cuerpo/cuerpo.xml"/>
             <freejoint name="libre"/>
-            <body name="THOR" pos="0.08 0.0825 0" euler="0 0 45.8814">
+            <body name="THOR" pos="0.0775 0.0815 0" euler="0 0 46.4411">
                 <include file="../Pata/THOR.xml"/>
             </body>
-            <body name="FRIGG" pos="-0.08 0.0825 0" euler="0 0 134.1186">
+            <body name="FRIGG" pos="-0.0775 0.0815 0" euler="0 0 133.5589">
                 <include file="../Pata/FRIGG.xml"/>
             </body>
-            <body name="ODIN" pos="-0.08 -0.0825 0" euler="0 0 -134.1186">
+            <body name="ODIN" pos="-0.0775 -0.0815 0" euler="0 0 -133.5589">
                 <include file="../Pata/ODIN.xml"/>
             </body>
-            <body name="LOKI" pos="0.08 -0.0825 0" euler="0 0 -45.8814">
+            <body name="LOKI" pos="0.0775 -0.0815 0" euler="0 0 -46.4411">
                 <include file="../Pata/LOKI.xml"/>
             </body>
             

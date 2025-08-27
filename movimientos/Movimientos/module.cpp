@@ -12,15 +12,15 @@ Module::Module(QWidget *parent) : QWidget(parent),ui(new Ui::Module), config(thi
     }
 
     //------------------------------------Temporal hasta actualización de software---------------------------------//
-    config.setConfigInfo(*new ConfigurationInfoV2);
-    for(int i= 0; i< 6; i++){
-        ConfigurationInfoV2 info = config.getConfigInvoV2();
-        FixedMotorInfoData limits; limits.max_angle = info.max[i]; limits.min_angle = info.min[i];
-        motors[i]->updateFixedInfo(limits);
-    }
+    // config.setConfigInfo(*new ConfigurationInfoV2);
+    // for(int i= 0; i< 6; i++){
+    //     ConfigurationInfoV2 info = config.getConfigInvoV2();
+    //     FixedMotorInfoData limits; limits.max_angle = info.max[i]; limits.min_angle = info.min[i];
+    //     motors[i]->updateFixedInfo(limits);
+    // }
     //------------------------------------Temporal hasta actualización de software---------------------------------//
-    connect(&timer, &QTimer::timeout, this, &Module::loop);
-    timer.start(40);
+    //connect(&timer, &QTimer::timeout, this, &Module::loop);
+    //timer.start(40);
 }
 Module::~Module()
 {
@@ -32,15 +32,20 @@ void Module::setModule(ModuleController *mod)
     module=mod;
     for(int i = 0; i<6; i++)motors[i]->setModuleController(module);
 }
-
-
-void Module::loop()
+void Module::setMatrizTransformacion()
 {
+    double m[3][3];
+    ConfigurationInfoV2 info = config.getConfigInvoV2();
 
+    qDebug()<<"Position: "<<info.position[0]<<", "<<info.position[1]<<", "<<info.position[2]<<".\n Orientation: "<<info.orientation[0]<<", "<<info.orientation[1]<<", "<<info.orientation[2];
+
+    Calc3x3ROT(info.orientation[0], info.orientation[1], info.orientation[2], m);
+    T = Matriz_Transformacion(m,info.position);
 }
 
 void Module::updateInfo(SuctionCupInfoData &data)
 {
+    suction_cup = data;
     //Actualizacion valores adherencia
     ui->lcd_pressure->display(QString::number(data.pressure, 'f', 0));
     ui->lcd_force->display(QString::number(data.force, 'f', 1));
@@ -52,10 +57,9 @@ void Module::updateInfo(SuctionCupInfoData &data)
     ui->lcd_d2->display(QString::number(data.distance[1], 'f', 0));
     ui->lcd_d3->display(QString::number(data.distance[2], 'f', 0));
 }
-
 void Module::updateRobotState()
 {
-    uchar_t robot_cicle_time=module->robot_cicle_time;
+    //uchar_t robot_cicle_time=module->robot_cicle_time;
 
     double m[6],q[6]{};
     for(int i = 0; i<6; i++){
@@ -63,10 +67,51 @@ void Module::updateRobotState()
     }
     romkin.m2q(q,m);
     auto pos = romkin.FKwrist(q[0],q[1],q[2]);
-    ui->lcd_x->display(QString::number(pos(0)*1000, 'f', 0));
-    ui->lcd_y->display(QString::number(pos(1)*1000, 'f', 0));
-    ui->lcd_z->display(QString::number(pos(2)*1000, 'f', 0));
+    ui->lcd_muneca_x->display(QString::number(pos(0)*1000, 'f', 0));
+    ui->lcd_muneca_y->display(QString::number(pos(1)*1000, 'f', 0));
+    ui->lcd_muneca_z->display(QString::number(pos(2)*1000, 'f', 0));
+
+    auto posicion = romkin.FK(q[0],q[1], q[2], q[3], q[4], q[5]);
+    ui->lcd_TCP_x->display(QString::number(posicion(0,3)*1000, 'f', 0));
+    ui->lcd_TCP_y->display(QString::number(posicion(1,3)*1000, 'f', 0));
+    ui->lcd_TCP_z->display(QString::number(posicion(2,3)*1000, 'f', 0));
 }
+
+void Module::get_motor_info(MotorInfoData *m)
+{
+    for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info();
+}
+
+void Module::updateTorque(int motor_id, bool torque)
+{
+    motors[motor_id]->setTorque(torque);
+}
+void Module::updateTorque(bool torques[])
+{
+    for(int i= 0; i< 6; i++){
+        motors[i]->setTorque(torques[i]);
+    }
+}
+void Module::updateTorque(bool torques)
+{
+    for(int i= 0; i< 6; i++){
+        motors[i]->setTorque(torques);
+    }
+}
+/* Funcion para comprobar que los valores articulares están dentro de límites.
+ * Devuelve true si se superan los límites para alguna articulación */
+bool Module::checkJointsLimits(double m[], bool simple)
+{
+    for( int i = 0; i < (6 - 3 * simple); i++){
+        if(motors[i]->get_motor_limits().min_angle > m[i] || motors[i]->get_motor_limits().max_angle < m[i]){
+            qDebug()<<"Joint "<< i << "limit surpassed";
+            qDebug()<<"Value "<<m[i]<<" out of range";
+            return true;
+        }
+    }
+    return false;
+}
+
 
 void Module::get_qs(double *q)
 {
@@ -74,7 +119,6 @@ void Module::get_qs(double *q)
     for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info().position;
     romkin.m2q(q,m);
 }
-
 void Module::get_torques(double *t)
 {
     double mi[6]{};
@@ -82,7 +126,6 @@ void Module::get_torques(double *t)
     //TODO: ver si la info de signo es correcta
     romkin.mt2qt(t,mi);
 }
-
 void Module::get_pos(double pos[])
 {
     double q[6];
@@ -93,35 +136,29 @@ void Module::get_pos(double pos[])
         pos[i] = posicion(i);
     }
 }
-
 void Module::get_pos_TCP(double pos[])
 {
-    double q[6];
+    double q[6], m[3][3], p[3];
     get_qs(q);
-    auto posicion = romkin.FK(q[0],q[1], q[2], q[3], q[4], q[5]);
+    romkin.FKfast(q,m, p );
 
     for(int i = 0; i< 3; i++){
-        pos[i] = posicion(i, 3);
+        pos[i] = p[i];
     }
 }
 
-void Module::get_motor_info(MotorInfoData *m)
+bool Module::newTCP_mov(Vector3D actualTCP, Vector3D *futureTCP, Matriz_Transformacion movimiento)
 {
-    for(int i = 0; i<6; i++)m[i]=motors[i]->get_motor_info();
+    actualTCP = Transformacion(actualTCP, T);
+    *futureTCP = Transformacion(actualTCP, (movimiento*T).Inversa());
+    return true;
+}
+bool Module::isAttached()
+{
+    uint8_t threshold = 18;
+    return (suction_cup.distance[0]<threshold && suction_cup.distance[1] < threshold && suction_cup.distance[2] < threshold);
 }
 
-/* Funcion para comprobar que los valores articulares están dentro de límites.
- * Devuelve true si se superan los límites para alguna articulación */
-bool Module::checkJointsLimits(double m[], bool simple)
-{
-    for( int i = 0; i < (6 - 3 * simple); i++){
-        if(motors[i]->get_motor_limits().min_angle > m[i] || motors[i]->get_motor_limits().max_angle < m[i]){
-            qDebug()<<"Joint "<< i << "limit surpassed";
-            return true;
-        }
-    }
-    return false;
-}
 
 bool Module::objetiveReached()
 {
@@ -131,14 +168,14 @@ bool Module::objetiveReached()
     return true;
 }
 
-bool Module::newTCP_mov(Vector3D actualTCP, Vector3D *futureTCP, Matriz_Transformacion movimiento)
+
+void Module::on_btn_refresh_clicked()
 {
-
-    actualTCP = Transformacion(actualTCP, T);
-    *futureTCP = Transformacion(actualTCP, (movimiento*T).Inversa());
-    return true;
+    module->getConfig();
 }
-
-
-
+void Module::on_btn_config_clicked()
+{
+    module->getConfig();
+    config.show();
+}
 

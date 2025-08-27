@@ -159,7 +159,9 @@ RomerinMsg configuration_message_v2(RomDefs &romdefs){
         punt+=romerin_writeUChar(punt, romdefs.vel_profile[i]);
         punt+=romerin_writeUChar(punt, romdefs.acc_profile[i]);
     }
-
+    for(int i=0;i<3;i++)punt+=romerin_writeInt16(punt, romdefs.position[i]);
+    for(int i=0;i<3;i++)punt+=romerin_writeInt16(punt, romdefs.orientation[i]);
+    punt+=romerin_writeUChar(punt,romdefs.init_configuration);
 
     msg.size=(punt-msg.info)+1;
     return msg;
@@ -168,11 +170,15 @@ void romerin_getConfiguration_v2(const uchar_t *buffer, RomDefs &romdefs)
 {
     for(int i=0;i<6;i++){
         romdefs.lenghts[i]=romerin_getUInt16(buffer);buffer+=2;
-        romdefs.limits[i].min=romerin_getInt16(buffer);buffer+=2;
-        romdefs.limits[i].max=romerin_getInt16(buffer);buffer+=2;
+        romdefs.limits[i].min=romerin_getUInt16(buffer);buffer+=2;
+        romdefs.limits[i].max=romerin_getUInt16(buffer);buffer+=2;
         romdefs.offset[i]=*(buffer++);
         romdefs.vel_profile[i]=*(buffer++);
         romdefs.acc_profile[i]=*(buffer++);
     }
-
+    for(int i=0;i<3;i++){romdefs.position[i]=romerin_getInt16(buffer);buffer+=2;}
+    for(int i=0;i<3;i++){romdefs.orientation[i]=romerin_getInt16(buffer);buffer+=2;}
+    romdefs.init_configuration=*(buffer++);
+    
+    
 }

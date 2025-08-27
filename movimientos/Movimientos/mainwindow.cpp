@@ -3,6 +3,8 @@
 #include "ui_mainwindow.h"
 
 #include "moduleshandler.h"
+#include "module.h"
+
 #include <QDebug>
 #include <QNetworkInterface>
 #include <QNetworkDatagram>
@@ -10,47 +12,16 @@
 #include <QTextStream>
 
 
-#include "module.h"
-
-
-
 QStatusBar * MainWindow::sbar;
 MainWindow * MainWindow::_this;
-static bool activo = false;
+
+static bool grabando = false;
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::MainWindow), ip_port(0)
 {
     ui->setupUi(this);
     sbar=ui->statusbar;
     _this=this;
-
-
-
-
-    // auto *series = new QLineSeries();
-    // series->append(0,3);
-    // series->append(3,6);
-    // series->append(4,9);
-    // series->append(6,5);
-    // series->append(6,3);
-    // series->append(43,1);
-    // series->append(1,7);
-
-    // auto *chart = new QChart();
-    // chart->legend()->hide();
-    // chart->addSeries(series);
-    // chart->createDefaultAxes();
-    // //chart->setVisible(true);
-
-    // //ui->graphicsView = new QChartView(chart, ui->graphicsView);
-    // // ui->graphicsView->setRenderHint(QPainter::Antialiasing);
-    // //ui->graphicsView->setVisible(true);
-
-    //  QChartView *chartview = new QChartView(chart);
-    //  chartview->setRenderHint(QPainter::Antialiasing);
-    //  chartview->setVisible(true);
-
-
 
     //Actualizacion de la tabla donde se informa de los módulos conectados
     QTableWidget *tb=ui->table_modules;
@@ -67,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::Main
     //Temporizador de la funcion loop
     info("Initialized");
     connect(&timer, &QTimer::timeout, this, &MainWindow::loop);
-    connect(&test_timer, &QTimer::timeout, this, &MainWindow::on_btn_fixRot_clicked);
+
     //Obtencion de las IPs disponibles para la conexion
     foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
         QNetworkInterface::InterfaceFlags flags = netInterface.flags();
@@ -87,9 +58,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
     ModulesHandler::clear();
-    if(activo) file.close();
+    if(grabando) file.close();
 }
-
 
 
 /* Funcion para actualizar la tabla de los modulos conectados*/
@@ -105,7 +75,6 @@ void MainWindow::updateTable(){
         tb->setItem(i,3,new QTableWidgetItem(mod->simulated ? QString("SIM[%1]").arg( QString::number(mod->virtualid) ) : QString("REAL")));
         i++;
     }
-
 }
 
 /* Funcion para mostrar mensajes en la esquina inferior */
@@ -115,12 +84,16 @@ void MainWindow::info(const QString &mens){
 }
 
 
+/* Loop principal de ejecución */
 void MainWindow::loop(){
     static unsigned long counter = 0;
     counter ++;
     ui->timerInfo->setText(QString::number(counter));
 
+    //Conexion y lectura de mensajes
     loop_wifi();
+
+    //Ejecución de rutina principal módulos
     ModulesHandler::loop();
 
     //update the tab view:
@@ -130,9 +103,13 @@ void MainWindow::loop(){
         else ui->tabWidget->setTabText(ind, m->name+"[OFF]");
 
     }
+
+    //Update time reference and run the execution of the next command
     commander.setTime(counter);
     commander.nextOrder();
 }
+
+/*Funcion encargada de realizar la conexion inicial. Tambien lanza la lectura de mensajes*/
 void MainWindow::loop_wifi(){
     //si está activa, entonces manda el ping broadcast y gestiona los mensajes pasándoselos a cada modulo
     static int count=0;
@@ -154,6 +131,7 @@ void MainWindow::loop_wifi(){
     if(ip_port) read_ip_port();
 }
 
+/*Funcion encargada de recibir e interpretar mensajes*/
 void MainWindow::read_ip_port(){
     while (ip_port->hasPendingDatagrams()) {
         QNetworkDatagram datagram = ip_port->receiveDatagram();
@@ -201,7 +179,11 @@ void MainWindow::read_ip_port(){
                     }
                     module->setFile(&file);
                     updateTable();
+
+                    //--------------Temporal------------------//
+                    // una vez se almacene la posicion del modulo respecto al centro se creará la matriz al recibir dichos datos.
                     commander.setMatrizTransformacion(module);
+                    //--------------Temporal------------------//
                 }
             }
         }
@@ -209,6 +191,7 @@ void MainWindow::read_ip_port(){
 }
 
 
+/*Funcion asociada a los campos para establecer la velocidad máxima de los motores*/
 void MainWindow::on_txt_motor1_maxvel_editingFinished()
 {
     float velMax = ui->txt_motor1_maxvel->text().toFloat();
@@ -275,14 +258,16 @@ void MainWindow::on_txt_masterVel_editingFinished()
     }
 }
 
+
+/*Funcion asociada al boton para activar los motores*/
 void MainWindow::on_btn_enableMotors_clicked(bool checked)
 {
     for(auto mod : ModulesHandler::module_list){
-        mod->activateMotors(checked);
+        mod->mod->updateTorque(checked);
     }
-    //commander.setlegs(ModulesHandler::module_list.front()->simulated);
 }
 
+/*Funciones para iniciar las acciones pregrabadas. Cada una está asociada a un boton*/
 void MainWindow::on_btn_reset_clicked()
 {
     commander.reset();
@@ -295,13 +280,6 @@ void MainWindow::on_btn_relax_clicked()
 {
     commander.relax();
 }
-void MainWindow::on_btn_fixRot_clicked()
-{
-    commander.fixed_rotation(2);
-    test_timer.stop();
-}
-
-
 
 void MainWindow::on_btn_thor_test_simple_clicked()
 {
@@ -329,6 +307,12 @@ void MainWindow::on_btn_thor_test_complete_clicked()
 
     commander.moveLeg(ModulesHandler::module_list.front(), x, y, z, giro, elbow, fix);
 }
+void MainWindow::on_btn_fixRot_clicked()
+{
+    commander.fixed_rotation();
+}
+
+/* Funciones de test */
 void MainWindow::on_btn_test1_clicked()
 {
 //    float RPY[] = {0,180,0};
@@ -340,45 +324,66 @@ void MainWindow::on_btn_test1_clicked()
 //    double m[6] = {210,255,195,180,180,180};
 //    for(auto modulo : ModulesHandler::module_list){
 //    commander.setMotorAngles(modulo, m);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , 180, 3);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_alfa->text().toFloat(), 4);
-    commander.setMotorAngles(ModulesHandler::module_list.front() , ui->txt_THOR_beta->text().toFloat() , 5);
+    bool all[6]= {1,1,1,1,1,1};
+    float a = ui->txt_THOR_alfa->text().toFloat(),b = ui->txt_THOR_beta->text().toFloat() ,c = ui->txt_THOR_gamma->text().toFloat();
+    commander.setTorque(ModulesHandler::module_list.front(), all);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , a, 3);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , b, 4);
+    commander.setMotorAngles(ModulesHandler::module_list.front() , c, 5);
+    qDebug()<<"Done, m4 = "<< a << " m5 = " << b << " m6 = "<< c;
 }
 void MainWindow::on_btn_test_2_clicked()
 {
-   float RPY[] = {0,180,0};
-   commander.moveLeg(ModulesHandler::getWithName("THOR"), 0.402, 0.035, 0.037 ,RPY, true, false);
-   commander.moveLeg(ModulesHandler::getWithName("FRIGG"), 0.402, 0.035, 0.037 ,RPY, true, false);
-   commander.moveLeg(ModulesHandler::getWithName("ODIN"), 0.402, 0.035, 0.037 ,RPY, true, false);
-   commander.moveLeg(ModulesHandler::getWithName("LOKI"), 0.402, 0.035, 0.037 ,RPY, true, false);
-}
+   // float RPY[] = {0,180,0};
+   // commander.moveLeg(ModulesHandler::getWithName("THOR"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   // commander.moveLeg(ModulesHandler::getWithName("FRIGG"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   // commander.moveLeg(ModulesHandler::getWithName("ODIN"), 0.402, 0.035, 0.037 ,RPY, true, false);
+   // commander.moveLeg(ModulesHandler::getWithName("LOKI"), 0.402, 0.035, 0.037 ,RPY, true, false);
 
+}
 void MainWindow::on_btn_test_3_clicked()
 {
-    commander.stand();
-    test_timer.start(2800);
+        double m[6] = {210,255,195,180,180,180};
+        for(auto modulo : ModulesHandler::module_list){
+            commander.setMotorAngles(modulo, m);
+        }
+//    commander.stand();
+//    test_timer.start(2800);
 }
 
+/*Funcion asociada al boton de grabado de datos*/
 void MainWindow::on_btn_record_clicked()
 {
-    if(activo){
-        activo = false;
+    if(grabando){
+        grabando = false;
         file.close();
         ui->btn_record->setText("Record");
         qDebug()<<"Fichero cerrado";
     }
     else{
-        activo = true;
+        grabando = true;
         QDateTime fecha = QDateTime::currentDateTime();
         QString str_fecha = fecha.toString("log_yyyyMMdd_hhmmss");
-        str_fecha = "../../../../Datalogs/" +str_fecha + ".txt";
-        qDebug() << str_fecha;
+        QString Directory = "../../../../Datalogs/raw/" +str_fecha + ".txt";
+        qDebug() << Directory;
 
-        file.setFileName(str_fecha);        
+        file.setFileName(Directory);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             qDebug() << "Error al abrir el archivo: " << file.errorString();
-            return;
+            qDebug() << "Segundo método de acceso";
+
+
+            //Second acces route
+            QString Directory = "../../Datalogs/raw/" + str_fecha + ".txt";
+            qDebug() << Directory;
+
+            file.setFileName(Directory);
+            if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                qDebug() << "Error al abrir el archivo: " << file.errorString()<<"Segundo acceso";
+                return;
+            }
         }
+
 
         ulong tiempo = millis();
         for(auto module : ModulesHandler::module_list){
@@ -386,12 +391,5 @@ void MainWindow::on_btn_record_clicked()
             //module->setFile(&file);
         }
         ui->btn_record->setText("Stop Recording");
-
     }
 }
-
-float RPY[] = {0,0,0};
-int counter = 0;
-
-
-

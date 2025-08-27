@@ -1,6 +1,13 @@
 import os
+import sys
 
-with open('link.xml', 'r') as PataGeneral:  
+if len(sys.argv) != 2:
+    print("Uso: python GenPatas.py <ruta al archivo base>")
+    sys.exit(1)
+
+ruta = sys.argv[1]
+
+with open(ruta + "link.xml", 'r') as PataGeneral:  
     lectura = PataGeneral.read() # Lee todo el contenido del archivo
     def reemplazo(nombre):
             
@@ -24,15 +31,15 @@ with open('link.xml', 'r') as PataGeneral:
         
         return Original
     
-    with open('ODIN.xml', 'w') as Odin:
+    with open(ruta + 'ODIN.xml', 'w') as Odin:
         Odin.write(reemplazo("ODIN"))
         
-    with open('THOR.xml', 'w') as Thor:
+    with open(ruta + 'THOR.xml', 'w') as Thor:
         Thor.write(reemplazo("THOR"))
     
-    with open('LOKI.xml', 'w') as Loki:
+    with open(ruta + 'LOKI.xml', 'w') as Loki:
         Loki.write(reemplazo("LOKI"))
     
-    with open('FRIGG.xml', 'w') as Frig:
+    with open(ruta + 'FRIGG.xml', 'w') as Frig:
         Frig.write(reemplazo("FRIGG"))
     

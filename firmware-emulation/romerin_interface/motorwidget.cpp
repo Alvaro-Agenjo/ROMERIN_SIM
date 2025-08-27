@@ -1,6 +1,7 @@
 #include "motorwidget.h"
 #include "ui_motorwidget.h"
 #include "modulecontroller.h"
+#include <QMessageBox>
 
 MotorWidget::MotorWidget(QWidget *parent, int m_id) :
     QWidget(parent),
@@ -38,7 +39,11 @@ void MotorWidget::updateInfo(MotorInfoData &minfo)
     ui->voltage->display(QString::number(minfo.voltage, 'f', 1));
      if(!ui->Torque->isChecked())ui->slider_angle->setValue((int)minfo.position);
      else if(!ui->slider_angle->isSliderDown())ui->slider_angle->setValue((int)minfo.position);
-   updateMotorStatus();
+
+     //reset button
+     ui->button_set0->setEnabled(!ui->Torque->isChecked());
+
+     updateMotorStatus();
 }
 void MotorWidget::updateFixedInfo(FixedMotorInfoData &minfo)
 {
@@ -130,3 +135,24 @@ void MotorWidget::Torque_clicked()
 {
     _module->sendMessage(romerinMsg_Torque(motor_id,info_motor.status&0x80?false:true));
 }
+
+void MotorWidget::on_button_set0_clicked()
+{
+    //set the current position as motor 180 (intermediate)
+    //as it is critical ... a confirmation is requested
+    QString text =
+        "  This operation will cause the 180-degree value of the motor to correspond \n\n"
+        "to the currently defined position. This is persistent information that will \n\n"
+        "be stored in the motor's EEPROM. Are you sure you want to continue?";
+
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Confirmation required", text,
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        //Se manda el reset con 180
+        _module->sendMessage(romerinMsg_ServoOffset(motor_id,180));
+    }
+
+}
+

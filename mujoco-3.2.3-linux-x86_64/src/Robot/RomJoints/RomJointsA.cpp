@@ -202,12 +202,12 @@ float MotorSimulation::m2q(float goalAng){
     }
     case 5:{
       //printf("ang5: %f\n", ((goal_ang5 - goalAng)/2) * romkin.rad2deg);
-        q4 = ((goal_ang5 - goalAng)/2);
+        q4 = ((goalAng - goal_ang5)/2);
         return q4;
     }
     case 6:{
       //printf("ang6: %f\n", (((goalAng + goal_ang4)/2 - M_PI) * romkin.factor_6) * romkin.rad2deg);
-        q5 = ((goalAng + goal_ang4)/2 - M_PI) * romkin.factor_6;
+        q5 = (M_PI - (goal_ang4 + goalAng)/2 ) * romkin.factor_6;
         return q5;
     }
     default:{
@@ -228,7 +228,7 @@ float RomJoints::q2m(int mot_id){
     }
     break;
     case 2:{
-        return (dynamixels[2].angle * romkin.rad2deg + (180/2));
+        return (dynamixels[2].angle * romkin.rad2deg + (90));
     }
     break;
     case 3:{
@@ -237,12 +237,12 @@ float RomJoints::q2m(int mot_id){
     }
     break;
     case 4:{
-        m = ((dynamixels[5].angle/romkin.factor_6) - dynamixels[4].angle) * romkin.rad2deg +180;
+        m = (dynamixels[4].angle - (dynamixels[5].angle/romkin.factor_6)) * romkin.rad2deg + 180;
         return m;
     }
     break;
     case 5:{
-        m = (dynamixels[4].angle + (dynamixels[5].angle/romkin.factor_6))* romkin.rad2deg +180;
+        m = (dynamixels[4].angle + (dynamixels[5].angle/romkin.factor_6)) * -romkin.rad2deg + 180;
         return m;
     }
     break;
@@ -252,41 +252,42 @@ float RomJoints::q2m(int mot_id){
   }
 }
 
-float MotorSimulation::q2m(float angle_get){
-  float m;
-  switch(id){
-    case 1:{
-        return (angle_get * romkin.rad2deg + 180);
-    }
-    break;
-    case 2:{
-        return (angle_get * romkin.rad2deg + 180);
-    }
-    break;
-    case 3:{
-        return (angle_get * romkin.rad2deg + (90));
-    }
-    break;
-    case 4:{
-        m = (angle_get  / Ang3) * romkin.rad2deg + 180;
-        return m;
-    }
-    break;
-    case 5:{
-        m = ((Ang4/romkin.factor_6) - angle_get) * romkin.rad2deg +180;
-        return m;
-    }
-    break;
-    case 6:{
-        m = (Ang4 + (angle_get/romkin.factor_6))* romkin.rad2deg +180;
-        return m;
-    }
-    break;
-    default:{
-      return 0;
-    }
-  }
-}
+/* No es llamada en ningun punto del código*/
+// float MotorSimulation::q2m(float angle_get){
+//   float m;
+//   switch(id){
+//     case 1:{
+//         return (angle_get * romkin.rad2deg + 180);
+//     }
+//     break;
+//     case 2:{
+//         return (angle_get * romkin.rad2deg + 180);
+//     }
+//     break;
+//     case 3:{
+//         return (angle_get * romkin.rad2deg + (90));
+//     }
+//     break;
+//     case 4:{
+//         m = (angle_get  / Ang3) * romkin.rad2deg + 180;
+//         return m;
+//     }
+//     break;
+//     case 5:{
+//         m = ((Ang4/romkin.factor_6) - angle_get) * romkin.rad2deg +180;
+//         return m;
+//     }
+//     break;
+//     case 6:{
+//         m = (Ang4 + (angle_get/romkin.factor_6))* romkin.rad2deg +180;
+//         return m;
+//     }
+//     break;
+//     default:{
+//       return 0;
+//     }
+//   }
+// }
 
 void RomJoints::setVelocity(int8_t id, float vel){ //grad/sec
 dynamixels[id].goal_velocity=vel;
@@ -398,9 +399,11 @@ void RomJoints::loop(QString module_name)
   //        Codified torque into current (sym_only)       //
   //////////////////////////////////////////////////////////
 
-  if(i == 0) motors[i].intensity *= 4.0 / 6.0;  // 4A / 6Nm
-  else if( i < 3) motors[i].intensity *= 5.0 / 10.0; // 5A / 10 Nm
-  else motors[i].intensity *= 1.4 / 1.9; // 1.4A / 1.9Nm
+  if(i == 0) motors[i].intensity /= 1.5;  // 4A / 6Nm
+  else if( i < 3) motors[i].intensity /= 2.0; // 5A / 10 Nm
+  else if (i==3) motors[i].intensity /= 1.4 / (1.9 * romkin.factor_4); // 1.4A / 1.9Nm
+  else if (i==4) motors[i].intensity = (dynamixels[i].getTorqueForce() - dynamixels[i+1].getTorqueForce()) * 1.4 / 1.9 ; // 1.4A / 1.9Nm
+  else if (i==5) motors[i].intensity = -(dynamixels[i-1].getTorqueForce() + dynamixels[i].getTorqueForce()) * 1.4 / (1.9 * romkin.factor_6); // 1.4A / 1.9Nm  
   
   motors[i].intensity *= 1000.0; //conversion to mA
 }

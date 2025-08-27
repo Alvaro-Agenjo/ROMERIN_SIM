@@ -10,7 +10,6 @@
 #include <list>
 #include "components/utils.h"
 
-
 constexpr int  MAIN_TIMER_MS=40; //ms before 50
 constexpr int WATCHDOG=4000/MAIN_TIMER_MS;  // 4 secs
 
