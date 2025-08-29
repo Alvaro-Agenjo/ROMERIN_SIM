@@ -17,6 +17,11 @@
 constexpr int  MAIN_TIMER_MS=40; //ms before 50
 constexpr int WATCHDOG=4000/MAIN_TIMER_MS;  // 4 secs
 
+#if QT_VERSION < 0x060000
+#include <QtGamepad/QGamepad>
+#else
+#include "components/QtGamepadFake.h"
+#endif
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,10 +39,12 @@ public:
 
     void updateTable();
     static void info(const QString &mens);
+    static QGamepad *gamepad;
 
 private slots:
 
     void loop();
+    void loop_game_pad();
     void read_ip_port();
 
     void on_txt_motor1_maxvel_editingFinished();
@@ -64,6 +71,8 @@ private slots:
 
     void on_btn_record_clicked();
 
+
+    void on_slider_z_level_sliderReleased();
 
 private:
     Ui::MainWindow *ui;

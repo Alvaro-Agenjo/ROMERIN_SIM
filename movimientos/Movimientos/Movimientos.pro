@@ -2,7 +2,6 @@
 QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-#//--------------------------------------------//
 lessThan(QT_MAJOR_VERSION, 6): QT += gamepad
 
 
@@ -33,6 +32,7 @@ SOURCES += \
     motor.cpp \
     trayectorygenerator.cpp
 
+
 HEADERS += \
     ../include/RomerinMessage.h \
     ../shared/romkin.h \
@@ -47,6 +47,7 @@ HEADERS += \
     mainwindow.h \
     motor.h \
     trayectorygenerator.h
+
 
 FORMS += \
     configdlg.ui \
@@ -63,5 +64,5 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    components/LICENSE
+#DISTFILES += \
+#   components/LICENSE

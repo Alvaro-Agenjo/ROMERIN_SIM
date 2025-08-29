@@ -14,14 +14,18 @@
 
 QStatusBar * MainWindow::sbar;
 MainWindow * MainWindow::_this;
+QGamepad *  MainWindow::gamepad;
 
 static bool grabando = false;
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::MainWindow), ip_port(0)
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent),
+    ui(new Ui::MainWindow), ip_port(0)
 {
     ui->setupUi(this);
     sbar=ui->statusbar;
     _this=this;
+    gamepad=nullptr;
 
     //Actualizacion de la tabla donde se informa de los módulos conectados
     QTableWidget *tb=ui->table_modules;
@@ -51,6 +55,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),    ui(new Ui::Main
     }
     ui->comboBoxIPs->addItem("127.0.0.1");
 
+    ui->slider_z_level->setMinimum(0);
+    ui->slider_z_level->setMaximum(400);
     timer.start(MAIN_TIMER_MS);//antes 50ms
 }
 
@@ -92,6 +98,7 @@ void MainWindow::loop(){
 
     //Conexion y lectura de mensajes
     loop_wifi();
+    loop_game_pad();
 
     //Ejecución de rutina principal módulos
     ModulesHandler::loop();
@@ -107,6 +114,19 @@ void MainWindow::loop(){
     //Update time reference and run the execution of the next command
     commander.setTime(counter);
     commander.nextOrder();
+
+
+//gamepad connect
+#if QT_VERSION < 0x060000
+    if(!gamepad){
+        auto gamepads = QGamepadManager::instance()->connectedGamepads();
+        if (!gamepads.isEmpty()){
+            qDebug() << "gamepad present";
+            gamepad=new QGamepad(gamepads[0], this);
+        }
+    }
+
+#endif
 }
 
 /*Funcion encargada de realizar la conexion inicial. Tambien lanza la lectura de mensajes*/
@@ -393,3 +413,34 @@ void MainWindow::on_btn_record_clicked()
         ui->btn_record->setText("Stop Recording");
     }
 }
+
+void  MainWindow::loop_game_pad()
+{
+    if((MainWindow::gamepad)&&(MainWindow::gamepad->isConnected())){
+        ui->virtualJoyPad->setX(MainWindow::gamepad->axisLeftX());
+        ui->virtualJoyPad->setY(-MainWindow::gamepad->axisLeftY());
+        ui->virtualJoyPad->setX(MainWindow::gamepad->axisRightX());
+        ui->virtualJoyPad->setY(-MainWindow::gamepad->axisRightY());
+    }
+    //AQUI SE PONEN LAS ACCIONES O LLAMADAS A lo que se desee hacer con el joy pad.
+
+}
+
+
+
+
+void MainWindow::on_slider_z_level_sliderReleased()
+{
+    if(commander.isMoving()) return;
+
+
+    float RPY[3] = {0,180,90};
+    Vector3D new_pos = commander.getCenter();
+    new_pos.z = (double)ui->slider_z_level->value() / 1000;
+
+    commander.moveBotAbsolute(new_pos, RPY, 2000, false);
+
+    ui->lcd_z_pos->display(QString::number(ui->slider_z_level->value(),'f', 1));
+
+}
+
