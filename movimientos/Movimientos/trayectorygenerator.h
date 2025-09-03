@@ -30,6 +30,7 @@ class trayectoryGenerator : public QObject
 public:
     trayectoryGenerator();
 
+    Vector3D getCenter(){return center; }
     bool isMoving();
     void setMatrizTransformacion(ModuleController * modulo);
     void refreshTCPs();
