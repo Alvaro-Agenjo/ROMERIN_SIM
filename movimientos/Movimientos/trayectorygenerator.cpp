@@ -242,7 +242,6 @@ bool trayectoryGenerator::moveLeg(ModuleController *module, double x, double y, 
 /* New_center in meters */
 bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int tiempo, bool fixed)
 {
-    refreshTCPs();
     Vector3D diff = new_center - center;
     if(!chopper(diff, RPY, tiempo, fixed))
         return false;
@@ -252,7 +251,6 @@ bool trayectoryGenerator::moveBotAbsolute(Vector3D new_center, float RPY[], int 
 
 bool trayectoryGenerator::moveBotRelative(Vector3D desplazamiento, float RPY[], int tiempo, bool fixed)
 {
-    refreshTCPs();
     return chopper(desplazamiento, RPY, tiempo, fixed);
 }
 

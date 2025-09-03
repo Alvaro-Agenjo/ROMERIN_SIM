@@ -74,6 +74,8 @@ private slots:
 
     void on_slider_z_level_sliderReleased();
 
+    void on_slider_z_level_sliderMoved(int position);
+
 private:
     Ui::MainWindow *ui;
 

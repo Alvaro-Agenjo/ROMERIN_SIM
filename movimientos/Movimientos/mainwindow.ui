@@ -307,6 +307,13 @@
            </layout>
           </item>
           <item>
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -495,8 +502,11 @@
                </layout>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_11">
-                <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QCheckBox" name="chk_fixed">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -509,7 +519,7 @@
                   </property>
                  </widget>
                 </item>
-                <item>
+                <item alignment="Qt::AlignHCenter">
                  <widget class="QCheckBox" name="chk_elbow">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -529,7 +539,7 @@
             <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
              <widget class="QGroupBox" name="groupBox">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Maximum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -547,7 +557,7 @@
                </size>
               </property>
               <property name="title">
-               <string>Body control</string>
+               <string>Live control </string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -568,18 +578,18 @@
               <widget class="JoyPad" name="virtualJoyPad" native="true">
                <property name="geometry">
                 <rect>
-                 <x>10</x>
-                 <y>50</y>
-                 <width>171</width>
-                 <height>141</height>
+                 <x>0</x>
+                 <y>30</y>
+                 <width>201</width>
+                 <height>161</height>
                 </rect>
                </property>
               </widget>
               <widget class="QLabel" name="label_18">
                <property name="geometry">
                 <rect>
-                 <x>200</x>
-                 <y>110</y>
+                 <x>180</x>
+                 <y>100</y>
                  <width>66</width>
                  <height>18</height>
                 </rect>
@@ -591,7 +601,7 @@
               <widget class="QLabel" name="label_19">
                <property name="geometry">
                 <rect>
-                 <x>80</x>
+                 <x>90</x>
                  <y>30</y>
                  <width>66</width>
                  <height>18</height>
@@ -624,7 +634,7 @@
                 </rect>
                </property>
                <property name="text">
-                <string>max</string>
+                <string>350</string>
                </property>
               </widget>
               <widget class="QLabel" name="z_min">
@@ -653,13 +663,6 @@
              </widget>
             </item>
            </layout>
-          </item>
-          <item>
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
           </item>
           <item>
            <widget class="Line" name="line_2">
