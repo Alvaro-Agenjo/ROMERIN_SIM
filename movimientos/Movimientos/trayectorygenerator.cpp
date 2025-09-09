@@ -319,6 +319,8 @@ void trayectoryGenerator::reset()
 }
 void trayectoryGenerator::stand()
 {
+    if (isMoving()) return;
+
     constexpr int ms = 2000;
     float rot[3] = {0,180,90};
     Vector3D up{0,0,0.2};
@@ -329,6 +331,7 @@ void trayectoryGenerator::stand()
 }
 void trayectoryGenerator::relax()
 {
+    if (isMoving()) return;
     constexpr int ms = 3000;
 
     float rot[3] = {0,180,90};
@@ -341,6 +344,7 @@ void trayectoryGenerator::relax()
 
 void trayectoryGenerator::fixed_rotation(int n)
 {
+    if (isMoving()) return;
     refreshTCPs();
 
     constexpr double r = 0.08;
